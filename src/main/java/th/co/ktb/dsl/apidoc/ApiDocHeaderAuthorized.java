@@ -8,6 +8,7 @@ import java.lang.annotation.Target;
 
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
+import th.co.ktb.dsl.config.ApiMetadata;
 
 @Inherited
 @Target(value={ElementType.METHOD,ElementType.ANNOTATION_TYPE,ElementType.TYPE})
@@ -16,7 +17,7 @@ import io.swagger.annotations.ApiImplicitParams;
 	@ApiImplicitParam(name = "Authorization", value = "JWT Access Token", required = true, 
 			allowEmptyValue = false, paramType = "header", dataTypeClass = String.class, 
 			example = "Bearer <access_token>"),
-	@ApiImplicitParam(name = "App-Meta", value = "Meta data information to process service request. syntax: "
+	@ApiImplicitParam(name = ApiMetadata.HEADER_NAME, value = "Metadata information of service request. syntax: "
 			+ "src=<channel>/<version>, dest=<service-destination>, service=<api-sevice-name>", required = true, 
 			allowEmptyValue = false, paramType = "header", dataTypeClass = String.class, 
 			example = "src=android/v1, dest=dsl-dms, service=payment"),

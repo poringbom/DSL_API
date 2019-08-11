@@ -1,13 +1,11 @@
 package th.co.ktb.dsl.controller;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -17,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import th.co.ktb.dsl.model.payment.InstallmentSchedule;
 import th.co.ktb.dsl.model.payment.PaymentHistory;
 import th.co.ktb.dsl.model.payment.PaymentInfo;
@@ -28,11 +27,14 @@ import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocParamAcctNo;
 import th.co.ktb.dsl.apidoc.ApiDocParamLoanType;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized;
+import th.co.ktb.dsl.config.ApiMetadata;
+import th.co.ktb.dsl.model.annotation.ApiMetadataRequest;
 import th.co.ktb.dsl.model.common.LoanType;
 
 @Api(tags="DMS - Payment API", description="API หมวดเกี่ยวกับการชำระเงิน/ข้อมูลการชำระเงิน")
 @RestController
 @RequestMapping("/api/v1/dms/payment")
+@Slf4j
 public class PaymentController {
 
 	@ApiOperation(value="API สำหรับดึงข้อมูลกำหนดการชำระเงินตามผู้ใช้ปัจจุบัน และบัญชีกู้ยืมที่กำหนด "
@@ -42,14 +44,11 @@ public class PaymentController {
 	@ApiDocResponseAuthorized
 	@GetMapping(path="/{loanType}/{acctNo}", produces=MediaType.APPLICATION_JSON_VALUE)
 	public PaymentInfo GetPaymentInfo(
-		@RequestHeader HttpHeaders headers,
+		@ApiMetadata ApiMetadataRequest apiMeta,
 		@ApiDocParamLoanType @PathVariable(name="loanType") LoanType loanType,
 		@ApiDocParamAcctNo @PathVariable("acctNo") String acctNo
 	) {
-//		List<String> info = headers.get("App-Meta");
-//		for(String s : info) {
-//			log.info(s);
-//		}
+		log.info("apiMeta -> {}",apiMeta);
 		if (acctNo.equals("1")) return PaymentInfo.getExamplePayment();
 		else if (acctNo.equals("2")) return PaymentInfo.getExamplePaymentWithDue();
 		else return PaymentInfo.getExamplePaymentWithOverDue();
@@ -123,8 +122,6 @@ public class PaymentController {
 		@ApiDocParamAcctNo @PathVariable("acctNo") String acctNo,
 		@ApiParam(type="query", value="Data offset", required=false, defaultValue="1") @RequestParam(name="offset", required=false) String offset,
 		@ApiParam(type="query", value="Limit data size (-1 = unlimit)", required=false, defaultValue="-1") @RequestParam(name="size", required=false) String size,
-//		@ApiDocParamOffset @RequestParam(value="offset",required=false) String offset,
-//		@ApiDocParamSize @RequestParam(value="size",required=false) String size,
 		@ApiParam(type="query", value="Filter year (-1 = all, default is current year)", required=false, defaultValue="2019") @RequestParam(name="year", required=false) String year
 	) {
 		return PaymentHistory.getExamplePaymentHistory(Integer.parseInt(acctNo));

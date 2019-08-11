@@ -18,6 +18,7 @@ import springfox.documentation.swagger.web.OperationsSorter;
 import springfox.documentation.swagger.web.UiConfiguration;
 import springfox.documentation.swagger.web.UiConfigurationBuilder;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import th.co.ktb.dsl.model.annotation.ApiMetadataRequest;
 
 @Configuration
 @EnableSwagger2
@@ -33,6 +34,7 @@ public class SwaggerConfig {
     @Bean
     public Docket api() { 
         return new Docket(DocumentationType.SWAGGER_2)  
+        		.ignoredParameterTypes(new Class[] {ApiMetadataRequest.class})
         		.useDefaultResponseMessages(false)
 //            .operationsSorter(OperationsSorter.METHOD)
 //        		.operationOrdering(operationOrdering)
