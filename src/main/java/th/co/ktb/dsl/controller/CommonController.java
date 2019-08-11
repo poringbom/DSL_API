@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.google.common.net.HttpHeaders;
 
@@ -51,11 +52,11 @@ public class CommonController {
 	) {
         String name = file.getOriginalFilename();
         String docID = UUID.randomUUID().toString();
-//        String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
-//			.path("/api/v1")
-//			.path("/document")
-//			.path("/"+docID)
-//			.toUriString();
+        ServletUriComponentsBuilder.fromCurrentContextPath()
+			.path("/api/v1")
+			.path("/document")
+			.path("/"+docID)
+			.toUriString();
         return new DownloadableDocument(docID, name, file.getContentType(), file.getSize());
 	}
 

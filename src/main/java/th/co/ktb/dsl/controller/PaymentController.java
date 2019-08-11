@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import lombok.extern.slf4j.Slf4j;
 import th.co.ktb.dsl.model.payment.InstallmentSchedule;
 import th.co.ktb.dsl.model.payment.PaymentHistory;
 import th.co.ktb.dsl.model.payment.PaymentInfo;
@@ -27,14 +26,11 @@ import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocParamAcctNo;
 import th.co.ktb.dsl.apidoc.ApiDocParamLoanType;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized;
-import th.co.ktb.dsl.config.ApiMetadata;
-import th.co.ktb.dsl.model.annotation.ApiMetadataRequest;
 import th.co.ktb.dsl.model.common.LoanType;
 
 @Api(tags="DMS - Payment API", description="API หมวดเกี่ยวกับการชำระเงิน/ข้อมูลการชำระเงิน")
 @RestController
 @RequestMapping("/api/v1/dms/payment")
-@Slf4j
 public class PaymentController {
 
 	@ApiOperation(value="API สำหรับดึงข้อมูลกำหนดการชำระเงินตามผู้ใช้ปัจจุบัน และบัญชีกู้ยืมที่กำหนด "
@@ -44,11 +40,9 @@ public class PaymentController {
 	@ApiDocResponseAuthorized
 	@GetMapping(path="/{loanType}/{acctNo}", produces=MediaType.APPLICATION_JSON_VALUE)
 	public PaymentInfo GetPaymentInfo(
-		@ApiMetadata ApiMetadataRequest apiMeta,
 		@ApiDocParamLoanType @PathVariable(name="loanType") LoanType loanType,
 		@ApiDocParamAcctNo @PathVariable("acctNo") String acctNo
 	) {
-		log.info("apiMeta -> {}",apiMeta);
 		if (acctNo.equals("1")) return PaymentInfo.getExamplePayment();
 		else if (acctNo.equals("2")) return PaymentInfo.getExamplePaymentWithDue();
 		else return PaymentInfo.getExamplePaymentWithOverDue();
@@ -61,7 +55,7 @@ public class PaymentController {
 	@ApiDocResponseAuthorized
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping(path="/{loanType}/{acctNo}/qr")
-	public PaymentRequestQR CreatePaymentQR (
+	public PaymentRequestQR createPaymentQR (
 		@ApiDocParamLoanType @PathVariable("loanType") LoanType loanType,
 		@ApiDocParamAcctNo @PathVariable("acctNo") String acctNo,
 		@ApiParam(value="Amount to pay", required=true)  @RequestBody PaymentRequest payment
@@ -76,7 +70,7 @@ public class PaymentController {
 	@ApiDocResponseAuthorized
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping(path="/{loanType}/{acctNo}/teller")
-	public PaymentRequestTeller CreatePaymentTeller (
+	public PaymentRequestTeller createPaymentTeller (
 		@ApiDocParamLoanType @PathVariable("loanType") LoanType loanType,
 		@ApiDocParamAcctNo @PathVariable("acctNo") String acctNo,
 		@ApiParam(value="Amount to pay", required=true)  @RequestBody PaymentRequest payment
@@ -91,7 +85,7 @@ public class PaymentController {
 	@ApiDocResponseAuthorized
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping(path="/{loanType}/{acctNo}/atm")
-	public PaymentRequestATM CreatePaymentATM (
+	public PaymentRequestATM createPaymentATM (
 		@ApiDocParamLoanType @PathVariable("loanType") LoanType loanType,
 		@ApiDocParamAcctNo @PathVariable("acctNo") String acctNo,
 		@ApiParam(value="Amount to pay", required=true)  @RequestBody PaymentRequest payment

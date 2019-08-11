@@ -12,6 +12,7 @@ import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger.web.OperationsSorter;
@@ -23,6 +24,9 @@ import th.co.ktb.dsl.model.annotation.ApiMetadataRequest;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {    
+
+	private final String lastUpdateString = "2019-08-09";
+	
 	@Bean
 	UiConfiguration uiConfig() {
 	    return UiConfigurationBuilder
@@ -39,24 +43,28 @@ public class SwaggerConfig {
 //            .operationsSorter(OperationsSorter.METHOD)
 //        		.operationOrdering(operationOrdering)
         		.select()                                  
-        		.apis(RequestHandlerSelectors.any())  
+        		.apis(RequestHandlerSelectors.basePackage("th.co.ktb.dsl.controller"))  
         		.paths(PathSelectors.any())
         		.build()
         		.apiInfo(apiEndPointsInfo());
     }
-    
 
-    private ApiInfo apiEndPointsInfo() {
+    @Bean
+    public ApiInfo apiEndPointsInfo() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    		String d = "2019-08-09";
     		Date lastUpdate = null;
-		try { lastUpdate = sdf.parse(d); } catch (ParseException e) {}
+		try { lastUpdate = sdf.parse(lastUpdateString); } catch (ParseException e) {}
     		
+//		String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
+//				.path("/api")
+//				.path("/changelog")
+//				.toUriString();
+		
         return new ApiInfoBuilder().title("Digital Student Loan (DSL) RESTful API")
             .description("Currently support only Debt Management System (DMS)")
-//            .contact(new Contact("Ramesh Fadatare", "www.javaguides.net", "ramesh24fadatare@gmail.com"))
+            .contact(new Contact("A.Pongchet", "https://github.com/pongchetgithub/DSL_API", "pongchet@orcsoft.co.th"))
             .license( (new MessageFormat("Last updated: {0,date} ")).format(new Object [] {lastUpdate}) )
-//            .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
+            .licenseUrl("/api/v1/changelog")
             .version("1.0.0 - Draft")
             .build();
     }

@@ -1,9 +1,15 @@
 package th.co.ktb.dsl.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Calendar;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,6 +53,9 @@ public class TestAPI {
 			@ApiParam(value="Param of operation.", allowEmptyValue=false, defaultValue="World", required=true) 
 			@RequestParam(required=true) String name,
 			@RequestParam(required=false, defaultValue="false") Boolean error) throws Exception{
+
+		log.info("apiMeta -> {}",apiMeta);
+		
 		if (error) service.doError();
 		return service.doHello(name);
 	}
@@ -59,5 +68,16 @@ public class TestAPI {
 		tm.setDtm(Calendar.getInstance().getTime());
 		log.info(tm.toString());
 		return tm;
+	}
+	
+	@GetMapping(path="/changelog", produces=MediaType.TEXT_PLAIN_VALUE)
+	public String getChangeLog() throws IOException {
+		Resource r = new ClassPathResource("messages/change_log.txt");
+		File f = r.getFile();
+		byte[] buff = new byte[(int)f.length()];
+		try (FileInputStream fr = new FileInputStream(f)){
+			fr.read(buff);
+		} 
+		return new String(buff,"UTF-8");
 	}
 }
