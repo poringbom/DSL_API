@@ -43,6 +43,11 @@ import th.co.ktb.dsl.model.payment.Payment;
 @Slf4j
 public class CommonController {
 	
+    @GetMapping("/")
+    public String index() {
+        return "Hello there! I'm running.";
+    }
+	
 	@PostMapping("/test")
 	public TestModel test (@RequestBody TestModel m) {
 		log.info(m.toString());
