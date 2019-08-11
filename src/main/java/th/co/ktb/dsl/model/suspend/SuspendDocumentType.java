@@ -1,0 +1,10 @@
+package th.co.ktb.dsl.model.suspend;
+
+public enum SuspendDocumentType {
+	SUSPEND_REQUEST_FORM,
+	INCOMPETENCE_CERTIFICATE,
+	DISABILITY_CERTIFICATE,
+	CERTIFIER_CARD,
+	MEDICAL_CERTIFICATE,
+	CITIZEN_CARD;
+}
