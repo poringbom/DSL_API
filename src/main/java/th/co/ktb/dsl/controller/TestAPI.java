@@ -1,8 +1,10 @@
 package th.co.ktb.dsl.controller;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Calendar;
 
@@ -73,11 +75,14 @@ public class TestAPI {
 	@GetMapping(path="/changelog", produces=MediaType.TEXT_PLAIN_VALUE)
 	public String getChangeLog() throws IOException {
 		Resource r = new ClassPathResource("messages/change_log.txt");
-		File f = r.getFile();
-		byte[] buff = new byte[(int)f.length()];
-		try (FileInputStream fr = new FileInputStream(f)){
-			fr.read(buff);
+		byte[] buff = new byte[4096];
+		int cnt;
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		try (InputStream fr = r.getInputStream()){
+			while (-1 != (cnt=fr.read(buff))) {
+				baos.write(buff, 0, cnt);
+			};
 		} 
-		return new String(buff,"UTF-8");
+		return new String(baos.toByteArray(),"UTF-8");
 	}
 }
