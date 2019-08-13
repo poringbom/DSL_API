@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
-import th.co.ktb.dsl.config.ApiMetadata;
+import th.co.ktb.dsl.model.annotation.ApiMetadata;
 
 @Inherited
 @Target(value={ElementType.METHOD,ElementType.ANNOTATION_TYPE,ElementType.TYPE})

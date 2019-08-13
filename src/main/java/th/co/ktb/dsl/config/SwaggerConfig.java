@@ -19,7 +19,7 @@ import springfox.documentation.swagger.web.OperationsSorter;
 import springfox.documentation.swagger.web.UiConfiguration;
 import springfox.documentation.swagger.web.UiConfigurationBuilder;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-import th.co.ktb.dsl.model.annotation.ApiMetadataRequest;
+import th.co.ktb.dsl.model.common.ApiMetadataRequest;
 
 @Configuration
 @EnableSwagger2

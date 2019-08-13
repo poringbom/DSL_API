@@ -27,13 +27,13 @@ import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized;
-import th.co.ktb.dsl.config.ApiMetadata;
-import th.co.ktb.dsl.model.annotation.ApiMetadataRequest;
+import th.co.ktb.dsl.model.annotation.ApiMetadata;
+import th.co.ktb.dsl.model.common.ApiMetadataRequest;
 import th.co.ktb.dsl.model.common.TestModel;
 import th.co.ktb.dsl.service.TestService;
 
 
-@Api(hidden=true)
+@Api(value="xxxx")
 @RestController
 @RequestMapping("/api/v1")
 @Slf4j
@@ -51,7 +51,7 @@ public class TestAPI {
 	@ApiDocResponseAuthorized
 	@GetMapping("/")
 	public String getTest(
-			@ApiMetadata ApiMetadataRequest apiMeta,
+			@ApiMetadata(desName="",serviceName="") ApiMetadataRequest apiMeta,
 			@ApiParam(value="Param of operation.", allowEmptyValue=false, defaultValue="World", required=true) 
 			@RequestParam(required=true) String name,
 			@RequestParam(required=false, defaultValue="false") Boolean error) throws Exception{
@@ -61,7 +61,7 @@ public class TestAPI {
 		if (error) service.doError();
 		return service.doHello(name);
 	}
-	
+
 	@PostMapping("/")
 	public TestModel test (@RequestBody TestModel m) {
 		log.info(m.toString());
@@ -72,6 +72,7 @@ public class TestAPI {
 		return tm;
 	}
 	
+	@ApiOperation(hidden=true, value="getChangeLog")
 	@GetMapping(path="/changelog", produces=MediaType.TEXT_PLAIN_VALUE)
 	public String getChangeLog() throws IOException {
 		Resource r = new ClassPathResource("messages/change_log.txt");

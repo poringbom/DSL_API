@@ -1,4 +1,4 @@
-package th.co.ktb.dsl.model.annotation;
+package th.co.ktb.dsl.model.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

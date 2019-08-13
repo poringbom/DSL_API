@@ -23,7 +23,7 @@ import th.co.ktb.dsl.model.common.ApiResponseError;
 import th.co.ktb.dsl.model.user.LoanInfo;
 import th.co.ktb.dsl.model.user.UserInfo;
 
-@Api(tags="DSL - User API", description="API หมวดเกี่ยวกับข้อมูลผู้ใช้งานระบบ")
+@Api(tags="DSL : User API", description="API หมวดเกี่ยวกับข้อมูลผู้ใช้งานระบบ")
 @RestController
 @RequestMapping("/api/v1/user")
 public class UserController {

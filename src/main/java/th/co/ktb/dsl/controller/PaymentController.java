@@ -28,7 +28,7 @@ import th.co.ktb.dsl.apidoc.ApiDocParamLoanType;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized;
 import th.co.ktb.dsl.model.common.LoanType;
 
-@Api(tags="DMS - Payment API", description="API หมวดเกี่ยวกับการชำระเงิน/ข้อมูลการชำระเงิน")
+@Api(tags="DSL-DMS : Payment API", description="API หมวดเกี่ยวกับการชำระเงิน/ข้อมูลการชำระเงิน")
 @RestController
 @RequestMapping("/api/v1/dms/payment")
 public class PaymentController {

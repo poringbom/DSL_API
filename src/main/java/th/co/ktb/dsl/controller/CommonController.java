@@ -31,7 +31,7 @@ import th.co.ktb.dsl.model.common.DocumentType;
 import th.co.ktb.dsl.model.common.DownloadableDocument;
 import th.co.ktb.dsl.model.payment.Payment;
 
-@Api(tags="DSL - Common API", description="API ทั่วไปอาจถูกนำไปใช้ในหลาย module")
+@Api(tags="DSL : Common API", description="API ทั่วไปอาจถูกนำไปใช้ในหลาย module")
 @RestController
 @RequestMapping("/api/v1")
 public class CommonController {

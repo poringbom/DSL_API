@@ -1,3 +1,6 @@
+2019-08-12
+	- เพิ่มตัวอย่างกลไกตรวจสอบ field ใน HTT-Request-Header 'ApiMetada'
+
 2019-08-11
 	- เพิ่มตัวอย่าง framework สำหรับ handle API response กรณี error
 	- แก้ไข Model-ApiResponseError เพิ่ม field 'trace' สำหรับเก็บ stacktrace เพิ่มเติม กรณี API response status ไม่ใช่ 2xx

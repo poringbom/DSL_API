@@ -10,7 +10,8 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import th.co.ktb.dsl.exception.BadRequestException;
-import th.co.ktb.dsl.model.annotation.ApiMetadataRequest;
+import th.co.ktb.dsl.model.annotation.ApiMetadata;
+import th.co.ktb.dsl.model.common.ApiMetadataRequest;
 import th.co.ktb.dsl.model.common.ApiRequestInputType;
 
 public class ApiMetadataArgumentResolver implements HandlerMethodArgumentResolver {
@@ -37,6 +38,12 @@ public class ApiMetadataArgumentResolver implements HandlerMethodArgumentResolve
         if (apiMetaData != null) {
 	    		Matcher m = pattern.matcher(apiMetaData);
 	    		if (m.matches() && m.groupCount() >= 6) {
+	    	        if (!"".equals(header.desName()) && !header.desName().equals(m.group(4))) {
+	    	        		throw new BadRequestException("Expecting 'des'='"+header.desName()+"' for '"+header.value()+"' from HTTP_HEADER");
+	    	        }
+	    	        if (!"".equals(header.serviceName()) && !header.desName().equals(m.group(6))) {
+	    	        		throw new BadRequestException("Expecting 'service'='"+header.serviceName()+"' for '"+header.value()+"' from HTT_HEADER");
+	    	        }
 	    			return new ApiMetadataRequest(m.group(2),m.group(4),m.group(6));
 	    		} else {
 	    			throw new BadRequestException(ApiRequestInputType.HTTP_HEADER,header.value());
