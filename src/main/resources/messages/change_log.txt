@@ -10,7 +10,7 @@
 2019-08-09
 	- เปลี่ยน HTTP-Request-Header สำหรับ 'Api-Meta' เป็น 'Api-Metadata' 
 	- เพิ่มตัวอย่างการรับค่า HTTP-Request-Header 'Api-Metadata' และการ validate
-	- แก้ไข Model-EmbedResource เพื่อรองรับกรณี save file payin-slip สำหรับ API createPaymentTeller()
+	- แก้ไข Model-EmbedResource เพื่อรองรับกรณี save file payin-slip สำหรับ API-createPaymentTeller()
 	- แก้ไข Model-InstallmentSchedule เพืิ่ม field 'lastUpdate' ตามหน้าจอ
 	- แก้ไข API-getPaymentHistory() ย้าย input 'offset', 'size' จาก HTTP-Request-Header มาเป็น Query-String / และ ย้าย response 'total' จาก Http-Response-Header มาอยู่ใน Http-Response-Body แทน
 	- เพิ่ม API Spec. DMS-Postpone
