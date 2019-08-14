@@ -12,7 +12,7 @@ import th.co.ktb.dsl.model.postpone.PostponeStatus;
 @Data 
 public class SuspendInfo {
 	@ApiModelProperty(position = 1, required=true)
-	String requestID;
+	String requestNo;
 
 	@ApiModelProperty(position = 2, required=true)
 	PostponeReason requestReason;

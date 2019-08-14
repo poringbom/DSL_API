@@ -11,7 +11,7 @@ import lombok.Data;
 public class SuspendRequestCreate {
 
 	@ApiModelProperty(position = 1, required=false)
-	String requestID;
+	String requestNo;
 
 	@ApiModelProperty(position = 2, required=true)
 	SuspendReason requestReason;

@@ -7,7 +7,7 @@ import lombok.Data;
 public class SuspendRequestUpdate {
 
 	@ApiModelProperty(position = 1, required=true)
-	String requestID;
+	String requestNo;
 
 	@ApiModelProperty(position = 2, required=true)
 	SuspendReason requestReason;

@@ -10,7 +10,7 @@ import lombok.Data;
 @Data 
 public class PostponeRequestCreate {
 	@ApiModelProperty(position = 1, required=false)
-	String requestID;
+	String requestNo;
 
 	@ApiModelProperty(position = 2, required=true)
 	PostponeReason requestReason;

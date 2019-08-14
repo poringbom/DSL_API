@@ -20,7 +20,8 @@ public class ApiDocAnnotation {
 			public String name() {
 				if      (field == ParamName.LOAN_TYPE) return "Loan type";
 				else if (field == ParamName.ACCT_NO) return "Loan account number";
-				else if (field == ParamName.POSTPONE_RQ_ID) return "Postpone request ID";
+				else if (field == ParamName.POSTPONE_RQ_NUMBER) return "Postpone request number";
+				else if (field == ParamName.SUSPEND_RQ_NUMBER) return "Postpone request number";
 				else if (field == ParamName.OFFSET) return "Data offset";
 				else if (field == ParamName.SIZE) return "Limit data size (-1 = unlimit)";
 				else return "";
@@ -30,7 +31,8 @@ public class ApiDocAnnotation {
 			public String value() {
 				if      (field == ParamName.LOAN_TYPE) return "Loan type";
 				else if (field == ParamName.ACCT_NO) return "Loan account number";
-				else if (field == ParamName.POSTPONE_RQ_ID) return "Postpone request ID";
+				else if (field == ParamName.POSTPONE_RQ_NUMBER) return "Postpone request number";
+				else if (field == ParamName.SUSPEND_RQ_NUMBER) return "Suspend request number";
 				else if (field == ParamName.OFFSET) return "Data offset";
 				else if (field == ParamName.SIZE) return "Limit data size (-1 = unlimit)";
 				else return "";
@@ -53,7 +55,8 @@ public class ApiDocAnnotation {
 			public boolean required() {
 				if      (field == ParamName.LOAN_TYPE) return true;
 				else if (field == ParamName.ACCT_NO) return true;
-				else if (field == ParamName.POSTPONE_RQ_ID) return true;
+				else if (field == ParamName.POSTPONE_RQ_NUMBER) return true;
+				else if (field == ParamName.SUSPEND_RQ_NUMBER) return true;
 				else if (field == ParamName.OFFSET) return false;
 				else if (field == ParamName.SIZE) return false;
 				else return false;
@@ -94,7 +97,8 @@ public class ApiDocAnnotation {
 			public String type() {
 				if      (field == ParamName.LOAN_TYPE) return "path";
 				else if (field == ParamName.ACCT_NO) return "path";
-				else if (field == ParamName.POSTPONE_RQ_ID) return "path";
+				else if (field == ParamName.POSTPONE_RQ_NUMBER) return "path";
+				else if (field == ParamName.SUSPEND_RQ_NUMBER) return "path";
 				else if (field == ParamName.OFFSET) return "query";
 				else if (field == ParamName.SIZE) return "query";
 				else return null;
@@ -133,5 +137,6 @@ enum ParamName {
 	ACCT_NO,
 	OFFSET,
 	SIZE,
-	POSTPONE_RQ_ID
+	POSTPONE_RQ_NUMBER,
+	SUSPEND_RQ_NUMBER
 }

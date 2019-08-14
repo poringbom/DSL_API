@@ -11,6 +11,6 @@ import io.swagger.annotations.ApiParam;
 @Inherited
 @Target(value={ElementType.PARAMETER,ElementType.METHOD,ElementType.FIELD})
 @Retention(value=RetentionPolicy.RUNTIME)
-public @interface ApiDocPathPostponeRequestID {
-	public ApiParam param = ApiDocAnnotation.getInstanceOfApiParam(ParamName.POSTPONE_RQ_ID);
+public @interface ApiDocPathSuspendRequestNo {
+	public ApiParam param = ApiDocAnnotation.getInstanceOfApiParam(ParamName.SUSPEND_RQ_NUMBER);
 }

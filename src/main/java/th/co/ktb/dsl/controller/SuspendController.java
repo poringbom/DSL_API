@@ -13,14 +13,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocParamAcctNo;
 import th.co.ktb.dsl.apidoc.ApiDocParamLoanType;
-import th.co.ktb.dsl.apidoc.ApiDocPathSuspendRequestID;
+import th.co.ktb.dsl.apidoc.ApiDocPathSuspendRequestNo;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized;
 import th.co.ktb.dsl.model.common.LoanType;
 import th.co.ktb.dsl.model.suspend.SuspendDetail;
@@ -35,7 +33,8 @@ import th.co.ktb.dsl.model.suspend.SuspendSummary;
 @RequestMapping("/api/v1/dms/suspend")
 public class SuspendController {
 
-	@ApiOperation(value="API สำหรับดึงข้อมูลสถานะร้องขอ ณ ปัจจุบัน "
+	@ApiOperation(nickname="getLoneStatus",
+			value="API สำหรับดึงข้อมูลสถานะร้องขอ ณ ปัจจุบัน "
 			+ "/ ใช้เรียกหลังจากผู้ใช้มีการเข้าถึงเมนู 'ระงับการชำระเงิน' "
 			+ "โดยข้อมูลจะประกอบด้วยการร้องขอระงับการชำระเงินปัจจุบัน และประวัติการร้องขอ")
 	@ApiDocHeaderAuthorized
@@ -51,11 +50,11 @@ public class SuspendController {
 	@ApiOperation(value="API สำหรับดึงข้อมูลรายละเอียดการร้องขอระงับการชำระเงิน")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
-	@GetMapping(path="/{loanType}/{acctNo}/{requestID}", produces=MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path="/{loanType}/{acctNo}/{requestNo}", produces=MediaType.APPLICATION_JSON_VALUE)
 	public SuspendDetail getSuspendRequest(		
 		@ApiDocParamLoanType @PathVariable("loanType") LoanType loanType,
 		@ApiDocParamAcctNo @PathVariable("acctNo") String acctNo,
-		@ApiDocPathSuspendRequestID @PathVariable("requestID") String requestID
+		@ApiDocPathSuspendRequestNo @PathVariable("requestNo") String requestNo
 	) {
 		return new SuspendDetail();
 	}
@@ -65,7 +64,6 @@ public class SuspendController {
 	@ApiDocResponseAuthorized
 	@GetMapping(path="/document/{reason}", produces=MediaType.APPLICATION_JSON_VALUE)
 	public SuspendFormExample[] getRequiredDocument(			
-//		@ApiDocPathSuspendRequestID @PathVariable("requestID") String requestID
 		@PathVariable("reason") SuspendReason reason
 	) {
 		return null;
@@ -74,9 +72,6 @@ public class SuspendController {
 	@ApiOperation(value="API สำหรับสร้างรายการร้องขอระงับการชำระเงิน "
 			+ "/ ข้อมูลประกอบด้วยรายละเอียดการร้องขอ พร้อมทั้งเอกสารแนบประกอบสำหรับแต่ละเหตุผลการร้องขอ "
 			+ " โดยหากผลการดำเนินเรียก API สำเร็จจะคืนผลลัพธ์หมายเลขอ้างอิงคำขอ")
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", dataTypeClass = String.class, example = "Bearer <access_token>"),
-	})
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
 	@ResponseStatus(HttpStatus.CREATED)
@@ -86,7 +81,7 @@ public class SuspendController {
 		@ApiDocParamAcctNo @PathVariable("acctNo") String acctNo,
 		@ApiParam(type="body", value="Suspend request data", required=true) @RequestBody SuspendRequestCreate request
 	) {
-		return new SuspendRequestUpdate(); // only PostponeRequest.requestID
+		return new SuspendRequestUpdate(); // only PostponeRequest.requestNo
 	}
 
 	@ApiOperation(value="API สำหรับยื่นเพิ่มเติมเอกสารประกอบคำร้อง หรือตามเรียกขอจากเจ้าหน้าที่ สำหรับขอระงับการชำระเงิน "
@@ -107,12 +102,12 @@ public class SuspendController {
 			+ "/ ข้อมูลยกเลิกร้องขอประกอบด้วย request id ")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
-	@DeleteMapping(path="/{loanType}/{acctNo}/{requestID}")
+	@DeleteMapping(path="/{loanType}/{acctNo}/{requestNo}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void cancelSuspendRequest(	
 		@ApiDocParamLoanType @PathVariable("loanType") LoanType loanType,
 		@ApiDocParamAcctNo @PathVariable("acctNo") String acctNo,
-		@ApiDocPathSuspendRequestID @PathVariable("requestID") String reqID
+		@ApiDocPathSuspendRequestNo @PathVariable("requestNo") String reqNo
 	) {
 		return;
 	}

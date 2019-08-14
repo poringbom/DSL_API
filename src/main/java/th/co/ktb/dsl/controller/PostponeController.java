@@ -13,14 +13,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocParamAcctNo;
 import th.co.ktb.dsl.apidoc.ApiDocParamLoanType;
-import th.co.ktb.dsl.apidoc.ApiDocPathPostponeRequestID;
+import th.co.ktb.dsl.apidoc.ApiDocPathPostponeRequestNo;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized;
 import th.co.ktb.dsl.model.common.LoanType;
 import th.co.ktb.dsl.model.postpone.PostponeDetail;
@@ -51,11 +49,11 @@ public class PostponeController {
 	@ApiOperation(value="API สำหรับดึงข้อมูลรายละเอียดการร้องขอผ่อนผันที่กำหนด")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
-	@GetMapping(path="/{loanType}/{acctNo}/{requestID}", produces=MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path="/{loanType}/{acctNo}/{requestNo}", produces=MediaType.APPLICATION_JSON_VALUE)
 	public PostponeDetail getPostponeRequest(		
 		@ApiDocParamLoanType @PathVariable("loanType") LoanType loanType,
 		@ApiDocParamAcctNo @PathVariable("acctNo") String acctNo,
-		@ApiDocPathPostponeRequestID @PathVariable("requestID") String requestID
+		@ApiDocPathPostponeRequestNo @PathVariable("requestNo") String requestNo
 	) {
 		return new PostponeDetail();
 	}
@@ -65,7 +63,6 @@ public class PostponeController {
 	@ApiDocResponseAuthorized
 	@GetMapping(path="/document/{reason}", produces=MediaType.APPLICATION_JSON_VALUE)
 	public PostponeFormExample[] getRequiredDocument(			
-//		@ApiDocPathPostponeRequestID @PathVariable("requestID") String requestID
 		@PathVariable("reason") PostponeReason reason
 	) {
 		return PostponeFormExample.getExample(reason);
@@ -74,9 +71,6 @@ public class PostponeController {
 	@ApiOperation(value="API สำหรับสร้างรายการร้องขอผ่อนผันการชำระเงิน "
 			+ "/ ข้อมูลประกอบด้วยรายละเอียดการร้องขอ พร้อมทั้งเอกสารแนบประกอบสำหรับแต่ละเหตุผลการร้องขอ "
 			+ " โดยหากผลการดำเนินเรียก API สำเร็จจะคืนผลลัพธ์หมายเลขอ้างอิงคำขอ")
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", dataTypeClass = String.class, example = "Bearer <access_token>"),
-	})
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
 	@ResponseStatus(HttpStatus.CREATED)
@@ -107,12 +101,12 @@ public class PostponeController {
 			+ "/ ข้อมูลยกเลิกร้องขอประกอบด้วย request id ")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
-	@DeleteMapping(path="/{loanType}/{acctNo}/{requestID}")
+	@DeleteMapping(path="/{loanType}/{acctNo}/{requestNo}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void cancelPostponeRequest(	
 		@ApiDocParamLoanType @PathVariable("loanType") LoanType loanType,
 		@ApiDocParamAcctNo @PathVariable("acctNo") String acctNo,
-		@ApiDocPathPostponeRequestID @PathVariable("requestID") String reqID
+		@ApiDocPathPostponeRequestNo @PathVariable("requestNo") String requestNo
 	) {
 		return;
 	}

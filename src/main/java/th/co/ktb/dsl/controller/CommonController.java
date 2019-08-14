@@ -1,5 +1,8 @@
 package th.co.ktb.dsl.controller;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
 
 import org.springframework.core.io.ClassPathResource;
@@ -24,26 +27,24 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import th.co.ktb.dsl.model.common.ApiResponseError;
+import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized;
+import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized;
 import th.co.ktb.dsl.model.common.DocumentType;
 import th.co.ktb.dsl.model.common.DownloadableDocument;
-import th.co.ktb.dsl.model.payment.Payment;
 
-@Api(tags="DSL : Common API", description="API ทั่วไปอาจถูกนำไปใช้ในหลาย module")
+@Api(tags="DSL-DMS : Common API", description="API ทั่วไปอาจถูกนำไปใช้ในหลาย module")
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/dms")
 public class CommonController {
 
 	@ApiOperation(value="API สำหรับอัพโหลดเอกสาร ")
+	@ApiDocHeaderAuthorized
+	@ApiDocResponseAuthorized
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", dataTypeClass = String.class, example = "Bearer <access_token>")
 	})
-	@ApiResponses(value = {
-	    @ApiResponse(code = 401, message = "Unauthorized", response = ApiResponseError.class),
-	})
 	@PostMapping(path="/document")
+	@ResponseStatus(HttpStatus.CREATED)
 	public DownloadableDocument uploadRequestDocument(
 		@ApiParam(value="File to upload", required=true) @RequestParam(name="file") MultipartFile file,
 		@ApiParam(value="Alias name") @RequestParam(name="alias", required=false) String alias, 
@@ -61,39 +62,42 @@ public class CommonController {
 	}
 
 	@ApiOperation(value="API สำหรับลบเอกสาร")
+	@ApiDocHeaderAuthorized
+	@ApiDocResponseAuthorized
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", dataTypeClass = String.class, example = "Bearer <access_token>"),
 	})
-	@ApiResponses(value = {
-	    @ApiResponse(code = 204, message = "No content", response = Payment.class),
-	    @ApiResponse(code = 401, message = "Unauthorized", response = ApiResponseError.class),
-	})
-	@DeleteMapping(path="/document/{docID:.+}")
+	@DeleteMapping(path="/document/{docID}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void removeRequestDocument(
 		@ApiParam(value="File to upload", required=true) @PathVariable("docID") String docID,
-		@ApiParam(value="Reference to document") @RequestParam(name="refID", required=false) String refID
+		@ApiParam(value="Reference to document", required=true) @RequestParam(name="refID", required=true) String refID
 	) {
 		return;
 	}
 		
 	@ApiOperation(value="API สำหรับดาวน์โหลดเอกสาร")
+	@ApiDocHeaderAuthorized
+	@ApiDocResponseAuthorized
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", dataTypeClass = String.class, example = "Bearer <access_token>"),
 	})
-	@ApiResponses(value = {
-		    @ApiResponse(code = 200, message = "OK", response = byte[].class),
-		    @ApiResponse(code = 401, message = "Unauthorized", response = ApiResponseError.class),
-		    @ApiResponse(code = 404, message = "Not found", response = ApiResponseError.class),
-		})
 	@GetMapping(path="/document/{docID:.+}")
-	public ResponseEntity<Resource> getDocument(
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<byte[]> getDocument(
 		@PathVariable("docID") String docID
 	) {
         Resource resource=new ClassPathResource("DSL_WOW.pdf");
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try (InputStream is = resource.getInputStream()){
+            byte[] buf = new byte[2048]; int cnt = 0;
+        		while ((cnt=is.read(buf)) > 0) {
+        			baos.write(buf,0,cnt);
+        		}
+        } catch (IOException ex) {}
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION,
                         "attachment; filename=\"" + resource.getFilename() + "\"")
-                .body(resource);
+                .body(baos.toByteArray());
 	}
 }
