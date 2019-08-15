@@ -18,9 +18,9 @@ import th.co.ktb.dsl.model.annotation.ApiMetadata;
 			allowEmptyValue = false, paramType = "header", dataTypeClass = String.class, 
 			example = "Bearer <access_token>"),
 	@ApiImplicitParam(name = ApiMetadata.HEADER_NAME, value = "Metadata information of service request. syntax: "
-			+ "src=<channel>/<version>, dest=<service-destination>, service=<api-sevice-name>", required = true, 
+			+ "src=<channel>;dest=<service-destination>;service=<api-sevice-name>", required = true, 
 			allowEmptyValue = false, paramType = "header", dataTypeClass = String.class, 
-			example = "src=android/v1, dest=dsl-dms, service=payment"),
+			example = "src=android;dest=dsl-dms;service=payment"),
 
 //	@ApiImplicitParam(name = "Service-Group", value = "Meta data information to process service request", required = true, 
 //	allowEmptyValue = false, paramType = "header", dataTypeClass = String.class, 

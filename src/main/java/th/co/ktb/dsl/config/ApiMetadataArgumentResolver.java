@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.core.MethodParameter;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -14,9 +15,25 @@ import th.co.ktb.dsl.model.annotation.ApiMetadata;
 import th.co.ktb.dsl.model.common.ApiMetadataRequest;
 import th.co.ktb.dsl.model.common.ApiRequestInputType;
 
+@Component
 public class ApiMetadataArgumentResolver implements HandlerMethodArgumentResolver {
-	public final String p = "(src=(.*))(dest=(.*))(service=(.*))";
+//	public final String p = "(src=(.*))(dest=(.*))(service=(.*))";
+	public final String p = "(src\\s*=\\s*(.*);)(dest\\s*=\\s*(.*);)(service\\s*=\\s*(.*))";
 	public final Pattern pattern;
+	
+	public ApiMetadataRequest matches(String apiMetaData) {
+		if (apiMetaData == null) return null;
+		Matcher m = pattern.matcher(apiMetaData);
+		if (m.matches() && m.groupCount() >= 2) {
+			return new ApiMetadataRequest(m.group(2),null,null);
+		} else if (m.matches() && m.groupCount() >= 4) {
+			return new ApiMetadataRequest(m.group(2),m.group(4),null);
+		} else if (m.matches() && m.groupCount() >= 6) {
+			return new ApiMetadataRequest(m.group(2),m.group(4),m.group(6));
+		} else {
+			return null;
+		}
+	}
 	
 	public ApiMetadataArgumentResolver() {
 		this.pattern = Pattern.compile(p);
@@ -36,16 +53,16 @@ public class ApiMetadataArgumentResolver implements HandlerMethodArgumentResolve
     		ApiMetadata header = parameter.getParameterAnnotation(ApiMetadata.class);
         String apiMetaData = webRequest.getHeader(header.value());
         if (apiMetaData != null) {
-	    		Matcher m = pattern.matcher(apiMetaData);
-	    		if (m.matches() && m.groupCount() >= 6) {
-	    	        if (!"".equals(header.desName()) && !header.desName().equals(m.group(4))) {
-	    	        		throw new BadRequestException("Expecting 'des'='"+header.desName()+"' for '"+header.value()+"' from HTTP_HEADER");
+        		ApiMetadataRequest data =this.matches(apiMetaData);
+        		if (data != null) {
+        			if (!"".equals(header.desName()) && !header.desName().equals(data.getDes())) {
+    	        			throw new BadRequestException("Expecting 'des'='"+header.desName()+"' for '"+header.value()+"' from HTTP_HEADER");
 	    	        }
-	    	        if (!"".equals(header.serviceName()) && !header.desName().equals(m.group(6))) {
+        			if (!"".equals(header.serviceName()) && !header.desName().equals(data.getService())) {
 	    	        		throw new BadRequestException("Expecting 'service'='"+header.serviceName()+"' for '"+header.value()+"' from HTT_HEADER");
 	    	        }
-	    			return new ApiMetadataRequest(m.group(2),m.group(4),m.group(6));
-	    		} else {
+        			return data;
+        		} else {
 	    			throw new BadRequestException(ApiRequestInputType.HTTP_HEADER,header.value());
 	    		}
         } else {

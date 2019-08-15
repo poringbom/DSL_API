@@ -20,6 +20,7 @@ import th.co.ktb.dsl.apidoc.ApiDocParamAcctNo;
 import th.co.ktb.dsl.apidoc.ApiDocParamLoanType;
 import th.co.ktb.dsl.apidoc.ApiDocPathPostponeRequestNo;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized;
+import th.co.ktb.dsl.mock.Testable;
 import th.co.ktb.dsl.model.common.LoanType;
 import th.co.ktb.dsl.model.postpone.PostponeDetail;
 import th.co.ktb.dsl.model.postpone.PostponeFormExample;
@@ -33,7 +34,10 @@ import th.co.ktb.dsl.model.postpone.PostponeSummary;
 @RequestMapping("/api/v1/dms/postpone")
 public class PostponeController {
 
-	@ApiOperation(value="API สำหรับดึงข้อมูลสถานะร้องขอ ณ ปัจจุบัน "
+	private final String getPostponeRequestStatus = "getPostponeRequestStatus";
+	@Testable
+	@ApiOperation(value=getPostponeRequestStatus,
+			notes="API สำหรับดึงข้อมูลสถานะร้องขอ ณ ปัจจุบัน "
 			+ "/ ใช้เรียกหลังจากผู้ใช้มีการเข้าถึงเมนู 'ลดหย่อนและผ่อนชำระ' "
 			+ "โดยข้อมูลจะประกอบด้วยการร้องขอผ่อนผันปัจจุบัน และประวัติการร้องขอ")
 	@ApiDocHeaderAuthorized
@@ -46,7 +50,10 @@ public class PostponeController {
 		return new PostponeSummary();
 	}
 
-	@ApiOperation(value="API สำหรับดึงข้อมูลรายละเอียดการร้องขอผ่อนผันที่กำหนด")
+	private final String getPostponeRequest = "getPostponeRequest";
+	@Testable
+	@ApiOperation(value=getPostponeRequest,
+			notes="API สำหรับดึงข้อมูลรายละเอียดการร้องขอผ่อนผันที่กำหนด")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
 	@GetMapping(path="/{loanType}/{acctNo}/{requestNo}", produces=MediaType.APPLICATION_JSON_VALUE)
@@ -58,7 +65,10 @@ public class PostponeController {
 		return new PostponeDetail();
 	}
 	
-	@ApiOperation(value="API สำหรับดึงข้อมูลเอกสารเกี่ยวข้องที่จำเป็นสำหรับการยื่นขอผ่อนผัน")
+	private final String getRequiredDocument = "getRequiredDocument";
+	@Testable
+	@ApiOperation(value=getRequiredDocument,
+			notes="API สำหรับดึงข้อมูลเอกสารเกี่ยวข้องที่จำเป็นสำหรับการยื่นขอผ่อนผัน")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
 	@GetMapping(path="/document/{reason}", produces=MediaType.APPLICATION_JSON_VALUE)
@@ -68,7 +78,10 @@ public class PostponeController {
 		return PostponeFormExample.getExample(reason);
 	}
 
-	@ApiOperation(value="API สำหรับสร้างรายการร้องขอผ่อนผันการชำระเงิน "
+	private final String createPostponeRequest = "createPostponeRequest";
+	@Testable
+	@ApiOperation(value=createPostponeRequest,
+			notes="API สำหรับสร้างรายการร้องขอผ่อนผันการชำระเงิน "
 			+ "/ ข้อมูลประกอบด้วยรายละเอียดการร้องขอ พร้อมทั้งเอกสารแนบประกอบสำหรับแต่ละเหตุผลการร้องขอ "
 			+ " โดยหากผลการดำเนินเรียก API สำเร็จจะคืนผลลัพธ์หมายเลขอ้างอิงคำขอ")
 	@ApiDocHeaderAuthorized
@@ -83,7 +96,10 @@ public class PostponeController {
 		return new PostponeRequestUpdate(); // only PostponeRequest.requestID
 	}
 
-	@ApiOperation(value="API สำหรับยื่นเพิ่มเติมเอกสารประกอบคำร้องขอผ่อนผันการชำระเงิน "
+	private final String updatePostponeRequest = "updatePostponeRequest";
+	@Testable
+	@ApiOperation(value=updatePostponeRequest,
+			notes="API สำหรับยื่นเพิ่มเติมเอกสารประกอบคำร้องขอผ่อนผันการชำระเงิน "
 			+ "/ ข้อมูลแก้ไขการร้องขอ พร้อมทั้งเอกสารแนบเพิ่มเติมหรือเปลี่ยนแปลงระกอบสำหรับแต่ละเหตุผลการร้องขอ "
 			+ " โดยหากผลการดำเนินเรียก API สำเร็จจะคืนผลลัพธ์หมายเลขอ้างอิงคำขอ")
 	@ApiDocHeaderAuthorized
@@ -97,7 +113,10 @@ public class PostponeController {
 		return new PostponeRequestUpdate();
 	}
 
-	@ApiOperation(value="API สำหรับยกเลิกคำร้องขอผ่อนผันการชำระเงิน "
+	private final String cancelPostponeRequest = "cancelPostponeRequest";
+	@Testable
+	@ApiOperation(value=cancelPostponeRequest,
+			notes="API สำหรับยกเลิกคำร้องขอผ่อนผันการชำระเงิน "
 			+ "/ ข้อมูลยกเลิกร้องขอประกอบด้วย request id ")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized

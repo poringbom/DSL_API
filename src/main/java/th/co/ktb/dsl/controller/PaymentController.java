@@ -26,6 +26,7 @@ import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocParamAcctNo;
 import th.co.ktb.dsl.apidoc.ApiDocParamLoanType;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized;
+import th.co.ktb.dsl.mock.Testable;
 import th.co.ktb.dsl.model.common.LoanType;
 
 @Api(tags="DSL-DMS : Payment API", description="API หมวดเกี่ยวกับการชำระเงิน/ข้อมูลการชำระเงิน")
@@ -33,22 +34,26 @@ import th.co.ktb.dsl.model.common.LoanType;
 @RequestMapping("/api/v1/dms/payment")
 public class PaymentController {
 
-	@ApiOperation(value="API สำหรับดึงข้อมูลกำหนดการชำระเงินตามผู้ใช้ปัจจุบัน และบัญชีกู้ยืมที่กำหนด "
+	private final String getPaymentInfo = "getPaymentInfo";
+	@Testable
+	@ApiOperation(value=getPaymentInfo, 
+			notes="API สำหรับดึงข้อมูลกำหนดการชำระเงินตามผู้ใช้ปัจจุบัน และบัญชีกู้ยืมที่กำหนด "
 			+ "/ ใช้เรียกเมื่อมีการเข้าถึงเมนู 'ชำระเงิน'"
 			+ "/ ตัวอย่าง response สำหรับกรณีไม่มีกำหนดชำระ: acctNo = 1, กรณีมีกำหนดขำระ: acctNo = 2, ที่เหลือกรณีมีค้างชำระ")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
 	@GetMapping(path="/{loanType}/{acctNo}", produces=MediaType.APPLICATION_JSON_VALUE)
-	public PaymentInfo GetPaymentInfo(
+	public PaymentInfo getPaymentInfo(
 		@ApiDocParamLoanType @PathVariable(name="loanType") LoanType loanType,
 		@ApiDocParamAcctNo @PathVariable("acctNo") String acctNo
 	) {
-		if (acctNo.equals("1")) return PaymentInfo.getExamplePayment();
-		else if (acctNo.equals("2")) return PaymentInfo.getExamplePaymentWithDue();
-		else return PaymentInfo.getExamplePaymentWithOverDue();
+		return new PaymentInfo();
 	}
 
-	@ApiOperation(value="API สำหรับสร้างข้อมูลการชำระเงินผ่านทาง QR Code "
+	private final String createPaymentQR = "createPaymentQR";
+	@Testable
+	@ApiOperation(value=createPaymentQR,
+			notes="API สำหรับสร้างข้อมูลการชำระเงินผ่านทาง QR Code "
 			+ "/ ใช้เรียกเมื่อผู้ใช้ตัดสินใจเลือกช่องทางการชำระเงินตามที่กำหนด "
 			+ "โดยคืนรูปภาพและคำแนะนำสำหรับการชำระเงิน")
 	@ApiDocHeaderAuthorized
@@ -63,7 +68,10 @@ public class PaymentController {
 		return PaymentRequestQR.getExampleQRResponse();
 	}
 	
-	@ApiOperation(value="API สำหรับสร้างข้อมูลการชำระเงินผ่านทาง Bank Teller "
+	private final String createPaymentTeller = "createPaymentTeller";
+	@Testable
+	@ApiOperation(value=createPaymentTeller,
+			notes="API สำหรับสร้างข้อมูลการชำระเงินผ่านทาง Bank Teller "
 			+ "/ ใช้เรียกเมื่อผู้ใช้ตัดสินใจเลือกช่องทางการชำระเงินตามที่กำหนด "
 			+ "โดยคืนรูปภาพแบบฟอร์มสำหรับการชำระเงินและคำแนะนำสำหรับการชำระเงินผ่านทางเคาว์เตอร์ธนาคาร")
 	@ApiDocHeaderAuthorized
@@ -78,7 +86,10 @@ public class PaymentController {
 		return PaymentRequestTeller.getExampleTellerResponse();
 	}
 
-	@ApiOperation(value="API สำหรับสร้างข้อมูลการชำระเงินผ่านทาง ATM "
+	private final String createPaymentATM = "createPaymentATM";
+	@Testable
+	@ApiOperation(value=createPaymentATM,
+			notes="API สำหรับสร้างข้อมูลการชำระเงินผ่านทาง ATM "
 			+ "/ ใช้เรียกเมื่อผู้ใช้ตัดสินใจเลือกช่องทางการชำระเงินตามที่กำหนด "
 			+ "โดยคืนคำแนะนำสำหรับการชำระเงินผ่านช่องทาง ATM")
 	@ApiDocHeaderAuthorized
@@ -93,7 +104,10 @@ public class PaymentController {
 		return PaymentRequestATM.getExampleATMResponse();
 	}
 
-	@ApiOperation(value="API สำหรับดึงข้อมูลตารางการผ่อนชำระตามผู้ใช้ปัจจุบัน และบัญชีกู้ยืมที่กำหนด "
+	private final String getInstallmentSchedule = "getInstallmentSchedule";
+	@Testable
+	@ApiOperation(value=getInstallmentSchedule,
+			notes="API สำหรับดึงข้อมูลตารางการผ่อนชำระตามผู้ใช้ปัจจุบัน และบัญชีกู้ยืมที่กำหนด "
 			+ "/ ใช้เรียกเมื่อมีการเข้าถึงเมนู 'ตารางผ่อนชำระ' "
 			+ "โดยคืนเป็นตารางลำดับการชำระเงินรายปี")
 	@ApiDocHeaderAuthorized
@@ -106,7 +120,10 @@ public class PaymentController {
 		return InstallmentSchedule.getExampleInstallmentSchedule();
 	}
 	
-	@ApiOperation(value="API สำหรับดึงข้อมูลประวัติการชำระเงินตามผู้ใช้ปัจจุบัน และบัญชีกู้ยืมที่กำหนด "
+	private final String getPaymentHistory = "getPaymentHistory";
+	@Testable
+	@ApiOperation(value=getPaymentHistory,
+			notes="API สำหรับดึงข้อมูลประวัติการชำระเงินตามผู้ใช้ปัจจุบัน และบัญชีกู้ยืมที่กำหนด "
 			+ "/ ใช้เรียกเมื่อมีการเข้าถึงเมนู 'รายการย้อนหลัง'")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized

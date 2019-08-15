@@ -1,6 +1,7 @@
 package th.co.ktb.dsl.model.postpone;
 
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -25,8 +26,32 @@ public class PostponeRequestCreate {
 	@JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss") Date docSubmitDue;
 
 	@ApiModelProperty(position = 12, required=false)
-	Double income; // example of additional info
+	AdditionalRequestInfo additionInfo;
 	
 	@ApiModelProperty(position = 15, notes="Reason - (Free text, up to 1,000 character)", required=false)
 	String reason; // example of additional info
+}
+
+@Data
+class AdditionalRequestInfo {
+	@ApiModelProperty(position = 1, required=false)
+	Double income; // example of additional info
+	
+	@ApiModelProperty(position = 2, required=false)
+	List<FamilyMember> lookAfterMember;
+}
+
+@Data
+class FamilyMember {
+	@ApiModelProperty(position = 1, required=true)
+	FamilyMemberStatus type; // Senility, 
+	
+	@ApiModelProperty(position = 2, required=true)
+	Integer number;
+}
+
+enum FamilyMemberStatus {
+	SENILITY,
+	DISABILITY,
+	SICKNESS
 }

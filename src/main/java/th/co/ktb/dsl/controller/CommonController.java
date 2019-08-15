@@ -23,12 +23,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.google.common.net.HttpHeaders;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized;
+import th.co.ktb.dsl.mock.Testable;
 import th.co.ktb.dsl.model.common.DocumentType;
 import th.co.ktb.dsl.model.common.DownloadableDocument;
 
@@ -36,13 +35,13 @@ import th.co.ktb.dsl.model.common.DownloadableDocument;
 @RestController
 @RequestMapping("/api/v1/dms")
 public class CommonController {
-
-	@ApiOperation(value="API สำหรับอัพโหลดเอกสาร ")
+	
+	private final String uploadRequestDocument = "uploadRequestDocument";
+	@Testable
+	@ApiOperation(value=uploadRequestDocument,
+			notes="API สำหรับอัพโหลดเอกสาร ")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", dataTypeClass = String.class, example = "Bearer <access_token>")
-	})
 	@PostMapping(path="/document")
 	@ResponseStatus(HttpStatus.CREATED)
 	public DownloadableDocument uploadRequestDocument(
@@ -61,12 +60,12 @@ public class CommonController {
         return new DownloadableDocument(docID, name, file.getContentType(), file.getSize());
 	}
 
-	@ApiOperation(value="API สำหรับลบเอกสาร")
+	private final String removeRequestDocument = "removeRequestDocument";
+	@Testable
+	@ApiOperation(value=removeRequestDocument,
+			notes="API สำหรับลบเอกสาร")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", dataTypeClass = String.class, example = "Bearer <access_token>"),
-	})
 	@DeleteMapping(path="/document/{docID}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void removeRequestDocument(
@@ -75,13 +74,13 @@ public class CommonController {
 	) {
 		return;
 	}
-		
-	@ApiOperation(value="API สำหรับดาวน์โหลดเอกสาร")
+
+	private final String getDocument = "getDocument";
+	@Testable
+	@ApiOperation(value=getDocument,
+			notes="API สำหรับดาวน์โหลดเอกสาร")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, allowEmptyValue = false, paramType = "header", dataTypeClass = String.class, example = "Bearer <access_token>"),
-	})
 	@GetMapping(path="/document/{docID:.+}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<byte[]> getDocument(

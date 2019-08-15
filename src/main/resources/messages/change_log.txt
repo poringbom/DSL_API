@@ -1,9 +1,14 @@
+2019-08-14
+	- เพิ่ม framework สำหรับ Testing 
+	- แก้ไข API module Payment ให้สามารถทดสอบตาม framework Testing ได้
+
 2019-08-13
 	- เพิ่ม code ให้ HTTP-Request-Header 'Access-Control-Allow-Origin: *'
 	- แก้ไข mock response สำหรับ API-createPaymentTeller() คืน ตัวอย่าง PDF ไฟล์
 	- แก้ไข field RequestID เป็น RequestNo สำหรับ model ที่ใช้มใน API Postpone และ Suspend
 	- เพิ่ม HTT-Request-Header 'ApiMetada' ที่ขาดไปใน API-createPostponeRequest() และ API-createSuspendRequest()
 	- เพิ่ม API Spec. DMS-Common (download/upload/get)
+	- แก้ไข Model-PostponeRequestCreate เพิ่มฟิลด์ additionInfo เพื่อเก็บข้อมูลสำหรับขอผ่อนผันในเหตุผลดูแลบุคคลในครอบครัว
 
 2019-08-12
 	- เพิ่มตัวอย่างกลไกตรวจสอบ field ใน HTT-Request-Header 'ApiMetada'

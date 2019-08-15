@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.core.io.Resource;
 
@@ -30,4 +32,22 @@ public class Utilities {
         }
         return baos.toByteArray();
 	}
+	
+
+    public static final String ROOT_PACKAGE_NAME = DSLApiApplication.class.getPackage().getName();
+    public static Throwable filterStackTrace(Throwable t) {
+    		DSLApiApplication.class.getPackage().getName();
+		List<StackTraceElement> stList= new ArrayList<StackTraceElement>();
+		if (t != null) {
+			for(StackTraceElement s : t.getStackTrace()) {
+				String clzName = s.getClassName();
+				if (clzName.startsWith(ROOT_PACKAGE_NAME) && !clzName.contains("CGLIB$$")){
+					stList.add(s);
+				} 
+			}
+			t.setStackTrace(stList.toArray(new StackTraceElement[0]));
+			if (t.getCause() != null) filterStackTrace(t.getCause());
+		}	
+		return t;
+    }
 }

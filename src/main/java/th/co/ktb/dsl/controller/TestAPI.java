@@ -1,8 +1,6 @@
 package th.co.ktb.dsl.controller;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -27,6 +25,7 @@ import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized;
+import th.co.ktb.dsl.mock.Testable;
 import th.co.ktb.dsl.model.annotation.ApiMetadata;
 import th.co.ktb.dsl.model.common.ApiMetadataRequest;
 import th.co.ktb.dsl.model.common.TestModel;
@@ -40,7 +39,9 @@ import th.co.ktb.dsl.service.TestService;
 public class TestAPI {
 	@Autowired TestService service;
 	
-	@ApiOperation("Get opeation.")
+	private final String GET_TEST = "getTest()";
+	@Testable
+	@ApiOperation(nickname=GET_TEST, value="Get opeation.")
 	@ApiResponses(value = {
 	        @ApiResponse(code = 200, message = "Successful"),
 	        @ApiResponse(code = 401, message = "No authorization"),
