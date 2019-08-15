@@ -28,8 +28,6 @@ public class PostponeRequestCreate {
 	@ApiModelProperty(position = 12, required=false)
 	AdditionalRequestInfo additionInfo;
 	
-	@ApiModelProperty(position = 15, notes="Reason - (Free text, up to 1,000 character)", required=false)
-	String reason; // example of additional info
 }
 
 @Data
@@ -39,6 +37,9 @@ class AdditionalRequestInfo {
 	
 	@ApiModelProperty(position = 2, required=false)
 	List<FamilyMember> lookAfterMember;
+
+	@ApiModelProperty(position = 10, notes="Reason - (Free text, up to 1,000 character)", required=false)
+	String reason; // example of additional info
 }
 
 @Data

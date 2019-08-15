@@ -123,8 +123,12 @@ public class ApiTestableAspect {
 		    				mockSQL.addMockRequest(new MockRequestLog(responseTxID,
 		    						remoteHost, remoteAddr, requestUrl, 
 		    						reqData, response.getMockID()));
-
-		    				String responseBody = mockSQL.getMockResponseBody(response.getResponseBodyID());
+		    				String responseBody;
+		    				if (response.getResponseBodyID() != null) {
+		    					responseBody = mockSQL.getMockResponseBody(response.getResponseBodyID());
+		    				} else {
+		    					responseBody = null;
+		    				}
 			    			if (response.responseStatus >= 200 && response.responseStatus < 300) {
 			    				log.error("Return mock response ID -> {}",response.getMockID()	);
 			    				Object o = mapper.readValue(responseBody, method.getReturnType());

@@ -12,9 +12,9 @@ public class SuspendSummary {
 
 //	@ApiModelProperty(position = 2, required=false)
 //	boolean overdueFlag = false;
-
-	@ApiModelProperty(position = 3, required=false)
-	Integer numApprovedRequest = 0;
+	
+//	@ApiModelProperty(position = 2, required=true)
+//	boolean onSuspendPeriod = false;
 
 	@ApiModelProperty(position = 8)
 	SuspendInfo activeRequest;
