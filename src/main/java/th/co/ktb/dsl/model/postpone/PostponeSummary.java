@@ -11,7 +11,7 @@ public class PostponeSummary {
 	boolean gracePeriod = false;
 	
 	@ApiModelProperty(position = 2, required=true)
-	boolean onSuspendPerid = false;
+	boolean onSuspendPeriod = false;
 
 	@ApiModelProperty(position = 3, required=false)
 	boolean overdueFlag = false;
