@@ -1,6 +1,6 @@
 package th.co.ktb.dsl.config;
 
-import java.text.MessageFormat;
+//import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,7 +26,7 @@ import th.co.ktb.dsl.model.common.ApiMetadataRequest;
 @EnableSwagger2
 public class SwaggerConfig {    
 
-	private final String lastUpdateString = "2019-08-09";
+	private final String lastUpdateString = "2019-08-16";
 	
 	@Bean
 	UiConfiguration uiConfig() {
@@ -52,9 +52,10 @@ public class SwaggerConfig {
     }
 
     @Bean
+	@SuppressWarnings("unused")
     public ApiInfo apiEndPointsInfo() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    		Date lastUpdate = null;
+		Date lastUpdate = null;
 		try { lastUpdate = sdf.parse(lastUpdateString); } catch (ParseException e) {}
     		
 //		String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -65,7 +66,8 @@ public class SwaggerConfig {
         return new ApiInfoBuilder().title("Digital Student Loan (DSL) RESTful API")
             .description("Currently support only Debt Management System (DMS)")
             .contact(new Contact("A.Pongchet", "https://github.com/pongchetgithub/DSL_API", "pongchet@orcsoft.co.th"))
-            .license( (new MessageFormat("Last updated: {0,date} ")).format(new Object [] {lastUpdate}) )
+//            .license( (new MessageFormat("Last updated: {0,date} ")).format(new Object [] {lastUpdate}) )
+            .license( "Change log ..." )
             .licenseUrl("/api/v1/changelog")
             .version("1.0.0 - Draft")
             .build();
