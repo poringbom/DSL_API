@@ -31,29 +31,29 @@ import th.co.ktb.dsl.model.authen.VerifyOTP;
 @RequestMapping("/api/v1")
 
 public class AuthenticationController {
-	
-	private final String login = "login";
+
+	private final String signIn = "signIn";
 	@Testable
-	@ApiOperation(value=login,
-			notes="API สำหรับการ Authentication โดยผลสำเร็จจะแนบ Token กลับมาด้วยใน header response ")
+	@ApiOperation(value=signIn,
+			notes="API สำหรับการ sign in โดยผลสำเร็จจะแนบ Token กลับมาด้วยใน header response ")
 	@ApiDocHeader
 	@ApiDocResponseNewAuthorized
-	@PostMapping("/login")
+	@PostMapping("/signIn")
 	@ResponseStatus(HttpStatus.OK)
-	public LoginResponse login(
-		@RequestBody LoginRequest login
+	public LoginResponse signIn(
+		@RequestBody LoginRequest userLogin
 	) {
 		return new LoginResponse();
 	}
 	
-	private final String logout = "logout";
+	private final String signOut = "signOut";
 	@Testable
-	@ApiOperation(value=logout,
-			notes="API สำหรับการ logout ")
+	@ApiOperation(value=signOut,
+			notes="API สำหรับการ sign out ")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
-	@PostMapping("/logout")
-	public void logout(
+	@PostMapping("/signOut")
+	public void signOut(
 	) {}
 	
 	private final String refreshToken = "refreshToken";
@@ -75,11 +75,9 @@ public class AuthenticationController {
 	@ApiDocResponseAuthorized2Authen
 	@GetMapping(path="/verifyUser")
 	@ResponseStatus(HttpStatus.OK)
-	public VerifyOTP verifyUser (
-		@ApiParam(name="requestOTP", value="OTP request information", required=true, type="body") @RequestBody RequestVerifyOTP requestOTP
-	) {
-		return new VerifyOTP();
-	}
+	public void verifyUser (
+		@RequestBody LoginRequest userLogin
+	) {}
 	
 	private final String requestOTPVerify = "requestOTPVerify";
 	@Testable
