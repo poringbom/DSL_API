@@ -76,7 +76,6 @@ public class ApiTestableAspect {
 		    } else if ("".equals(apiOperation.value())) {
 		    		log.info("No @apiOpeation.value"); return jp.proceed();
 		    } else {
-		    		log.info("dbTime = {}",mockSQL.getDBTime());
 		    		HttpServletRequest httpRequest = 
 		    				((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes())
 		    				.getRequest();
@@ -93,13 +92,18 @@ public class ApiTestableAspect {
 		    		log.info("Service = {}, Channel = {}, Test-Scenario = {}", apiName, channel, scenario);
 		    		ObjectMapper mapper = new ObjectMapper();
 		    		Class returnType = method.getReturnType();
-		    		log.info("({} != {}) is {}",returnType,ResponseEntity.class,(returnType != ResponseEntity.class));
-		    		
+//		    		log.info("({} != {}) is {}",returnType,ResponseEntity.class,(returnType != ResponseEntity.class));
 		    		if (returnType == ResponseEntity.class) {
 		    			log.info("return type -> ResponseEntity");
 		    			return new ResponseEntity(HttpStatus.OK);
 		    		} else {
 		    			log.info("return type -> {}",returnType);
+		    			String testDev = httpRequest.getHeader("Test-Dev");
+		    			String temp;
+		    			if (testDev != null && !"".equals(testDev) && (temp = mockSQL.getTestScenario(testDev)) != null) {
+		    				log.info("Override 'Test-Scenario' by 'Test-Dev' config -> {}",temp);
+		    				scenario = temp;
+		    			}
 		    			MockResponse response = mockSQL.getMockResponse(apiName, channel, scenario);
 		    			if (response != null) {
 		    				String mockID = String.valueOf(response.getMockID());
@@ -130,7 +134,7 @@ public class ApiTestableAspect {
 		    					responseBody = null;
 		    				}
 			    			if (response.responseStatus >= 200 && response.responseStatus < 300) {
-			    				log.error("Return mock response ID -> {}",response.getMockID()	);
+			    				log.error("Return MockID -> {}, (ResponseID: {})",response.getMockID(), responseTxID);
 			    				Object o = mapper.readValue(responseBody, method.getReturnType());
 				    			return o;
 			    			} else {
@@ -144,7 +148,6 @@ public class ApiTestableAspect {
 		    			}
 		    		}
 		    }
-		    
 		} catch (Throwable t) {
 			if (t instanceof TestableException) throw t;
 			else {

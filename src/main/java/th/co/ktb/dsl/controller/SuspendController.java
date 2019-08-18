@@ -28,7 +28,7 @@ import th.co.ktb.dsl.model.suspend.SuspendRequestCreate;
 import th.co.ktb.dsl.model.suspend.SuspendRequestUpdate;
 import th.co.ktb.dsl.model.suspend.SuspendSummary;
 
-@Api(tags="DSL-DMS : Suspend API", description="API หมวดเกี่ยวกับคำร้องเพื่อระงับการชำระเงิน")
+@Api(tags="2.4. DSL-DMS : Suspend API", description="API หมวดเกี่ยวกับคำร้องเพื่อระงับการชำระเงิน")
 @RestController
 @RequestMapping("/api/v1/dms/suspend")
 public class SuspendController {

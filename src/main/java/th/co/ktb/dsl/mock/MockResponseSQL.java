@@ -2,6 +2,7 @@ package th.co.ktb.dsl.mock;
 
 import java.util.Date;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -49,4 +50,15 @@ public interface MockResponseSQL {
 	@Insert(INSERT_MOCK_REQUEST)
 	@SelectKey(statement="SELECT @@identity", keyProperty="logID", before=false, resultType=Long.class)
 	public void addMockRequest(MockRequestLog log);
+	
+	public final String DELETE_LOG = "" +
+			" DELETE TOP (50) l " + 
+			" FROM LogApiTesting l " + 
+			" WHERE DATEDIFF(HOUR,l.RequestDTM,#{current}) >= #{numHr} ";
+	@Delete(DELETE_LOG)
+	public Integer deleteLogResponse(@Param("numHr") Integer numHr, @Param("current") Date current);
+	
+	public final String GET_TEST_SCENARIO = "SELECT TestScenario FROM TestProxyConfig WHERE TestDev = #{dev}";
+	@Select(GET_TEST_SCENARIO)
+	public String getTestScenario(@Param("dev") String dev);
 }

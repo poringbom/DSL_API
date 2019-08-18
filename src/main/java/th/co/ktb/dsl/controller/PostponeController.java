@@ -29,7 +29,7 @@ import th.co.ktb.dsl.model.postpone.PostponeRequestCreate;
 import th.co.ktb.dsl.model.postpone.PostponeRequestUpdate;
 import th.co.ktb.dsl.model.postpone.PostponeSummary;
 
-@Api(tags="DSL-DMS : Postpone API", description="API หมวดเกี่ยวกับคำร้องเพื่อการผ่อนผัน")
+@Api(tags="2.3. DSL-DMS : Postpone API", description="API หมวดเกี่ยวกับคำร้องเพื่อการผ่อนผัน")
 @RestController
 @RequestMapping("/api/v1/dms/postpone")
 public class PostponeController {

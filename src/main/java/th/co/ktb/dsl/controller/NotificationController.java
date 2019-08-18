@@ -17,7 +17,7 @@ import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized;
 import th.co.ktb.dsl.mock.Testable;
 import th.co.ktb.dsl.model.notification.NotificationList;
 
-@Api(tags="DSL : Notification API", description="API หมวดเกี่ยวกับการแจ้งเตือน Notification")
+@Api(tags="0.2. DSL : Notification API", description="API เกี่ยวกับการแจ้งเตือน Notification")
 @RestController
 @RequestMapping("/api/v1/notification")
 public class NotificationController {

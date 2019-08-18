@@ -1,9 +1,13 @@
+2019-08-16
+	- เพิ่มกลไกแทนที่ HTTP-Request-Header 'Test-Scenario' ด้วย scenario ที่แมพได้จาก HTTP-Request-Header 'Test-Dev' (หากมีการกำหนดมาค่า และมี DB configuration)
+	- จัดลำดับกลุ่ม API ตาม Business Functional.
+	- เพิ่ม API Spec. User
+
 2019-08-15
 	- แก้ไข Model-PostponeRequestUpdate เพิ่มฟิลด์ 'docSubmitDue'
 	- แก้ไข Model-PostponeSummary แก้ไขฟิลด์ชื่อสะกดผิด 'onPostponePeriod'
 	- แก้ไข Model-PostponeRequestCreate ย้ายตำแหน่งฟิลด์ 'reason' ไปอยู่ใน 'additionInfo'
 	- เพิ่ม API Spec. Notification (list/acknowledge)
-	- เพิ่ม API-requestOTPVerify() สำหรับการขอยืนยันตัวตนแบบ OTP
 
 2019-08-14
 	- เพิ่ม framework สำหรับ Testing 

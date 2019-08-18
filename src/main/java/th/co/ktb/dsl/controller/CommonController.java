@@ -31,7 +31,7 @@ import th.co.ktb.dsl.mock.Testable;
 import th.co.ktb.dsl.model.common.DocumentType;
 import th.co.ktb.dsl.model.common.DownloadableDocument;
 
-@Api(tags="DSL-DMS : Common API", description="API ทั่วไปอาจถูกนำไปใช้ในหลาย module")
+@Api(tags="2.1. DSL-DMS : Common API", description="API ทั่วไปอาจถูกนำไปใช้ในหลาย module")
 @RestController
 @RequestMapping("/api/v1/dms")
 public class CommonController {
