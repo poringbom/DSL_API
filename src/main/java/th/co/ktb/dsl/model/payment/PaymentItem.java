@@ -33,5 +33,5 @@ public class PaymentItem {
 	String receipt; // link, id, ... 
 
 	@ApiModelProperty(position = 7)
-	PayType type = PayType.Pay;
+	PayType type = PayType.PAY;
 }
