@@ -22,4 +22,13 @@ public class PersonalInfo {
 
 	@ApiModelProperty(position = 4, required=true)
 	String citizenID;
+	
+	@ApiModelProperty(position = 5, required=true)
+	String email;
+
+	@ApiModelProperty(position = 6, required=true)
+	String mobileNo;
+
+	@ApiModelProperty(position = 7, required=true)
+	String tel;
 }

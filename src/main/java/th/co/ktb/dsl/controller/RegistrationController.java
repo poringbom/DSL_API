@@ -26,8 +26,8 @@ import th.co.ktb.dsl.model.user.PasswordReset.PasswordChange;
 import th.co.ktb.dsl.model.user.PinSetup;
 import th.co.ktb.dsl.model.user.PinSetup.PinChange;
 
-//@Api(tags="1.2. DSL-RMS : Registration API", 
-//	description="API เกี่ยวกับการลงทะเบียนใช้งาน")
+@Api(tags="1.2. DSL-RMS : Registration API", 
+	description="API เกี่ยวกับการลงทะเบียนใช้งาน")
 @RestController
 @RequestMapping("/api/v1/rms")
 public class RegistrationController {

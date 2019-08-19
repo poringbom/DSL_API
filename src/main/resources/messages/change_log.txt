@@ -1,3 +1,14 @@
+2019-08-19
+	- แก้ไข API-getPaymentHistory() เพิ่มพารามิเตอร์ 'includeRec' เพื่อเพิ่มเงื่อนไขในการเรียกรายการข้อมูลรวมถึงเงินที่ได้รับจากกองทุน (รองรับการเรียก API จาก module Dashboard)
+	- แก้ไข Model-PaymentHistory เพิ่มฟิลด์ 'filterYear' คือรายการปี option ที่ผู้ใช้เลือกได้ (รองรับการเรียก API จาก module Dashboard)
+	- แก้ไข Model-PaymentItem เพิ่มฟิลด์ 'type' คือการชำระเงิน จาก ผู้กู้แก้กองทุน หรือ ผู้กู้ได้รับเงินจากกองทุน (รองรับการเรียก API จาก module Dashboard)
+	- เพิ่ม API-listUserAccount() สำหรับเรียกดูรายการบัญชีเงินกู้ของผู้ใช้ พร้อมทั้งข้อมูลพื้นฐาน (รองรับการเรียก API จาก module Dashboard)
+	- เพิ่ม API-getUserInfo() สำหรับเรียกดูรายละเอียดข้อมูลของผู้ใช้ปัจจุบัน
+	- เพิ่ม API-updateUserInfo() สำหรับปรับปรุงข้อมูลพื้นฐานของผู้ใช้ (รหัสบัตรประชาชน, ชื่อ, สกุล, วันเกิด, ข้อมูลติดต่อ)
+	- เพิ่ม API-updateUserAddress() สำหรับปรับปรุงข้อมูลที่อยู่ (ที่อยู่ตามทะเบียนบ้าน, ที่อยู่ปัจจุบัน, ที่อยู่จัดส่งเอกสาร)
+	- เพิ่ม API-updateUserSpouse() สำหรับปรับปรุงข้อมูลคู่สมรส
+	- เพิ่ม API-updateUserWorkInfo() สำหรับปรับปรุงข้อมูลการทำงาน
+	
 2019-08-16
 	- เพิ่มกลไกแทนที่ HTTP-Request-Header 'Test-Scenario' ด้วย scenario ที่แมพได้จาก HTTP-Request-Header 'Test-Dev' (หากมีการกำหนดมาค่า และมี DB configuration)
 	- จัดลำดับกลุ่ม API ตาม Business Functional.

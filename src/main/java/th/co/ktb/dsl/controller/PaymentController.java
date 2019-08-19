@@ -38,8 +38,7 @@ public class PaymentController {
 	@Testable
 	@ApiOperation(value=getPaymentInfo, 
 			notes="API สำหรับดึงข้อมูลกำหนดการชำระเงินตามผู้ใช้ปัจจุบัน และบัญชีกู้ยืมที่กำหนด "
-			+ "/ ใช้เรียกเมื่อมีการเข้าถึงเมนู 'ชำระเงิน'"
-			+ "/ ตัวอย่าง response สำหรับกรณีไม่มีกำหนดชำระ: acctNo = 1, กรณีมีกำหนดขำระ: acctNo = 2, ที่เหลือกรณีมีค้างชำระ")
+			+ "/ ใช้เรียกเมื่อมีการเข้าถึงเมนู 'ชำระเงิน'")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
 	@GetMapping(path="/{loanType}/{acctNo}", produces=MediaType.APPLICATION_JSON_VALUE)
@@ -131,9 +130,18 @@ public class PaymentController {
 	public PaymentHistory getPaymentHistory(
 		@ApiDocParamLoanType @PathVariable("loanType") LoanType loanType,
 		@ApiDocParamAcctNo @PathVariable("acctNo") String acctNo,
-		@ApiParam(type="query", value="Data offset", required=false, defaultValue="1") @RequestParam(name="offset", required=false) String offset,
-		@ApiParam(type="query", value="Limit data size (-1 = unlimit)", required=false, defaultValue="-1") @RequestParam(name="size", required=false) String size,
-		@ApiParam(type="query", value="Filter year (-1 = all, default is current year)", required=false, defaultValue="2019") @RequestParam(name="year", required=false) String year
+		
+		@ApiParam(type="query", value="Data offset", required=false, defaultValue="1") 
+		@RequestParam(name="offset", required=false) String offset,
+		
+		@ApiParam(type="query", value="Limit data size (-1 = unlimit)", required=false, defaultValue="-1") 
+		@RequestParam(name="size", required=false) String size,
+		
+		@ApiParam(type="query", value="Filter year (-1 = all, default is current year)", required=false, defaultValue="2019") 
+		@RequestParam(name="year", required=false) String year,
+		
+		@ApiParam(type="query", value="Include money receive record from DSL", required=false, defaultValue="false") 
+		@RequestParam(name="includeRec", required=false, defaultValue="false") Boolean includeReceive
 	) {
 		return PaymentHistory.getExamplePaymentHistory(Integer.parseInt(acctNo));
 	}

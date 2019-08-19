@@ -30,7 +30,7 @@ public class UserInfo {
 	UserAddresses addresses;
 	
 	@ApiModelProperty(position = 10, required=false)
-	WorkingAddressInfo workingAddr; 
+	WorkInfo workInfo; 
 
 	@ApiModelProperty(position = 11, required=false)
 	SpouseInfo spouse;

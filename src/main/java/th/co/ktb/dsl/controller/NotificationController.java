@@ -1,9 +1,12 @@
 package th.co.ktb.dsl.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -17,8 +20,8 @@ import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized;
 import th.co.ktb.dsl.mock.Testable;
 import th.co.ktb.dsl.model.notification.NotificationList;
 
-@Api(tags="0.2. DSL : Notification API", description="API เกี่ยวกับการแจ้งเตือน Notification")
-@RestController
+//@Api(tags="0.2. DSL : Notification API", description="API เกี่ยวกับการแจ้งเตือน Notification")
+//@RestController
 @RequestMapping("/api/v1/notification")
 public class NotificationController {
 	
@@ -43,10 +46,10 @@ public class NotificationController {
 			notes="API สำหรับที่รับทราบรายการแจ้งเตือน ")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
-	@PatchMapping("/{notfID}")
+	@PatchMapping("/")
 	@ResponseStatus(HttpStatus.OK)
 	public void acknowledgeNotification(
-		@ApiParam(name="notfID", required=true) @PathVariable(name="notfID", required=true) String notfID
+		@ApiParam(name="List of accept notification.", type="body", required=true) @RequestBody(required=true) List<String> listNotfID
 	) {
 		return;
 	}

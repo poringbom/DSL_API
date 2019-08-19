@@ -23,10 +23,11 @@ import th.co.ktb.dsl.model.authen.ChallengeOTP;
 import th.co.ktb.dsl.model.authen.LoginRequest;
 import th.co.ktb.dsl.model.authen.LoginResponse;
 import th.co.ktb.dsl.model.authen.RequestVerifyOTP;
+import th.co.ktb.dsl.model.authen.UserRegisterInfo;
 import th.co.ktb.dsl.model.authen.VerifyOTP;
 
-//@Api(tags="1.1. DSL-RMS : Authentication API", 
-//	description="API เกี่ยวกับการยืนยันตัวตนผู้ใช้ และการลงทะเบียนผู้ใช้ ")
+@Api(tags="1.1. DSL-RMS : Authentication API", 
+	description="API เกี่ยวกับการยืนยันตัวตนผู้ใช้ และการลงทะเบียนผู้ใช้ ")
 @RestController
 @RequestMapping("/api/v1")
 
@@ -103,6 +104,19 @@ public class AuthenticationController {
 		@ApiParam(name="challengeOTP", value="Submited OTP", required=true, type="body") @RequestBody ChallengeOTP challengeOTP
 	) {
 		
+	}
+	
+	private final String requestEmailVerify = "requestEmailVerify";
+	@Testable
+	@ApiOperation(value=requestEmailVerify,
+			notes="API สำหรับขอยืนยันตัวตน ด้วย Email / สำหรับกรณียืนยันตัวตนก่อนมี Authorization (การลงทะเบียนผู้ใช้)​")
+	@ApiDocHeaderOptionAuthorized
+	@GetMapping(path="/email/verify")
+	@ResponseStatus(HttpStatus.OK)
+	public VerifyOTP requestEmailVerify(
+		@ApiParam(name="userRegister", value="User registration with verify by email", required=true, type="body") @RequestBody UserRegisterInfo userRegister
+	) {
+		return new VerifyOTP();
 	}
 
 }

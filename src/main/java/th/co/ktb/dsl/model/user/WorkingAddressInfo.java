@@ -8,9 +8,9 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper=false)
 public class WorkingAddressInfo extends AddressInfo {
 
-	@ApiModelProperty(position = 0, required = true)
-	WorkInfo workInfo;
-	
 	@ApiModelProperty(position = 20, required = true)
 	String workTel;
+	
+	@ApiModelProperty(position = 21, required = true)
+	String workTelExt;
 }
