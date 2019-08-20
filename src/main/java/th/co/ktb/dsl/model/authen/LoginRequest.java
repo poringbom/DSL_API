@@ -7,7 +7,7 @@ import lombok.Data;
 public class LoginRequest {
 	
 	@ApiModelProperty(position = 1, required=true)
-	String userID;
+	String username;
 
 	@ApiModelProperty(position = 2, required=true)
 	String password;

@@ -41,6 +41,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import th.co.ktb.dsl.Utilities;
 import th.co.ktb.dsl.config.ApiMetadataArgumentResolver;
+import th.co.ktb.dsl.exception.ApiException;
 import th.co.ktb.dsl.model.annotation.ApiMetadata;
 import th.co.ktb.dsl.model.common.ApiMetadataRequest;
 import th.co.ktb.dsl.model.common.ApiResponseError;
@@ -151,6 +152,7 @@ public class ApiTestableAspect {
 		} catch (Throwable t) {
 			if (t instanceof TestableException) throw t;
 			else {
+				Utilities.filterStackTrace(t);
 				log.error(t.getMessage(),t);
 				throw new TestableException(t);
 			}

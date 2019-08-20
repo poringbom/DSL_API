@@ -30,20 +30,27 @@ public class ApiErrorHandlerController extends ResponseEntityExceptionHandler {
 	
 	@ExceptionHandler({ ApiException.class, Exception.class })
 	public ResponseEntity<ApiResponseError> handleApiException (Exception ex) {
-		log.info("handleApiException() error instanceof {}",((UndeclaredThrowableException)ex).getUndeclaredThrowable().getClass());
-		log.info("TestableException = {}",(((UndeclaredThrowableException)ex).getUndeclaredThrowable() instanceof TestableException));
+		if (ex instanceof UndeclaredThrowableException) {
+			log.info("handleApiException() error instanceof {}",((UndeclaredThrowableException)ex).getUndeclaredThrowable().getClass());
+			log.info("TestableException = {}",(((UndeclaredThrowableException)ex).getUndeclaredThrowable() instanceof TestableException));
+		} else {
+			log.info("Exception instaneof {}",ex.getClass());
+		}
 		HttpStatus status;
 
 		if (ex instanceof BadRequestException) {
 			status = HttpStatus.BAD_REQUEST;
 			
 		} else if (ex instanceof ClientException) {
-			status = HttpStatus.CONFLICT;
+			String code = ((ClientException) ex).getCode().substring(0,3);
+			status = HttpStatus.valueOf(Integer.parseInt(code));
+//			status = HttpStatus.CONFLICT;
 			
 		} else if (ex instanceof ServerException) {
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 			
-		} else if (((UndeclaredThrowableException)ex).getUndeclaredThrowable() instanceof TestableException) {
+		} else if (ex instanceof UndeclaredThrowableException &&
+				((UndeclaredThrowableException)ex).getUndeclaredThrowable() instanceof TestableException) {
 			TestableException t = (TestableException) ((UndeclaredThrowableException)ex).getUndeclaredThrowable();
 			ResponseEntity<ApiResponseError> ret;
 			if (t.getApiResponseError() != null) {

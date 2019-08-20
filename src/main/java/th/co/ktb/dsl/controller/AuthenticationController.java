@@ -1,5 +1,8 @@
 package th.co.ktb.dsl.controller;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,10 +21,12 @@ import th.co.ktb.dsl.apidoc.ApiDocHeaderOptionAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized2Authen;
 import th.co.ktb.dsl.apidoc.ApiDocResponseNewAuthorized;
+import th.co.ktb.dsl.mock.MockService;
 import th.co.ktb.dsl.mock.Testable;
 import th.co.ktb.dsl.model.authen.ChallengeOTP;
 import th.co.ktb.dsl.model.authen.LoginRequest;
 import th.co.ktb.dsl.model.authen.LoginResponse;
+import th.co.ktb.dsl.model.authen.LogoutRequest;
 import th.co.ktb.dsl.model.authen.RequestVerifyOTP;
 import th.co.ktb.dsl.model.authen.UserRegisterInfo;
 import th.co.ktb.dsl.model.authen.VerifyOTP;
@@ -32,9 +37,11 @@ import th.co.ktb.dsl.model.authen.VerifyOTP;
 @RequestMapping("/api/v1")
 
 public class AuthenticationController {
-
+	
+	@Autowired MockService mockService;
+	
 	private final String signIn = "signIn";
-	@Testable
+//	@Testable
 	@ApiOperation(value=signIn,
 			notes="API สำหรับการ sign in โดยผลสำเร็จจะแนบ Token กลับมาด้วยใน header response ")
 	@ApiDocHeader
@@ -42,9 +49,12 @@ public class AuthenticationController {
 	@PostMapping("/signIn")
 	@ResponseStatus(HttpStatus.OK)
 	public LoginResponse signIn(
-		@RequestBody LoginRequest userLogin
-	) {
-		return new LoginResponse();
+		@RequestBody LoginRequest userLogin,
+		HttpServletResponse response
+	) throws Exception {
+		LoginResponse rt = mockService.signIn(userLogin);
+		response.setHeader("Authorization", "Bearer xxx");
+		return rt;
 	}
 	
 	private final String signOut = "signOut";
@@ -55,6 +65,7 @@ public class AuthenticationController {
 	@ApiDocResponseAuthorized
 	@PostMapping("/signOut")
 	public void signOut(
+		@RequestBody LogoutRequest userLogout
 	) {}
 	
 	private final String refreshToken = "refreshToken";
@@ -66,6 +77,8 @@ public class AuthenticationController {
 	@ApiDocResponseNewAuthorized
 	@PutMapping("/token")
 	public void refreshToken(
+		@ApiParam(name="refreshToken",value="Access token และ Refresh token ปัจจุบัน (ที่ยังไม่หมดอายุ)", required=true, type="RefreshToken") 
+		@RequestBody LogoutRequest refreshToken
 	) {}
 	
 	private final String verifyUser = "verifyUser";

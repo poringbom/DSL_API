@@ -21,7 +21,7 @@ import th.co.ktb.dsl.model.annotation.ApiMetadata;
 			+ "src=<channel>;dest=<service-destination>;service=<api-sevice-name>", required = true, 
 			allowEmptyValue = false, paramType = "header", dataTypeClass = String.class, 
 			example = "src=android;dest=dsl-dms;service=payment"),
-	@ApiImplicitParam(name = "Verify-Token-Action", value = "Authenticated token to perform action.", required = true, 
+	@ApiImplicitParam(name = "Verify-Token-Action", value = "Token สำหรับตรวจสอบเพื่อดำเนินการบริการบางประเภท", required = true, 
 			allowEmptyValue = false, paramType = "header", dataTypeClass = String.class, 
 			example = "Token <action_token>"),
 })

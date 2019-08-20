@@ -18,7 +18,8 @@ import th.co.ktb.dsl.model.annotation.ApiMetadata;
 			+ "src=<channel>;dest=<service-destination>;service=<api-sevice-name>", required = true, 
 			allowEmptyValue = false, paramType = "header", dataTypeClass = String.class, 
 			example = "src=android;dest=dsl-dms;service=payment"),
-	@ApiImplicitParam(name = "X-Verify-Token", value = "Authenticated token to perform action.", 
-			required = true, paramType = "header", dataTypeClass = String.class),
+	@ApiImplicitParam(name = "Verify-Token-Action", value = "Token สำหรับตรวจสอบเพื่อดำเนินการบริการบางประเภท", required = true, 
+			allowEmptyValue = false, paramType = "header", dataTypeClass = String.class, 
+			example = "Token <action_token>"),
 })
 public @interface ApiDocHeaderNoAuthorized2Authen {}

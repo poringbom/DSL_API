@@ -9,17 +9,18 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import th.co.ktb.dsl.apidoc.ApiDocHeader;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized2Authen;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderNoAuthorized2Authen;
 import th.co.ktb.dsl.apidoc.ApiDocResponseNoAuthorized;
 import th.co.ktb.dsl.mock.Testable;
-import th.co.ktb.dsl.model.annotation.ApiMetadata;
+import th.co.ktb.dsl.model.authen.ActivateUserRequest;
+import th.co.ktb.dsl.model.authen.ActivateUserResponse;
 import th.co.ktb.dsl.model.authen.UserRegisterInfo;
+import th.co.ktb.dsl.model.authen.UserRegisterResponse;
 import th.co.ktb.dsl.model.user.ContactInfo;
 import th.co.ktb.dsl.model.user.PasswordReset;
 import th.co.ktb.dsl.model.user.PasswordReset.PasswordChange;
@@ -80,35 +81,27 @@ public class RegistrationController {
 	@Testable
 	@ApiOperation(value=registerUser,
 			notes="API สำหรับลงทะเบียนการใช้งานระบบด้วยบัตรประชาชน")
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = ApiMetadata.HEADER_NAME, value = "Metadata information of service request. syntax: "
-				+ "src=<channel>;dest=<service-destination>;service=<api-sevice-name>", required = true, 
-				allowEmptyValue = false, paramType = "header", dataTypeClass = String.class, 
-				example = "src=android;dest=dsl-dms;service=payment"),
-		@ApiImplicitParam(name = "X-Verify-Token", value = "Valid token for user registration, receive from OTP verification process.", 
-				required = false, paramType = "header", dataTypeClass = String.class),
-		@ApiImplicitParam(name = "X-Verify-OTP", value = "User input otp. syntax: "
-				+ "otp=<otp>;refID=<referenceID>", 
-				required = false, paramType = "header", dataTypeClass = String.class,
-				example = "otp=<otp>;refID=<referenceID>")
-	})
-	@ApiDocResponseNoAuthorized
+	@ApiDocHeaderNoAuthorized2Authen
 	@PostMapping("/register")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void registerUser(
-		@ApiParam(name="userInfo",type="body",required=true) @RequestBody UserRegisterInfo userInfo
+	@ResponseStatus(HttpStatus.OK)
+	public UserRegisterResponse registerUser(
+		@ApiParam(name="userInfo",type="body",required=true, value="ข้อมูลผู้ใช้สำหรับการลงทะเบียนใช้งาน") 
+		@RequestBody UserRegisterInfo userInfo
 	) {
-		return;
+		return null;
 	}
 
-	private final String registerUserByOpenID = "registerUserByOpenID";
+	private final String resendVerifyEmail = "resendVerifyEmail";
 	@Testable
-	@ApiOperation(value=registerUserByOpenID,hidden=true,
-			notes="API สำหรับลงทะเบียนการใช้งานผ่านช่องทาง OpenID")
-	@PostMapping("/register/openID")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void registerUserByOpenID(
-		
+	@ApiOperation(value=resendVerifyEmail,
+			notes="API สำหรับส่ง Email เพื่อยืนยันตัวตนเปิดการใช้งานผู้ใช้ในระบบ")
+	@ApiDocHeader
+	@ApiDocResponseNoAuthorized
+	@PostMapping("/email")
+	@ResponseStatus(HttpStatus.OK)
+	public void resendVerifyEmail(
+		@ApiParam(name="registerRef",type="body",required=true, value="Register reference ID") 
+		@RequestBody ActivateUserRequest registerRef
 	) {
 		return;
 	}
@@ -120,10 +113,25 @@ public class RegistrationController {
 	@ApiDocHeaderNoAuthorized2Authen
 	@ApiDocResponseNoAuthorized
 	@PostMapping("/activation")
+	@ResponseStatus(HttpStatus.OK)
+	public ActivateUserResponse activateUser(
+		@ApiParam(name="registerRef",type="body",required=true, value="Register reference ID") 
+		@RequestBody ActivateUserRequest registerRef
+	) {
+		return null;
+	}
+	
+/*
+	private final String registerUserByOpenID = "registerUserByOpenID";
+	@Testable
+	@ApiOperation(value=registerUserByOpenID,hidden=true,
+			notes="API สำหรับลงทะเบียนการใช้งานผ่านช่องทาง OpenID")
+	@PostMapping("/register/openID")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void activateUser(
-		@ApiParam(name="contactInfo",type="body",required=true) @RequestBody ContactInfo contactInfo
+	public void registerUserByOpenID(
+		
 	) {
 		return;
 	}
+*/
 }

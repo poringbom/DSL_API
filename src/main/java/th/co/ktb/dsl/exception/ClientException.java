@@ -5,7 +5,10 @@ import lombok.NoArgsConstructor;
 @SuppressWarnings("serial")
 @NoArgsConstructor
 public class ClientException extends ApiException {
-	String code = "409-000";
+	public ClientException(String code, String message) {
+		super.code = code;
+		this.message = message;
+	}
 	public ClientException(String message) {
 		this.message = message;
 	}

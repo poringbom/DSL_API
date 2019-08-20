@@ -13,9 +13,9 @@ import th.co.ktb.dsl.model.common.ApiResponseError;
 @Target(value={ElementType.METHOD,ElementType.TYPE})
 @Retention(value=RetentionPolicy.RUNTIME)
 @ApiResponses(value = {
-    @ApiResponse(code = 200, message = "OK", responseHeaders = {
-    		@ResponseHeader(name="Authorization", description="JWT Access Token", response=String.class), 
-	}),
+//    @ApiResponse(code = 200, message = "OK", responseHeaders = {
+//    		@ResponseHeader(name="Authorization", description="JWT Access Token", response=String.class), 
+//	}),
     @ApiResponse(code = 401, message = "Unauthorized", response = ApiResponseError.class),
     @ApiResponse(code = 500, message = "Internal server error", response = ApiResponseError.class)
 })

@@ -8,9 +8,13 @@ public enum PostponeReason {
 	LOOK_AFTER_FAMILY (5),
 	OTHER (6);
 	
-	@SuppressWarnings("unused")
 	private int value;  
 	private PostponeReason(int value){  
 		this.value=value;  
 	}  
+	
+	public Integer getRequestTopicID() {
+		return value;
+	}
+	
 }

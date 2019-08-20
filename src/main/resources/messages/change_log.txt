@@ -1,3 +1,8 @@
+2019-08-20
+	- เพิ่ม API-getRequestStatus() สำหรับเรียกดูข้อมูลคำขอต่างๆ (ผ่อนผัน,ระงับ,ลดหย่อนการหัก)​ ของผู้กู้ ที่อยู่ในกระบวนการก่อนการอนุมัติ (รองรับการเรียก API จาก module Dashboard)
+	- เพิ่ม API Spec. Authentication: API-signIn(), API-signOut(), API-refreshToken()
+	- เพิ่ม API Spec. Registration: API-registerUser(), API-activateUser(), API-resendVerifyEmail(), API-resetPassword(), API-resetPIN()
+
 2019-08-19
 	- แก้ไข API-getPaymentHistory() เพิ่มพารามิเตอร์ 'includeRec' เพื่อเพิ่มเงื่อนไขในการเรียกรายการข้อมูลรวมถึงเงินที่ได้รับจากกองทุน (รองรับการเรียก API จาก module Dashboard)
 	- แก้ไข Model-PaymentHistory เพิ่มฟิลด์ 'filterYear' คือรายการปี option ที่ผู้ใช้เลือกได้ (รองรับการเรียก API จาก module Dashboard)

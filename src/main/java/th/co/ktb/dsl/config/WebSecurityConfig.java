@@ -1,12 +1,15 @@
 package th.co.ktb.dsl.config;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 @EnableWebSecurity 
+@Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
 	String[] swagger_url = {
 			"/v2/api-docs",
             "/configuration/ui",
@@ -25,7 +28,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.requiresSecure()
 			.and()
 			.authorizeRequests()
-			.antMatchers("/api/v1/**").permitAll()
+			.antMatchers("/api/v1/signIn").permitAll()
 			.antMatchers("/messages/**").permitAll()
 			.anyRequest().authenticated()
 			.and()
@@ -38,4 +41,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.ignoring()
 				.antMatchers("/resources/**"); 
     }
+	
 }

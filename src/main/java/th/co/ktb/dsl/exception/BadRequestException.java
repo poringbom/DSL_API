@@ -19,6 +19,11 @@ public class BadRequestException extends ClientException{
 	ApiRequestInputType type;
 	String param;
 	
+	@Override
+	public String getCode() {
+		return code;
+	}
+	
 	public BadRequestException(ApiRequestInputType type, String param) {
 		this.type = type;
 		this.param = param;
