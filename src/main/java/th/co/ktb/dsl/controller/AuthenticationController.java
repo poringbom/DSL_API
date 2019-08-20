@@ -68,11 +68,10 @@ public class AuthenticationController {
 		@RequestBody LogoutRequest userLogout
 	) {}
 	
-	private final String refreshToken = "refreshToken";
+	private final String refreshTokens = "refreshToken";
 	@Testable
-	@ApiOperation(value=refreshToken,
-			notes="API สำหรับรีเฟรช Token กรณี Token ใกล้หมดอายุ "
-				+ "/ ในส่วน Backend ควร implement ตรวจสอบ Token หากใกล้หมดอายุ ควรบังคับให้ Frontend request service นี้เป็นลำดับแรกก่อนจะเรียก service ใดๆ ต่อไป")
+	@ApiOperation(value=refreshTokens,
+			notes="API สำหรับรีเฟรช Token ")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseNewAuthorized
 	@PutMapping("/token")
