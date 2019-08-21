@@ -42,7 +42,7 @@ public class AuthenticationController {
 	
 	private final String signIn = "signIn";
 //	@Testable
-	@ApiOperation(value=signIn,
+	@ApiOperation(value=signIn ,
 			notes="API สำหรับการ sign in โดยผลสำเร็จจะแนบ Token กลับมาด้วยใน header response ")
 	@ApiDocHeader
 	@ApiDocResponseNewAuthorized

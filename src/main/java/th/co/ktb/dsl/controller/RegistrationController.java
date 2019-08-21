@@ -1,6 +1,7 @@
 package th.co.ktb.dsl.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +22,7 @@ import th.co.ktb.dsl.model.authen.ActivateUserRequest;
 import th.co.ktb.dsl.model.authen.ActivateUserResponse;
 import th.co.ktb.dsl.model.authen.UserRegisterInfo;
 import th.co.ktb.dsl.model.authen.UserRegisterResponse;
+import th.co.ktb.dsl.model.authen.ValidateUserRequest;
 import th.co.ktb.dsl.model.user.ContactInfo;
 import th.co.ktb.dsl.model.user.PasswordReset;
 import th.co.ktb.dsl.model.user.PasswordReset.PasswordChange;
@@ -117,6 +119,21 @@ public class RegistrationController {
 	public ActivateUserResponse activateUser(
 		@ApiParam(name="registerRef",type="body",required=true, value="Register reference ID") 
 		@RequestBody ActivateUserRequest registerRef
+	) {
+		return null;
+	}
+	
+	private final String validateUser = "validateUser";
+	@Testable
+	@ApiOperation(value=validateUser,
+			notes="API สำหรับตรวจสอบข้อมูลผู้ลงทะเบียนถูกต้องตรงตามในข้อมูลกรมการปกครอง และไม่ซ้ำซ้อนกับข้อมูลในระบบ")
+	@ApiDocHeaderNoAuthorized2Authen
+	@ApiDocResponseNoAuthorized
+	@GetMapping("/validation")
+	@ResponseStatus(HttpStatus.OK)
+	public ActivateUserResponse validateUser(
+		@ApiParam(name="userInfo",type="body",required=true, value="ข้อมูลผู้ใช้สำหรับการลงทะเบียนใช้งาน") 
+		@RequestBody ValidateUserRequest userInfo
 	) {
 		return null;
 	}
