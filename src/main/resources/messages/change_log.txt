@@ -1,5 +1,11 @@
 2019-08-21
 	- เพิ่ม API-validateUser() สำหรับตรวจสอบข้อมูลผู้ลงทะเบียนถูกต้องตรงตามในข้อมูลกรมการปกครอง และไม่ซ้ำซ้อนกับข้อมูลในระบบ
+	- เพิ่ม code ให้ HTTP-Request-Header 'Access-Control-Allow-Methods: *'
+	- แก้ไขเวลาการทดสอบ request API จำเป็นต้อง authentication ให้ไม่จำเป็นต้อง authenticate.
+	- ยกเลิก API-getPostponeRequiredDocument(), API-getSuspendRequiredDocument() แทนที่ด้วย API-getRequiredDocument()
+	- ยกเลิก API-getPostponeRequestStatus(), API-getSuspendRequestStatus() แทนที่ด้วย API-getRequestSummary()
+	- เพิ่ม API-getPaymentReceipt() สำหรับเรียกดูใบเสร็จการชำระเงิน
+	- เพิ่มรายละเอียด และทีม ที่ดำเนินการพัฒนา API
 
 2019-08-20
 	- เพิ่ม API-getRequestStatus() สำหรับเรียกดูข้อมูลคำขอต่างๆ (ผ่อนผัน,ระงับ,ลดหย่อนการหัก)​ ของผู้กู้ ที่อยู่ในกระบวนการก่อนการอนุมัติ (รองรับการเรียก API จาก module Dashboard)

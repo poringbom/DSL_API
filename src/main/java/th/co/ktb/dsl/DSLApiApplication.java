@@ -17,6 +17,7 @@ public class DSLApiApplication {
 		ConfigurableApplicationContext ctx = SpringApplication.run(DSLApiApplication.class, args);
 		log.info("Datasource: {}",ctx.getBean(DataSource.class));
 		log.info("{} -> {}",PostponeReason.NO_INCOME,PostponeReason.NO_INCOME.getRequestTopicID());
+		
 	}
 
 }

@@ -17,6 +17,7 @@ import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized2Authen;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderNoAuthorized2Authen;
 import th.co.ktb.dsl.apidoc.ApiDocResponseNoAuthorized;
+import th.co.ktb.dsl.apidoc.Team;
 import th.co.ktb.dsl.mock.Testable;
 import th.co.ktb.dsl.model.authen.ActivateUserRequest;
 import th.co.ktb.dsl.model.authen.ActivateUserResponse;
@@ -37,7 +38,7 @@ public class RegistrationController {
 	
 	private final String resetPIN = "resetPIN";
 	@Testable
-	@ApiOperation(value=resetPIN,
+	@ApiOperation(value=resetPIN+Team.RMS_TEAM,
 			notes="API สำหรับกำหนด PIN ใหม่ (กรณีไม่เคยมีมาก่อน หรือ ผู้ใช้ลืม PIN)")
 	@ApiDocHeaderAuthorized2Authen
 	@PostMapping("/pin")
@@ -48,7 +49,7 @@ public class RegistrationController {
 	
 	private final String changePIN = "changePIN";
 	@Testable
-	@ApiOperation(value=changePIN,
+	@ApiOperation(value=changePIN+Team.RMS_TEAM,
 			notes="API สำหรับกำหนด PIN ใหม่ (ผุ้ใช้จำเป็นต้องทราบ PIN ปัจจุบัน)")
 	@ApiDocHeaderAuthorized
 	@PutMapping("/pin")
@@ -59,9 +60,9 @@ public class RegistrationController {
 	
 	private final String resetPassword = "resetPassword";
 	@Testable
-	@ApiOperation(value=resetPassword,
+	@ApiOperation(value=resetPassword+Team.RMS_TEAM,
 			notes="API สำหรับกำหนดรหัสผ่านเข้าใช้งานระบบใหม่ (กรณีผู้ใช้ลืม PIN)")
-	@ApiDocHeaderAuthorized2Authen
+	@ApiDocHeaderNoAuthorized2Authen
 	@PostMapping("/password")
 	@ResponseStatus(HttpStatus.CREATED)
 	public void resetPassword(
@@ -70,7 +71,7 @@ public class RegistrationController {
 	
 	private final String changePassword = "changePassword";
 	@Testable
-	@ApiOperation(value=changePassword,
+	@ApiOperation(value=changePassword+Team.RMS_TEAM,
 			notes="API สำหรับเปลี่ยนรหัสผ่านเข้าใช้งานระบบ (ผู้ใช้จำเป็นต้องทราบรหัสผ่านปัจจุบัน)")
 	@ApiDocHeaderAuthorized
 	@PutMapping("/password")
@@ -81,7 +82,7 @@ public class RegistrationController {
 
 	private final String registerUser = "registerUser";
 	@Testable
-	@ApiOperation(value=registerUser,
+	@ApiOperation(value=registerUser+Team.RMS_TEAM,
 			notes="API สำหรับลงทะเบียนการใช้งานระบบด้วยบัตรประชาชน")
 	@ApiDocHeaderNoAuthorized2Authen
 	@PostMapping("/register")
@@ -95,7 +96,7 @@ public class RegistrationController {
 
 	private final String resendVerifyEmail = "resendVerifyEmail";
 	@Testable
-	@ApiOperation(value=resendVerifyEmail,
+	@ApiOperation(value=resendVerifyEmail+Team.RMS_TEAM,
 			notes="API สำหรับส่ง Email เพื่อยืนยันตัวตนเปิดการใช้งานผู้ใช้ในระบบ")
 	@ApiDocHeader
 	@ApiDocResponseNoAuthorized
@@ -110,7 +111,7 @@ public class RegistrationController {
 	
 	private final String activateUser = "activateUser";
 	@Testable
-	@ApiOperation(value=activateUser,
+	@ApiOperation(value=activateUser+Team.RMS_TEAM,
 			notes="API สำหรับเปิดการใช้งานผู้ใช้สำหรับกรณี ผู้ใช้ทำการเลือกช่องทางยืนยันตัวตนผ่านทาง Email.")
 	@ApiDocHeaderNoAuthorized2Authen
 	@ApiDocResponseNoAuthorized
@@ -125,7 +126,7 @@ public class RegistrationController {
 	
 	private final String validateUser = "validateUser";
 	@Testable
-	@ApiOperation(value=validateUser,
+	@ApiOperation(value=validateUser+Team.RMS_TEAM,
 			notes="API สำหรับตรวจสอบข้อมูลผู้ลงทะเบียนถูกต้องตรงตามในข้อมูลกรมการปกครอง และไม่ซ้ำซ้อนกับข้อมูลในระบบ")
 	@ApiDocHeaderNoAuthorized2Authen
 	@ApiDocResponseNoAuthorized

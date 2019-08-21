@@ -20,6 +20,7 @@ import th.co.ktb.dsl.apidoc.ApiDocParamAcctNo;
 import th.co.ktb.dsl.apidoc.ApiDocParamLoanType;
 import th.co.ktb.dsl.apidoc.ApiDocPathPostponeRequestNo;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized;
+import th.co.ktb.dsl.apidoc.Team;
 import th.co.ktb.dsl.mock.Testable;
 import th.co.ktb.dsl.model.common.LoanType;
 import th.co.ktb.dsl.model.postpone.PostponeDetail;
@@ -36,7 +37,7 @@ public class PostponeController {
 
 	private final String getPostponeRequestStatus = "getPostponeRequestStatus";
 	@Testable
-	@ApiOperation(value=getPostponeRequestStatus,
+	@ApiOperation(value=getPostponeRequestStatus+" - DEPRECATION !!!!",
 			notes="API สำหรับดึงข้อมูลสถานะร้องขอ ณ ปัจจุบัน "
 			+ "/ ใช้เรียกหลังจากผู้ใช้มีการเข้าถึงเมนู 'ลดหย่อนและผ่อนชำระ' "
 			+ "โดยข้อมูลจะประกอบด้วยการร้องขอผ่อนผันปัจจุบัน และประวัติการร้องขอ")
@@ -52,7 +53,7 @@ public class PostponeController {
 
 	private final String getPostponeRequest = "getPostponeRequest";
 	@Testable
-	@ApiOperation(value=getPostponeRequest,
+	@ApiOperation(value=getPostponeRequest+Team.DMS_TEAM,
 			notes="API สำหรับดึงข้อมูลรายละเอียดการร้องขอผ่อนผันที่กำหนด")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
@@ -65,14 +66,14 @@ public class PostponeController {
 		return new PostponeDetail();
 	}
 	
-	private final String getRequiredDocument = "getRequiredDocument";
+	private final String getPostponeRequiredDocument = "getPostponeRequiredDocument";
 	@Testable
-	@ApiOperation(value=getRequiredDocument,
+	@ApiOperation(value=getPostponeRequiredDocument+" - DEPRECATION !!!!",
 			notes="API สำหรับดึงข้อมูลเอกสารเกี่ยวข้องที่จำเป็นสำหรับการยื่นขอผ่อนผัน")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
 	@GetMapping(path="/document/{reason}", produces=MediaType.APPLICATION_JSON_VALUE)
-	public PostponeFormExample[] getRequiredDocument(			
+	public PostponeFormExample[] getPostponeRequiredDocument(			
 		@PathVariable("reason") PostponeReason reason
 	) {
 		return PostponeFormExample.getExample(reason);
@@ -80,7 +81,7 @@ public class PostponeController {
 
 	private final String createPostponeRequest = "createPostponeRequest";
 	@Testable
-	@ApiOperation(value=createPostponeRequest,
+	@ApiOperation(value=createPostponeRequest+Team.DMS_TEAM,
 			notes="API สำหรับสร้างรายการร้องขอผ่อนผันการชำระเงิน "
 			+ "/ ข้อมูลประกอบด้วยรายละเอียดการร้องขอ พร้อมทั้งเอกสารแนบประกอบสำหรับแต่ละเหตุผลการร้องขอ "
 			+ " โดยหากผลการดำเนินเรียก API สำเร็จจะคืนผลลัพธ์หมายเลขอ้างอิงคำขอ")
@@ -98,7 +99,7 @@ public class PostponeController {
 
 	private final String updatePostponeRequest = "updatePostponeRequest";
 	@Testable
-	@ApiOperation(value=updatePostponeRequest,
+	@ApiOperation(value=updatePostponeRequest+Team.DMS_TEAM,
 			notes="API สำหรับยื่นเพิ่มเติมเอกสารประกอบคำร้องขอผ่อนผันการชำระเงิน "
 			+ "/ ข้อมูลแก้ไขการร้องขอ พร้อมทั้งเอกสารแนบเพิ่มเติมหรือเปลี่ยนแปลงระกอบสำหรับแต่ละเหตุผลการร้องขอ "
 			+ " โดยหากผลการดำเนินเรียก API สำเร็จจะคืนผลลัพธ์หมายเลขอ้างอิงคำขอ")
@@ -115,7 +116,7 @@ public class PostponeController {
 
 	private final String cancelPostponeRequest = "cancelPostponeRequest";
 	@Testable
-	@ApiOperation(value=cancelPostponeRequest,
+	@ApiOperation(value=cancelPostponeRequest+Team.DMS_TEAM,
 			notes="API สำหรับยกเลิกคำร้องขอผ่อนผันการชำระเงิน "
 			+ "/ ข้อมูลยกเลิกร้องขอประกอบด้วย request id ")
 	@ApiDocHeaderAuthorized

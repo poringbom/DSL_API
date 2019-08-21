@@ -28,7 +28,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.requiresSecure()
 			.and()
 			.authorizeRequests()
-			.antMatchers("/api/v1/signIn").permitAll()
+			.antMatchers("/api/v1/**").permitAll()
 			.antMatchers("/messages/**").permitAll()
 			.anyRequest().authenticated()
 			.and()

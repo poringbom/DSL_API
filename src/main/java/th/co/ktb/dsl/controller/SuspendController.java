@@ -20,6 +20,8 @@ import th.co.ktb.dsl.apidoc.ApiDocParamAcctNo;
 import th.co.ktb.dsl.apidoc.ApiDocParamLoanType;
 import th.co.ktb.dsl.apidoc.ApiDocPathSuspendRequestNo;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized;
+import th.co.ktb.dsl.apidoc.Team;
+import th.co.ktb.dsl.mock.Testable;
 import th.co.ktb.dsl.model.common.LoanType;
 import th.co.ktb.dsl.model.suspend.SuspendDetail;
 import th.co.ktb.dsl.model.suspend.SuspendFormExample;
@@ -33,21 +35,26 @@ import th.co.ktb.dsl.model.suspend.SuspendSummary;
 @RequestMapping("/api/v1/dms/suspend")
 public class SuspendController {
 
-	@ApiOperation(nickname="getLoneStatus",
-			value="API สำหรับดึงข้อมูลสถานะร้องขอ ณ ปัจจุบัน "
+	private final String getSuspendRequestStatus = "getSuspendRequestStatus";
+	@Testable
+	@ApiOperation(value=getSuspendRequestStatus+" - DEPRECATION !!!!",
+			notes="API สำหรับดึงข้อมูลสถานะร้องขอ ณ ปัจจุบัน "
 			+ "/ ใช้เรียกหลังจากผู้ใช้มีการเข้าถึงเมนู 'ระงับการชำระเงิน' "
 			+ "โดยข้อมูลจะประกอบด้วยการร้องขอระงับการชำระเงินปัจจุบัน และประวัติการร้องขอ")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
 	@GetMapping(path="/{loanType}/{acctNo}/", produces=MediaType.APPLICATION_JSON_VALUE)
-	public SuspendSummary getLoneStatus(		
+	public SuspendSummary getSuspendRequestStatus(		
 		@ApiDocParamLoanType @PathVariable("loanType") LoanType loanType,
 		@ApiDocParamAcctNo @PathVariable("acctNo") String acctNo
 	) {
 		return new SuspendSummary();
 	}
 
-	@ApiOperation(value="API สำหรับดึงข้อมูลรายละเอียดการร้องขอระงับการชำระเงิน")
+	private final String getSuspendRequest = "getSuspendRequest";
+	@Testable
+	@ApiOperation(value=getSuspendRequest+Team.DMS_TEAM,
+			notes="API สำหรับดึงข้อมูลรายละเอียดการร้องขอระงับการชำระเงิน")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
 	@GetMapping(path="/{loanType}/{acctNo}/{requestNo}", produces=MediaType.APPLICATION_JSON_VALUE)
@@ -58,18 +65,24 @@ public class SuspendController {
 	) {
 		return new SuspendDetail();
 	}
-	
-	@ApiOperation(value="API สำหรับดึงข้อมูลเอกสารเกี่ยวข้องที่จำเป็นสำหรับการยื่นขอระงับการชำระเงิน")
+
+	private final String getSuspendRequiredDocument = "getSuspendRequiredDocument";
+	@Testable
+	@ApiOperation(value=getSuspendRequiredDocument+" - DEPRECATION !!!!",
+			notes="API สำหรับดึงข้อมูลเอกสารเกี่ยวข้องที่จำเป็นสำหรับการยื่นขอระงับการชำระเงิน")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
 	@GetMapping(path="/document/{reason}", produces=MediaType.APPLICATION_JSON_VALUE)
-	public SuspendFormExample[] getRequiredDocument(			
+	public SuspendFormExample[] getSuspendRequiredDocument(			
 		@PathVariable("reason") SuspendReason reason
 	) {
 		return null;
 	}
 
-	@ApiOperation(value="API สำหรับสร้างรายการร้องขอระงับการชำระเงิน "
+	private final String createSuspendRequest = "createSuspendRequest";
+	@Testable
+	@ApiOperation(value=createSuspendRequest+Team.DMS_TEAM,
+			notes="API สำหรับสร้างรายการร้องขอระงับการชำระเงิน "
 			+ "/ ข้อมูลประกอบด้วยรายละเอียดการร้องขอ พร้อมทั้งเอกสารแนบประกอบสำหรับแต่ละเหตุผลการร้องขอ "
 			+ " โดยหากผลการดำเนินเรียก API สำเร็จจะคืนผลลัพธ์หมายเลขอ้างอิงคำขอ")
 	@ApiDocHeaderAuthorized
@@ -84,7 +97,10 @@ public class SuspendController {
 		return new SuspendRequestUpdate(); // only PostponeRequest.requestNo
 	}
 
-	@ApiOperation(value="API สำหรับยื่นเพิ่มเติมเอกสารประกอบคำร้อง หรือตามเรียกขอจากเจ้าหน้าที่ สำหรับขอระงับการชำระเงิน "
+	private final String updateSuspendRequest = "updateSuspendRequest";
+	@Testable
+	@ApiOperation(value=updateSuspendRequest+Team.DMS_TEAM,
+			notes="API สำหรับยื่นเพิ่มเติมเอกสารประกอบคำร้อง หรือตามเรียกขอจากเจ้าหน้าที่ สำหรับขอระงับการชำระเงิน "
 			+ "/ ข้อมูลแก้ไขการร้องขอ พร้อมทั้งเอกสารแนบเพิ่มเติมหรือเปลี่ยนแปลงระกอบสำหรับแต่ละเหตุผลการร้องขอ "
 			+ " โดยหากผลการดำเนินเรียก API สำเร็จจะคืนผลลัพธ์หมายเลขอ้างอิงคำขอ")
 	@ApiDocHeaderAuthorized
@@ -98,7 +114,10 @@ public class SuspendController {
 		return new SuspendRequestUpdate();
 	}
 
-	@ApiOperation(value="API สำหรับยกเลิกคำร้องรับงับการชำระเงิน "
+	private final String cancelSuspendRequest = "cancelSuspendRequest";
+	@Testable
+	@ApiOperation(value=cancelSuspendRequest+Team.DMS_TEAM,
+			notes="API สำหรับยกเลิกคำร้องรับงับการชำระเงิน "
 			+ "/ ข้อมูลยกเลิกร้องขอประกอบด้วย request id ")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized

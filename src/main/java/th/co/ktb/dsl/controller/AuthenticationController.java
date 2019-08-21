@@ -21,6 +21,7 @@ import th.co.ktb.dsl.apidoc.ApiDocHeaderOptionAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized2Authen;
 import th.co.ktb.dsl.apidoc.ApiDocResponseNewAuthorized;
+import th.co.ktb.dsl.apidoc.Team;
 import th.co.ktb.dsl.mock.MockService;
 import th.co.ktb.dsl.mock.Testable;
 import th.co.ktb.dsl.model.authen.ChallengeOTP;
@@ -42,7 +43,7 @@ public class AuthenticationController {
 	
 	private final String signIn = "signIn";
 //	@Testable
-	@ApiOperation(value=signIn ,
+	@ApiOperation(value=signIn+Team.GATEWAY_TEAM ,
 			notes="API สำหรับการ sign in โดยผลสำเร็จจะแนบ Token กลับมาด้วยใน header response ")
 	@ApiDocHeader
 	@ApiDocResponseNewAuthorized
@@ -59,7 +60,7 @@ public class AuthenticationController {
 	
 	private final String signOut = "signOut";
 	@Testable
-	@ApiOperation(value=signOut,
+	@ApiOperation(value=signOut+Team.GATEWAY_TEAM,
 			notes="API สำหรับการ sign out ")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
@@ -70,15 +71,17 @@ public class AuthenticationController {
 	
 	private final String refreshTokens = "refreshToken";
 	@Testable
-	@ApiOperation(value=refreshTokens,
+	@ApiOperation(value=refreshTokens+Team.GATEWAY_TEAM,
 			notes="API สำหรับรีเฟรช Token ")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseNewAuthorized
 	@PutMapping("/token")
-	public void refreshToken(
+	public LoginResponse refreshToken(
 		@ApiParam(name="refreshToken",value="Access token และ Refresh token ปัจจุบัน (ที่ยังไม่หมดอายุ)", required=true, type="RefreshToken") 
 		@RequestBody LogoutRequest refreshToken
-	) {}
+	) {
+		return null;
+	}
 	
 	private final String verifyUser = "verifyUser";
 	@Testable
@@ -94,7 +97,7 @@ public class AuthenticationController {
 	
 	private final String requestOTPVerify = "requestOTPVerify";
 	@Testable
-	@ApiOperation(value=requestOTPVerify,
+	@ApiOperation(value=requestOTPVerify+Team.DSL_SECURITY_TEAM,
 			notes="API สำหรับขอยืนยันตัวตน ด้วย OTP / สำหรับกรณียืนยันตัวตนก่อนมี Authorization (เช่น การลงทะเบียนผู้ใช้)​ ไม่จำเป็นต้องแนบ Token หากมี Authorization แล้วจำเป็นต้องแนบ Token เสมอ")
 	@ApiDocHeaderOptionAuthorized
 	@GetMapping(path="/otp")
@@ -107,7 +110,7 @@ public class AuthenticationController {
 	
 	private final String verifyOTP = "verifyOTP";
 	@Testable
-	@ApiOperation(value=verifyOTP,
+	@ApiOperation(value=verifyOTP+Team.DSL_SECURITY_TEAM,
 			notes="API สำหรับตรวจสอบ OTP")
 	@ApiDocHeaderOptionAuthorized
 	@ApiDocResponseAuthorized2Authen

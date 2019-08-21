@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,10 +27,16 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized;
+import th.co.ktb.dsl.apidoc.ApiDocParamAcctNo;
+import th.co.ktb.dsl.apidoc.ApiDocParamLoanType;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized;
+import th.co.ktb.dsl.apidoc.Team;
 import th.co.ktb.dsl.mock.Testable;
 import th.co.ktb.dsl.model.common.DocumentType;
 import th.co.ktb.dsl.model.common.DownloadableDocument;
+import th.co.ktb.dsl.model.common.LoanType;
+import th.co.ktb.dsl.model.common.RequestDocFormExample;
+import th.co.ktb.dsl.model.common.RequestReason;
 
 @Api(tags="2.1. DSL-DMS : Common API", description="API ทั่วไปอาจถูกนำไปใช้ในหลาย module")
 @RestController
@@ -38,7 +45,7 @@ public class CommonController {
 	
 	private final String uploadRequestDocument = "uploadRequestDocument";
 	@Testable
-	@ApiOperation(value=uploadRequestDocument,
+	@ApiOperation(value=uploadRequestDocument + Team.DMS_TEAM,
 			notes="API สำหรับอัพโหลดเอกสาร ")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
@@ -62,7 +69,7 @@ public class CommonController {
 
 	private final String removeRequestDocument = "removeRequestDocument";
 	@Testable
-	@ApiOperation(value=removeRequestDocument,
+	@ApiOperation(value=removeRequestDocument + Team.DMS_TEAM,
 			notes="API สำหรับลบเอกสาร")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
@@ -77,7 +84,7 @@ public class CommonController {
 
 	private final String getDocument = "getDocument";
 	@Testable
-	@ApiOperation(value=getDocument,
+	@ApiOperation(value=getDocument + Team.DMS_TEAM,
 			notes="API สำหรับดาวน์โหลดเอกสาร")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
@@ -98,5 +105,34 @@ public class CommonController {
                 .header(HttpHeaders.CONTENT_DISPOSITION,
                         "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(baos.toByteArray());
+	}
+
+	private final String getRequestSummary = "getRequestSummary";
+	@Testable
+	@ApiOperation(value=getRequestSummary + Team.DMS_TEAM,
+			notes="API สำหรับดึงข้อมูลสถานะร้องขอ ณ ปัจจุบัน "
+			+ "โดยข้อมูลจะประกอบด้วยการร้องขอผ่อนผัน/ระงับ ปัจจุบัน และประวัติการร้องขอ"
+			+ "(แทน API-getPostponeRequestStatus() และ )​")
+	@ApiDocHeaderAuthorized
+	@ApiDocResponseAuthorized
+	@GetMapping(path="/{loanType}/{acctNo}", produces=MediaType.APPLICATION_JSON_VALUE)
+	public RequestSummary getRequestStatus(		
+		@ApiDocParamLoanType @PathVariable("loanType") LoanType loanType,
+		@ApiDocParamAcctNo @PathVariable("acctNo") String acctNo
+	) {
+		return new RequestSummary();
+	}
+	
+	private final String getRequiredDocument = "getRequiredDocument";
+	@Testable
+	@ApiOperation(value=getRequiredDocument + Team.DMS_TEAM,
+			notes="API สำหรับดึงข้อมูลเอกสารเกี่ยวข้องที่จำเป็นสำหรับการยื่นขอผ่อนผัน/ระงับ")
+	@ApiDocHeaderAuthorized
+	@ApiDocResponseAuthorized
+	@GetMapping(path="/document/{reason}", produces=MediaType.APPLICATION_JSON_VALUE)
+	public RequestDocFormExample[] getRequiredDocument(			
+		@PathVariable("reason") RequestReason reason
+	) {
+		return RequestDocFormExample.getExample(reason);
 	}
 }

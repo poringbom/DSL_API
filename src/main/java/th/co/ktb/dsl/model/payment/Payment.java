@@ -17,7 +17,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper=false)
 @JsonInclude(Include.NON_EMPTY)
 public class Payment extends PaymentRequest {
-	@ApiModelProperty(position = 2)
+	@ApiModelProperty(position = 1)
 	byte[] payinSlip;
 
 	@ApiModelProperty(position = 2)

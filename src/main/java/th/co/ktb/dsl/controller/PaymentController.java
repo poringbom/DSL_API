@@ -18,6 +18,7 @@ import io.swagger.annotations.ApiParam;
 import th.co.ktb.dsl.model.payment.InstallmentSchedule;
 import th.co.ktb.dsl.model.payment.PaymentHistory;
 import th.co.ktb.dsl.model.payment.PaymentInfo;
+import th.co.ktb.dsl.model.payment.PaymentReceipt;
 import th.co.ktb.dsl.model.payment.PaymentRequest;
 import th.co.ktb.dsl.model.payment.PaymentRequestATM;
 import th.co.ktb.dsl.model.payment.PaymentRequestQR;
@@ -26,6 +27,7 @@ import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocParamAcctNo;
 import th.co.ktb.dsl.apidoc.ApiDocParamLoanType;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized;
+import th.co.ktb.dsl.apidoc.Team;
 import th.co.ktb.dsl.mock.Testable;
 import th.co.ktb.dsl.model.common.LoanType;
 
@@ -36,7 +38,7 @@ public class PaymentController {
 
 	private final String getPaymentInfo = "getPaymentInfo";
 	@Testable
-	@ApiOperation(value=getPaymentInfo, 
+	@ApiOperation(value=getPaymentInfo+Team.DMS_PAYMENT_TEAM, 
 			notes="API สำหรับดึงข้อมูลกำหนดการชำระเงินตามผู้ใช้ปัจจุบัน และบัญชีกู้ยืมที่กำหนด "
 			+ "/ ใช้เรียกเมื่อมีการเข้าถึงเมนู 'ชำระเงิน'")
 	@ApiDocHeaderAuthorized
@@ -51,7 +53,7 @@ public class PaymentController {
 
 	private final String createPaymentQR = "createPaymentQR";
 	@Testable
-	@ApiOperation(value=createPaymentQR,
+	@ApiOperation(value=createPaymentQR+Team.DMS_PAYMENT_TEAM,
 			notes="API สำหรับสร้างข้อมูลการชำระเงินผ่านทาง QR Code "
 			+ "/ ใช้เรียกเมื่อผู้ใช้ตัดสินใจเลือกช่องทางการชำระเงินตามที่กำหนด "
 			+ "โดยคืนรูปภาพและคำแนะนำสำหรับการชำระเงิน")
@@ -69,7 +71,7 @@ public class PaymentController {
 	
 	private final String createPaymentTeller = "createPaymentTeller";
 	@Testable
-	@ApiOperation(value=createPaymentTeller,
+	@ApiOperation(value=createPaymentTeller+Team.DMS_PAYMENT_TEAM,
 			notes="API สำหรับสร้างข้อมูลการชำระเงินผ่านทาง Bank Teller "
 			+ "/ ใช้เรียกเมื่อผู้ใช้ตัดสินใจเลือกช่องทางการชำระเงินตามที่กำหนด "
 			+ "โดยคืนรูปภาพแบบฟอร์มสำหรับการชำระเงินและคำแนะนำสำหรับการชำระเงินผ่านทางเคาว์เตอร์ธนาคาร")
@@ -87,7 +89,7 @@ public class PaymentController {
 
 	private final String createPaymentATM = "createPaymentATM";
 	@Testable
-	@ApiOperation(value=createPaymentATM,
+	@ApiOperation(value=createPaymentATM+Team.DMS_PAYMENT_TEAM,
 			notes="API สำหรับสร้างข้อมูลการชำระเงินผ่านทาง ATM "
 			+ "/ ใช้เรียกเมื่อผู้ใช้ตัดสินใจเลือกช่องทางการชำระเงินตามที่กำหนด "
 			+ "โดยคืนคำแนะนำสำหรับการชำระเงินผ่านช่องทาง ATM")
@@ -105,7 +107,7 @@ public class PaymentController {
 
 	private final String getInstallmentSchedule = "getInstallmentSchedule";
 	@Testable
-	@ApiOperation(value=getInstallmentSchedule,
+	@ApiOperation(value=getInstallmentSchedule+Team.DMS_PAYMENT_TEAM,
 			notes="API สำหรับดึงข้อมูลตารางการผ่อนชำระตามผู้ใช้ปัจจุบัน และบัญชีกู้ยืมที่กำหนด "
 			+ "/ ใช้เรียกเมื่อมีการเข้าถึงเมนู 'ตารางผ่อนชำระ' "
 			+ "โดยคืนเป็นตารางลำดับการชำระเงินรายปี")
@@ -121,7 +123,7 @@ public class PaymentController {
 	
 	private final String getPaymentHistory = "getPaymentHistory";
 	@Testable
-	@ApiOperation(value=getPaymentHistory,
+	@ApiOperation(value=getPaymentHistory+Team.DMS_PAYMENT_TEAM,
 			notes="API สำหรับดึงข้อมูลประวัติการชำระเงินตามผู้ใช้ปัจจุบัน และบัญชีกู้ยืมที่กำหนด "
 			+ "/ ใช้เรียกเมื่อมีการเข้าถึงเมนู 'รายการย้อนหลัง'")
 	@ApiDocHeaderAuthorized
@@ -146,6 +148,21 @@ public class PaymentController {
 		return PaymentHistory.getExamplePaymentHistory(Integer.parseInt(acctNo));
 	}
 
+
+	private final String getPaymentReceipt = "getPaymentReceipt";
+	@Testable
+	@ApiOperation(value=getPaymentReceipt+Team.DMS_PAYMENT_TEAM, 
+			notes="API สำหรับเรียกดูข้อมูลใบเสร็จการชำระเงินรายการที่กำหนด ")
+	@ApiDocHeaderAuthorized
+	@ApiDocResponseAuthorized
+	@GetMapping(path="/receipt/{receiptID}", produces=MediaType.APPLICATION_JSON_VALUE)
+	public PaymentReceipt getPaymentReceipt(
+		@ApiParam(type="path", value="หมายเลขใบเสร็จรับเงิน (จาก API-getPaymentHistory() )", required=true) 
+		@PathVariable(name="receiptID") String receiptID
+	) {
+		return PaymentReceipt.getExamplePaymentReceipt();
+		
+	}
 }
 
 
