@@ -38,7 +38,7 @@ public class PaymentController {
 
 	private final String getPaymentInfo = "getPaymentInfo";
 	@Testable
-	@ApiOperation(value=getPaymentInfo+Team.DMS_PAYMENT_TEAM, tags=getPaymentInfo,
+	@ApiOperation(value=getPaymentInfo+Team.DMS_PAYMENT_TEAM, 
 			notes="API สำหรับดึงข้อมูลกำหนดการชำระเงินตามผู้ใช้ปัจจุบัน และบัญชีกู้ยืมที่กำหนด "
 			+ "/ ใช้เรียกเมื่อมีการเข้าถึงเมนู 'ชำระเงิน'")
 	@ApiDocHeaderAuthorized
@@ -53,7 +53,7 @@ public class PaymentController {
 
 	private final String createPaymentQR = "createPaymentQR";
 	@Testable
-	@ApiOperation(value=createPaymentQR+Team.DMS_PAYMENT_TEAM, tags=createPaymentQR,
+	@ApiOperation(value=createPaymentQR+Team.DMS_PAYMENT_TEAM, 
 			notes="API สำหรับสร้างข้อมูลการชำระเงินผ่านทาง QR Code "
 			+ "/ ใช้เรียกเมื่อผู้ใช้ตัดสินใจเลือกช่องทางการชำระเงินตามที่กำหนด "
 			+ "โดยคืนรูปภาพและคำแนะนำสำหรับการชำระเงิน")
@@ -71,7 +71,7 @@ public class PaymentController {
 	
 	private final String createPaymentTeller = "createPaymentTeller";
 	@Testable
-	@ApiOperation(value=createPaymentTeller+Team.DMS_PAYMENT_TEAM, tags=createPaymentTeller,
+	@ApiOperation(value=createPaymentTeller+Team.DMS_PAYMENT_TEAM, 
 			notes="API สำหรับสร้างข้อมูลการชำระเงินผ่านทาง Bank Teller "
 			+ "/ ใช้เรียกเมื่อผู้ใช้ตัดสินใจเลือกช่องทางการชำระเงินตามที่กำหนด "
 			+ "โดยคืนรูปภาพแบบฟอร์มสำหรับการชำระเงินและคำแนะนำสำหรับการชำระเงินผ่านทางเคาว์เตอร์ธนาคาร")
@@ -89,7 +89,7 @@ public class PaymentController {
 
 	private final String createPaymentATM = "createPaymentATM";
 	@Testable
-	@ApiOperation(value=createPaymentATM+Team.DMS_PAYMENT_TEAM, tags=createPaymentATM,
+	@ApiOperation(value=createPaymentATM+Team.DMS_PAYMENT_TEAM, 
 			notes="API สำหรับสร้างข้อมูลการชำระเงินผ่านทาง ATM "
 			+ "/ ใช้เรียกเมื่อผู้ใช้ตัดสินใจเลือกช่องทางการชำระเงินตามที่กำหนด "
 			+ "โดยคืนคำแนะนำสำหรับการชำระเงินผ่านช่องทาง ATM")
@@ -107,7 +107,7 @@ public class PaymentController {
 
 	private final String getInstallmentSchedule = "getInstallmentSchedule";
 	@Testable
-	@ApiOperation(value=getInstallmentSchedule+Team.DMS_PAYMENT_TEAM, tags=getInstallmentSchedule,
+	@ApiOperation(value=getInstallmentSchedule+Team.DMS_PAYMENT_TEAM, 
 			notes="API สำหรับดึงข้อมูลตารางการผ่อนชำระตามผู้ใช้ปัจจุบัน และบัญชีกู้ยืมที่กำหนด "
 			+ "/ ใช้เรียกเมื่อมีการเข้าถึงเมนู 'ตารางผ่อนชำระ' "
 			+ "โดยคืนเป็นตารางลำดับการชำระเงินรายปี")
@@ -123,7 +123,7 @@ public class PaymentController {
 	
 	private final String getPaymentHistory = "getPaymentHistory";
 	@Testable
-	@ApiOperation(value=getPaymentHistory+Team.DMS_PAYMENT_TEAM, tags=getPaymentHistory,
+	@ApiOperation(value=getPaymentHistory+Team.DMS_PAYMENT_TEAM, 
 			notes="API สำหรับดึงข้อมูลประวัติการชำระเงินตามผู้ใช้ปัจจุบัน และบัญชีกู้ยืมที่กำหนด "
 			+ "/ ใช้เรียกเมื่อมีการเข้าถึงเมนู 'รายการย้อนหลัง'")
 	@ApiDocHeaderAuthorized
@@ -151,7 +151,7 @@ public class PaymentController {
 
 	private final String getPaymentReceipt = "getPaymentReceipt";
 	@Testable
-	@ApiOperation(value=getPaymentReceipt+Team.DMS_PAYMENT_TEAM, tags=getPaymentReceipt, 
+	@ApiOperation(value=getPaymentReceipt+Team.DMS_PAYMENT_TEAM, 
 			notes="API สำหรับเรียกดูข้อมูลใบเสร็จการชำระเงินรายการที่กำหนด ")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized

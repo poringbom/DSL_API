@@ -26,7 +26,7 @@ public class NotificationController {
 	
 	private final String listNotification = "listNotification";
 	@Testable
-	@ApiOperation(value=listNotification, tags=listNotification,
+	@ApiOperation(value=listNotification, 
 			notes="API สำหรับเรียกดูรายการแจ้งเตือน ")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
@@ -41,7 +41,7 @@ public class NotificationController {
 	
 	private final String acknowledgeNotification = "acknowledgeNotification";
 	@Testable
-	@ApiOperation(value=acknowledgeNotification, tags=acknowledgeNotification,
+	@ApiOperation(value=acknowledgeNotification, 
 			notes="API สำหรับที่รับทราบรายการแจ้งเตือน ")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized

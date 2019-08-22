@@ -37,7 +37,7 @@ public class SuspendController {
 
 	private final String getSuspendRequestStatus = "getSuspendRequestStatus";
 	@Testable
-	@ApiOperation(value=getSuspendRequestStatus+" - DEPRECATION !!!!", tags=getSuspendRequestStatus,
+	@ApiOperation(value=getSuspendRequestStatus+" - DEPRECATION !!!!", 
 			notes="API สำหรับดึงข้อมูลสถานะร้องขอ ณ ปัจจุบัน "
 			+ "/ ใช้เรียกหลังจากผู้ใช้มีการเข้าถึงเมนู 'ระงับการชำระเงิน' "
 			+ "โดยข้อมูลจะประกอบด้วยการร้องขอระงับการชำระเงินปัจจุบัน และประวัติการร้องขอ")
@@ -53,7 +53,7 @@ public class SuspendController {
 
 	private final String getSuspendRequest = "getSuspendRequest";
 	@Testable
-	@ApiOperation(value=getSuspendRequest+Team.DMS_TEAM, tags=getSuspendRequest,
+	@ApiOperation(value=getSuspendRequest+Team.DMS_TEAM, 
 			notes="API สำหรับดึงข้อมูลรายละเอียดการร้องขอระงับการชำระเงิน")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
@@ -68,7 +68,7 @@ public class SuspendController {
 
 	private final String getSuspendRequiredDocument = "getSuspendRequiredDocument";
 	@Testable
-	@ApiOperation(value=getSuspendRequiredDocument+" - DEPRECATION !!!!", tags=getSuspendRequiredDocument,
+	@ApiOperation(value=getSuspendRequiredDocument+" - DEPRECATION !!!!", 
 			notes="API สำหรับดึงข้อมูลเอกสารเกี่ยวข้องที่จำเป็นสำหรับการยื่นขอระงับการชำระเงิน")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
@@ -81,7 +81,7 @@ public class SuspendController {
 
 	private final String createSuspendRequest = "createSuspendRequest";
 	@Testable
-	@ApiOperation(value=createSuspendRequest+Team.DMS_TEAM, tags=createSuspendRequest,
+	@ApiOperation(value=createSuspendRequest+Team.DMS_TEAM, 
 			notes="API สำหรับสร้างรายการร้องขอระงับการชำระเงิน "
 			+ "/ ข้อมูลประกอบด้วยรายละเอียดการร้องขอ พร้อมทั้งเอกสารแนบประกอบสำหรับแต่ละเหตุผลการร้องขอ "
 			+ " โดยหากผลการดำเนินเรียก API สำเร็จจะคืนผลลัพธ์หมายเลขอ้างอิงคำขอ")
@@ -99,7 +99,7 @@ public class SuspendController {
 
 	private final String updateSuspendRequest = "updateSuspendRequest";
 	@Testable
-	@ApiOperation(value=updateSuspendRequest+Team.DMS_TEAM, tags=updateSuspendRequest,
+	@ApiOperation(value=updateSuspendRequest+Team.DMS_TEAM, 
 			notes="API สำหรับยื่นเพิ่มเติมเอกสารประกอบคำร้อง หรือตามเรียกขอจากเจ้าหน้าที่ สำหรับขอระงับการชำระเงิน "
 			+ "/ ข้อมูลแก้ไขการร้องขอ พร้อมทั้งเอกสารแนบเพิ่มเติมหรือเปลี่ยนแปลงระกอบสำหรับแต่ละเหตุผลการร้องขอ "
 			+ " โดยหากผลการดำเนินเรียก API สำเร็จจะคืนผลลัพธ์หมายเลขอ้างอิงคำขอ")
@@ -116,7 +116,7 @@ public class SuspendController {
 
 	private final String cancelSuspendRequest = "cancelSuspendRequest";
 	@Testable
-	@ApiOperation(value=cancelSuspendRequest+Team.DMS_TEAM, tags=cancelSuspendRequest,
+	@ApiOperation(value=cancelSuspendRequest+Team.DMS_TEAM, 
 			notes="API สำหรับยกเลิกคำร้องรับงับการชำระเงิน "
 			+ "/ ข้อมูลยกเลิกร้องขอประกอบด้วย request id ")
 	@ApiDocHeaderAuthorized

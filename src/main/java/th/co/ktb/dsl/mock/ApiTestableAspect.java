@@ -82,13 +82,11 @@ public class ApiTestableAspect {
 		    		HttpServletResponse httpResponse = 
 		    				((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes())
 		    				.getResponse();
-//		    		String apiName = apiOperation.value();
-		    		String apiName = null;
-		    		String[] tags = apiOperation.tags();
-//		    		log.info("tags {}",tags); 
-		    		if (tags != null && tags.length > 0) {
-		    			apiName = tags[0];
-		    		}
+		    		String apiName = method.getName();
+//		    		String[] tags = apiOperation.tags();
+//		    		if (tags != null && tags.length > 0) {
+//		    			apiName = tags[0];
+//		    		}
 		    		String scenario = httpRequest.getHeader("Test-Scenario");
 		    		String metaData = httpRequest.getHeader(ApiMetadata.HEADER_NAME);
 		    		ApiMetadataRequest apiMetaData = apiMetadataResolver.matches(metaData);
