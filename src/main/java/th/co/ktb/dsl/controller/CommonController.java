@@ -32,6 +32,7 @@ import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocParamAcctNo;
 import th.co.ktb.dsl.apidoc.ApiDocParamLoanType;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized;
+import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorizedFile;
 import th.co.ktb.dsl.apidoc.Team;
 import th.co.ktb.dsl.mock.Testable;
 import th.co.ktb.dsl.model.common.DocumentType;
@@ -41,6 +42,8 @@ import th.co.ktb.dsl.model.common.RequestDocFormExample;
 import th.co.ktb.dsl.model.common.RequestReason;
 import th.co.ktb.dsl.model.postpone.PostponeReason;
 import th.co.ktb.dsl.model.postpone.PostponeStatus;
+import th.co.ktb.dsl.model.postpone.PostponeSummary;
+import th.co.ktb.dsl.model.suspend.SuspendSummary;
 
 @Api(tags="2.1. DSL-DMS : Common API", description="API ทั่วไปอาจถูกนำไปใช้ในหลาย module")
 @RestController
@@ -91,24 +94,26 @@ public class CommonController {
 	@ApiOperation(value=getDocument + Team.DMS_TEAM, 
 			notes="API สำหรับดาวน์โหลดเอกสาร")
 	@ApiDocHeaderAuthorized
-	@ApiDocResponseAuthorized
+	@ApiDocResponseAuthorizedFile
 	@GetMapping(path="/document/{docID:.+}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<byte[]> getDocument(
 		@PathVariable("docID") String docID
 	) {
-        Resource resource=new ClassPathResource("DSL_WOW.pdf");
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try (InputStream is = resource.getInputStream()){
-            byte[] buf = new byte[2048]; int cnt = 0;
-        		while ((cnt=is.read(buf)) > 0) {
-        			baos.write(buf,0,cnt);
-        		}
-        } catch (IOException ex) {}
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment; filename=\"" + resource.getFilename() + "\"")
-                .body(baos.toByteArray());
+//		return new ResponseEntity<byte[]>(null,,200);
+//        Resource resource=new ClassPathResource("DSL_WOW.pdf");
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        try (InputStream is = resource.getInputStream()){
+//            byte[] buf = new byte[2048]; int cnt = 0;
+//        		while ((cnt=is.read(buf)) > 0) {
+//        			baos.write(buf,0,cnt);
+//        		}
+//        } catch (IOException ex) {}
+//        return ResponseEntity.ok()
+//                .header(HttpHeaders.CONTENT_DISPOSITION,
+//                        "attachment; filename=\"" + resource.getFilename() + "\"")
+//                .body(baos.toByteArray());
+		return null;
 	}
 
 	private final String getRequestStatus = "getRequestStatus";
@@ -120,11 +125,11 @@ public class CommonController {
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
 	@GetMapping(path="/{loanType}/{acctNo}", produces=MediaType.APPLICATION_JSON_VALUE)
-	public RequestSummary getRequestStatus(		
+	public RequestStatusRs getRequestStatus(		
 		@ApiDocParamLoanType @PathVariable("loanType") LoanType loanType,
 		@ApiDocParamAcctNo @PathVariable("acctNo") String acctNo
 	) {
-		return new RequestSummary();
+		return new RequestStatusRs();
 	}
 	
 	private final String getRequiredDocument = "getRequiredDocument";
@@ -154,6 +159,18 @@ public class CommonController {
 		return null;
 	}
 }
+
+
+
+@Data
+class RequestStatusRs {
+	@ApiModelProperty(position = 1, required=false)
+	PostponeSummary postponeStatus;
+
+	@ApiModelProperty(position = 2, required=false)
+	SuspendSummary suspendStatus;	
+}
+
 
 @Data
 class RequestSummary {

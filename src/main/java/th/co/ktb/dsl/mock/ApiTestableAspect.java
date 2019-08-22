@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
+import java.util.Base64;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +31,7 @@ import org.json.JSONObject;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -63,9 +65,10 @@ public class ApiTestableAspect {
 	@SuppressWarnings("rawtypes")
 	@Around(DoRestApi)
 	public Object interceptProcess(ProceedingJoinPoint jp) throws Throwable{
-		MessageFormat mf = new MessageFormat("MockID={0} ; ResponseTxID={1}");
+		MessageFormat mf = new MessageFormat("MockID={0}; ResponseTxID={1}");
 		try {
 		    MethodSignature signature = (MethodSignature) jp.getSignature();
+		    log.info("signature: {}",signature);
 		    Method method = signature.getMethod();
 		    ApiOperation apiOperation = method.getAnnotation(ApiOperation.class);
 		    Testable testable = method.getAnnotation(Testable.class);
@@ -83,10 +86,6 @@ public class ApiTestableAspect {
 		    				((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes())
 		    				.getResponse();
 		    		String apiName = method.getName();
-//		    		String[] tags = apiOperation.tags();
-//		    		if (tags != null && tags.length > 0) {
-//		    			apiName = tags[0];
-//		    		}
 		    		String scenario = httpRequest.getHeader("Test-Scenario");
 		    		String metaData = httpRequest.getHeader(ApiMetadata.HEADER_NAME);
 		    		ApiMetadataRequest apiMetaData = apiMetadataResolver.matches(metaData);
@@ -97,11 +96,15 @@ public class ApiTestableAspect {
 		    		ObjectMapper mapper = new ObjectMapper();
 		    		Class returnType = method.getReturnType();
 //		    		log.info("({} != {}) is {}",returnType,ResponseEntity.class,(returnType != ResponseEntity.class));
-		    		if (returnType == ResponseEntity.class) {
-		    			log.info("return type -> ResponseEntity");
-		    			return new ResponseEntity(HttpStatus.OK);
-		    		} else {
-		    			log.info("return type -> {}",returnType);
+		    		Boolean isResponseEntity = false;
+		    		if (ResponseEntity.class.getSimpleName().equals(returnType.getSimpleName())) {
+//		    			String paraType = ((ParameterizedType) returnType.getGenericSuperclass()).getActualTypeArguments()[0].getTypeName();
+//		    			log.info("return type -> ResponseEntity<{}>",paraType);
+		    			isResponseEntity = true;
+//		    			return new ResponseEntity(HttpStatus.OK);
+		    		}  
+		    		{
+		    			log.info("return type -> {}",returnType.getSimpleName());
 		    			String testDev = httpRequest.getHeader("Test-Dev");
 		    			String temp;
 		    			if (testDev != null && !"".equals(testDev) && (temp = mockSQL.getTestScenario(testDev)) != null) {
@@ -112,12 +115,15 @@ public class ApiTestableAspect {
 		    			if (response != null) {
 		    				String mockID = String.valueOf(response.getMockID());
 		    				String responseTxID = UUID.randomUUID().toString();
-		    				httpResponse.addHeader("Mock-Respone", mf.format(new Object[] {mockID, responseTxID}));
-		    				if (response.getResponseHeader() != null) {
+		    				HttpHeaders httpHeaderResponse = new HttpHeaders();
+    						httpHeaderResponse.add("Mock-Respone", mf.format(new Object[] {mockID, responseTxID}));
+    						if (!isResponseEntity) httpResponse.addHeader("Mock-Respone", mf.format(new Object[] {mockID, responseTxID}));
+    						if (response.getResponseHeader() != null) {
 		    					Pattern p = Pattern.compile(regExResponseHeader,Pattern.MULTILINE);
 		    					Matcher m = p.matcher(response.getResponseHeader());
 		    					while(m.find()) {
-		    						httpResponse.addHeader(m.group(1), m.group(2));
+		    						if (!isResponseEntity) httpResponse.addHeader(m.group(1), m.group(2));
+		    						httpHeaderResponse.add(m.group(1), m.group(2));
 		    					}
 		    				}
 
@@ -138,9 +144,17 @@ public class ApiTestableAspect {
 		    					responseBody = null;
 		    				}
 			    			if (response.responseStatus >= 200 && response.responseStatus < 300) {
-			    				log.error("Return MockID -> {}, (ResponseID: {})",response.getMockID(), responseTxID);
-			    				Object o = mapper.readValue(responseBody, method.getReturnType());
-				    			return o;
+			    				log.error("Return MockID -> {},responseBodyID -> {}  (ResponseID: {})",response.getMockID(), response.getResponseBodyID(), responseTxID);
+			    				if ( isResponseEntity ) {
+		    						return new ResponseEntity<byte[]>(
+		    								Base64.getDecoder().decode(responseBody), 
+		    								httpHeaderResponse,
+		    								HttpStatus.valueOf(response.responseStatus));
+
+			    				} else {
+				    				Object o = mapper.readValue(responseBody, method.getReturnType());
+					    			return o;
+			    				}
 			    			} else {
 			    				httpResponse.setStatus(response.responseStatus);
 			    				ApiResponseError error = mapper.readValue(responseBody, ApiResponseError.class);
