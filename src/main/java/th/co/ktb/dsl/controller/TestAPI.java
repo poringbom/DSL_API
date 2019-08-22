@@ -22,6 +22,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.SwaggerDefinition;
+import io.swagger.annotations.Tag;
 import lombok.extern.slf4j.Slf4j;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized;
@@ -32,16 +34,21 @@ import th.co.ktb.dsl.model.common.TestModel;
 import th.co.ktb.dsl.service.TestService;
 
 
-@Api(value="xxxx")
+@Api(tags="${TEST.API}", description="${TEST.DESCRIPTION}", value="${TEST.API}")
 @RestController
 @RequestMapping("/api/v1")
 @Slf4j
+
+@SwaggerDefinition(tags = { @Tag(name = "getTest()", description =
+"Description about world: <br /> " +
+        "1. Hello <br /> " +                  //With <br />, not  <br>
+        "2. World ")})   
 public class TestAPI {
 	@Autowired TestService service;
 	
 	private final String GET_TEST = "getTest()";
 	@Testable
-	@ApiOperation(nickname=GET_TEST, value="Get opeation.")
+	@ApiOperation(nickname=GET_TEST, value="acknowledgeNotification")
 	@ApiResponses(value = {
 	        @ApiResponse(code = 200, message = "Successful"),
 	        @ApiResponse(code = 401, message = "No authorization"),

@@ -49,7 +49,7 @@ public class CommonController {
 	
 	private final String uploadRequestDocument = "uploadRequestDocument";
 	@Testable
-	@ApiOperation(value=uploadRequestDocument + Team.DMS_TEAM,
+	@ApiOperation(value=uploadRequestDocument + Team.DMS_TEAM, tags=uploadRequestDocument,
 			notes="API สำหรับอัพโหลดเอกสาร ")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
@@ -73,7 +73,7 @@ public class CommonController {
 
 	private final String removeRequestDocument = "removeRequestDocument";
 	@Testable
-	@ApiOperation(value=removeRequestDocument + Team.DMS_TEAM,
+	@ApiOperation(value=removeRequestDocument + Team.DMS_TEAM, tags=removeRequestDocument,
 			notes="API สำหรับลบเอกสาร")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
@@ -88,7 +88,7 @@ public class CommonController {
 
 	private final String getDocument = "getDocument";
 	@Testable
-	@ApiOperation(value=getDocument + Team.DMS_TEAM,
+	@ApiOperation(value=getDocument + Team.DMS_TEAM, tags=getDocument,
 			notes="API สำหรับดาวน์โหลดเอกสาร")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
@@ -113,7 +113,7 @@ public class CommonController {
 
 	private final String getRequestStatus = "getRequestStatus";
 	@Testable
-	@ApiOperation(value=getRequestStatus + Team.DMS_TEAM,
+	@ApiOperation(value=getRequestStatus + Team.DMS_TEAM, tags=getRequestStatus,
 			notes="API สำหรับดึงข้อมูลสถานะร้องขอ ณ ปัจจุบัน "
 			+ "โดยข้อมูลจะประกอบด้วยการร้องขอผ่อนผัน/ระงับ ปัจจุบัน และประวัติการร้องขอ"
 			+ "(แทน API-getPostponeRequestStatus() และ )​")
@@ -129,7 +129,7 @@ public class CommonController {
 	
 	private final String getRequiredDocument = "getRequiredDocument";
 	@Testable
-	@ApiOperation(value=getRequiredDocument + Team.DMS_TEAM,
+	@ApiOperation(value=getRequiredDocument + Team.DMS_TEAM, tags=getRequiredDocument,
 			notes="API สำหรับดึงข้อมูลเอกสารเกี่ยวข้องที่จำเป็นสำหรับการยื่นขอผ่อนผัน/ระงับ")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
@@ -141,7 +141,7 @@ public class CommonController {
 	}
 
 	private final String getSummaryRequestStatus = "getSummaryRequestStatus";
-	@ApiOperation(value=getSummaryRequestStatus + Team.DMS_TEAM,
+	@ApiOperation(value=getSummaryRequestStatus + Team.DMS_TEAM, tags=getSummaryRequestStatus,
 			notes="API สำหรับเรียกดูสถานะคำขอของผู้กู้ (ผ่อนผัน/ระงับ) รองรับการเรียก API จาก module Dashboard ")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized

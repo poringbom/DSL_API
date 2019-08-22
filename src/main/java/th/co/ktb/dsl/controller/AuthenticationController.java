@@ -43,7 +43,7 @@ public class AuthenticationController {
 	
 	private final String signIn = "signIn";
 //	@Testable
-	@ApiOperation(value=signIn+Team.GATEWAY_TEAM ,
+	@ApiOperation(value=signIn+Team.GATEWAY_TEAM, tags=signIn,
 			notes="API สำหรับการ sign in โดยผลสำเร็จจะแนบ Token กลับมาด้วยใน header response ")
 	@ApiDocHeader
 	@ApiDocResponseNewAuthorized
@@ -60,7 +60,7 @@ public class AuthenticationController {
 	
 	private final String signOut = "signOut";
 	@Testable
-	@ApiOperation(value=signOut+Team.GATEWAY_TEAM,
+	@ApiOperation(value=signOut+Team.GATEWAY_TEAM, tags=signOut,
 			notes="API สำหรับการ sign out ")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
@@ -71,7 +71,7 @@ public class AuthenticationController {
 	
 	private final String refreshTokens = "refreshToken";
 	@Testable
-	@ApiOperation(value=refreshTokens+Team.GATEWAY_TEAM,
+	@ApiOperation(value=refreshTokens+Team.GATEWAY_TEAM, tags=refreshTokens,
 			notes="API สำหรับรีเฟรช Token ")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseNewAuthorized
@@ -85,7 +85,7 @@ public class AuthenticationController {
 	
 	private final String verifyUser = "verifyUser";
 	@Testable
-	@ApiOperation(value=verifyUser,
+	@ApiOperation(value=verifyUser, tags=verifyUser,
 			notes="API สำหรับขอยืนยันตัวตนด้วย รหัสผู้ใช้+รหัสลับ (user+password) เพื่อขอ Verify Token Action (ตัวอย่างใช้งานกรณีลืมรหัส PIN)​ ")
 	@ApiDocHeaderOptionAuthorized
 	@ApiDocResponseAuthorized2Authen
@@ -97,7 +97,7 @@ public class AuthenticationController {
 	
 	private final String requestOTPVerify = "requestOTPVerify";
 	@Testable
-	@ApiOperation(value=requestOTPVerify+Team.DSL_SECURITY_TEAM,
+	@ApiOperation(value=requestOTPVerify+Team.DSL_SECURITY_TEAM, tags=requestOTPVerify,
 			notes="API สำหรับขอยืนยันตัวตน ด้วย OTP / สำหรับกรณียืนยันตัวตนก่อนมี Authorization (เช่น การลงทะเบียนผู้ใช้)​ ไม่จำเป็นต้องแนบ Token หากมี Authorization แล้วจำเป็นต้องแนบ Token เสมอ")
 	@ApiDocHeaderOptionAuthorized
 	@GetMapping(path="/otp")
@@ -110,7 +110,7 @@ public class AuthenticationController {
 	
 	private final String verifyOTP = "verifyOTP";
 	@Testable
-	@ApiOperation(value=verifyOTP+Team.DSL_SECURITY_TEAM,
+	@ApiOperation(value=verifyOTP+Team.DSL_SECURITY_TEAM, tags=verifyOTP,
 			notes="API สำหรับตรวจสอบ OTP")
 	@ApiDocHeaderOptionAuthorized
 	@ApiDocResponseAuthorized2Authen
@@ -123,7 +123,7 @@ public class AuthenticationController {
 	
 	private final String requestEmailVerify = "requestEmailVerify";
 	@Testable
-	@ApiOperation(value=requestEmailVerify,
+	@ApiOperation(value=requestEmailVerify, tags=requestEmailVerify,
 			notes="API สำหรับขอยืนยันตัวตน ด้วย Email / สำหรับกรณียืนยันตัวตนก่อนมี Authorization (การลงทะเบียนผู้ใช้)​")
 	@ApiDocHeaderOptionAuthorized
 	@GetMapping(path="/email/verify")
