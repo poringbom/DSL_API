@@ -105,7 +105,7 @@ public class CommonController {
 		UploadFile file = serviceSQL.getUplaodFile(Integer.valueOf(docID));
 		if (file == null) throw new BadRequestException("Invalid docID");
 		org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
-		ContentDisposition cd = ContentDisposition.builder("attachment").filename(file.getAlias()).build();
+		ContentDisposition cd = ContentDisposition.builder("attachment").filename(file.getAlias()!=null?file.getAlias():file.getFileName()).build();
 		headers.setContentDisposition(cd);
 
 		Tika tika = new Tika();

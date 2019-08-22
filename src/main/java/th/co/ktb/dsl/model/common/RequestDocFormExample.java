@@ -17,13 +17,22 @@ public class RequestDocFormExample {
 	RequestDocumentType type;
 	
 	@ApiModelProperty(position = 2, required=false)
-	String form;
+	String docDescription;
 	
 	@ApiModelProperty(position = 3, required=false)
+	String form;
+	
+	@ApiModelProperty(position = 4, required=false)
 	String example;
 	
 	public RequestDocFormExample(RequestDocumentType type,String form) {
-		this(type,form,null);
+		this(type,form,null,null);
+	}
+	
+	public RequestDocFormExample(RequestDocumentType type,String form,String example) {
+		this.type = type;
+		this.form = form;
+		this.example = example;
 	}
 	
 	public static RequestDocFormExample[] getExample(RequestReason reason) {

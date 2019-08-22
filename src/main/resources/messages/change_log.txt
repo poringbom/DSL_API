@@ -2,6 +2,7 @@
 	- เพิ่ม API-getSummaryRequestStatus() สำหรับเรียกดูสถานะคำขอของผู้กู้ (ผ่อนผัน/ระงับ) รองรับการเรียก API จาก module Dashboard
 	- เพิ่ม API-listNotification() และ API-acknowledgeNotification() รองรับการการเรียก API จาก module Notification
 	- เพิ่มกลไกทดสอบสอบสำหรับ API-removeRequestDocument(), API-getDocument(), API-uploadRequestDocument()
+	- แก้ API-getRequiredDocument() เพิ่มคืนฟิลด์ 'docDescription' สำหรับเป็นคำอธิบายกำกับประเภทเอกสารที่ต้องแนบ
 	
 2019-08-21
 	- เพิ่ม API-validateUser() สำหรับตรวจสอบข้อมูลผู้ลงทะเบียนถูกต้องตรงตามในข้อมูลกรมการปกครอง และไม่ซ้ำซ้อนกับข้อมูลในระบบ
