@@ -18,7 +18,7 @@ public class PurgeLogSchedule {
 	@Autowired MockResponseSQL mockResponse;
 	
 	@Scheduled(cron="0 0 2 * * ?")
-	public void scheduleFixedDelayTask() {
+	public void clearLogResponse() {
 	    log.info("Start Purge LogApiTesting");
 	    Integer hr = 24;
 	    Date current = Calendar.getInstance().getTime();
@@ -30,5 +30,20 @@ public class PurgeLogSchedule {
 		    log.info("Delete {} records",count);
 	    }
 	    log.info("End Purge LogApiTesting (total delete: {})",total);
+	}
+
+	@Scheduled(cron="0 15 2 * * ?")
+	public void clearUploadFile() {
+	    log.info("Start Purge UploadFile");
+	    Integer hr = 24;
+	    Date current = Calendar.getInstance().getTime();
+	    int count = -1;
+	    int total = 0;
+	    log.info("Delete UploadFile older than {} hr.",hr);
+	    while (count != 0) {
+		    total += count = mockResponse.deleteUpload(hr, current);
+		    log.info("Delete {} records",count);
+	    }
+	    log.info("End Purge UploadFile (total delete: {})",total);
 	}
 }

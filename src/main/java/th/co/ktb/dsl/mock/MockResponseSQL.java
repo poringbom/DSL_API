@@ -61,4 +61,11 @@ public interface MockResponseSQL {
 	public final String GET_TEST_SCENARIO = "SELECT TestScenario FROM TestProxyConfig WHERE TestDev = #{dev}";
 	@Select(GET_TEST_SCENARIO)
 	public String getTestScenario(@Param("dev") String dev);
+	
+	public final String DELETE_UPLOAD = "" +
+			" DELETE TOP (50) l " + 
+			" FROM UploadFile l " + 
+			" WHERE DATEDIFF(HOUR,l.UploadDTM,#{current}) >= #{numHr} ";
+	@Delete(DELETE_UPLOAD)
+	public Integer deleteUpload(@Param("numHr") Integer numHr, @Param("current") Date current);
 }
