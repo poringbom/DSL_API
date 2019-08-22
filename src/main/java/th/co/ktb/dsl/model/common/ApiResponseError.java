@@ -8,21 +8,18 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
 @Data
-@RequiredArgsConstructor
-@NoArgsConstructor
+//@NoArgsConstructor
 @JsonPropertyOrder(alphabetic=false)
 @JsonInclude(Include.NON_NULL)
 public class ApiResponseError {
 	@ApiModelProperty(position = 1, required=true)
-	@NonNull String code;
+	@NonNull String code = "500-001";
 	
 	@ApiModelProperty(position = 2, required=true)
-	@NonNull String message;
+	@NonNull String message = "";
 	
 	@ApiModelProperty(position = 3)
 	String description;
@@ -33,8 +30,14 @@ public class ApiResponseError {
 	@ApiModelProperty(position = 11)
 	List<Error> errors;
 	
+	public ApiResponseError(String code, String message) {
+		this.code = code;
+		this.message = message;
+	}
+	
 	public ApiResponseError(String code, String message, StackTraceElement[] trace) {
-		this(code, message);
+		this.code = code;
+		this.message = message;
 		this.trace = trace;
 	}
 }

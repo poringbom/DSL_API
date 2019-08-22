@@ -1,12 +1,9 @@
 package th.co.ktb.dsl.controller;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.UUID;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import org.apache.tika.Tika;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,21 +16,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import com.google.common.net.HttpHeaders;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocParamAcctNo;
 import th.co.ktb.dsl.apidoc.ApiDocParamLoanType;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorizedFile;
 import th.co.ktb.dsl.apidoc.Team;
+import th.co.ktb.dsl.exception.BadRequestException;
+import th.co.ktb.dsl.mock.ServiceSQL;
+import th.co.ktb.dsl.mock.ServiceSQL.UploadFile;
 import th.co.ktb.dsl.mock.Testable;
 import th.co.ktb.dsl.model.common.DocumentType;
 import th.co.ktb.dsl.model.common.DownloadableDocument;
@@ -48,10 +46,12 @@ import th.co.ktb.dsl.model.suspend.SuspendSummary;
 @Api(tags="2.1. DSL-DMS : Common API", description="API ทั่วไปอาจถูกนำไปใช้ในหลาย module")
 @RestController
 @RequestMapping("/api/v1/dms")
+@Slf4j
 public class CommonController {
 	
+	@Autowired ServiceSQL serviceSQL;
+	
 	private final String uploadRequestDocument = "uploadRequestDocument";
-	@Testable
 	@ApiOperation(value=uploadRequestDocument + Team.DMS_TEAM, 
 			notes="API สำหรับอัพโหลดเอกสาร ")
 	@ApiDocHeaderAuthorized
@@ -63,19 +63,21 @@ public class CommonController {
 		@ApiParam(value="Alias name") @RequestParam(name="alias", required=false) String alias, 
 		@ApiParam(value="Document or category type", required=false) @RequestParam(name="docType", required=true) DocumentType docType,
 		@ApiParam(value="Reference to document", required=true) @RequestParam(name="refID", required=false) String refID
-	) {
-        String name = file.getOriginalFilename();
-        String docID = UUID.randomUUID().toString();
-        ServletUriComponentsBuilder.fromCurrentContextPath()
-			.path("/api/v1")
-			.path("/document")
-			.path("/"+docID)
-			.toUriString();
-        return new DownloadableDocument(docID, name, file.getContentType(), file.getSize());
+	) throws Exception {
+		UploadFile uploadFile = new UploadFile();
+		uploadFile.setContent(file.getBytes());
+		uploadFile.setFileName(file.getOriginalFilename());
+		uploadFile.setDocType(docType.name());
+		uploadFile.setAlias(alias);
+		uploadFile.setRefID(refID);
+		log.info("Add upload file.");
+		serviceSQL.addUplaodFile(uploadFile);
+		log.info("File added with ID: {}",uploadFile.getFileID());
+		String fileID = uploadFile.getFileID().toString();
+        return new DownloadableDocument(fileID, uploadFile.getFileName(), file.getContentType(), file.getSize());
 	}
 
 	private final String removeRequestDocument = "removeRequestDocument";
-	@Testable
 	@ApiOperation(value=removeRequestDocument + Team.DMS_TEAM, 
 			notes="API สำหรับลบเอกสาร")
 	@ApiDocHeaderAuthorized
@@ -86,11 +88,11 @@ public class CommonController {
 		@ApiParam(value="File to upload", required=true) @PathVariable("docID") String docID,
 		@ApiParam(value="Reference to document", required=true) @RequestParam(name="refID", required=true) String refID
 	) {
-		return;
+		log.info("Remove upload fiile with ID: {}",docID);
+		serviceSQL.removeUplaodFile(Integer.valueOf(docID));
 	}
 
 	private final String getDocument = "getDocument";
-	@Testable
 	@ApiOperation(value=getDocument + Team.DMS_TEAM, 
 			notes="API สำหรับดาวน์โหลดเอกสาร")
 	@ApiDocHeaderAuthorized
@@ -99,21 +101,19 @@ public class CommonController {
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<byte[]> getDocument(
 		@PathVariable("docID") String docID
-	) {
-//		return new ResponseEntity<byte[]>(null,,200);
-//        Resource resource=new ClassPathResource("DSL_WOW.pdf");
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        try (InputStream is = resource.getInputStream()){
-//            byte[] buf = new byte[2048]; int cnt = 0;
-//        		while ((cnt=is.read(buf)) > 0) {
-//        			baos.write(buf,0,cnt);
-//        		}
-//        } catch (IOException ex) {}
-//        return ResponseEntity.ok()
-//                .header(HttpHeaders.CONTENT_DISPOSITION,
-//                        "attachment; filename=\"" + resource.getFilename() + "\"")
-//                .body(baos.toByteArray());
-		return null;
+	) throws BadRequestException {
+		UploadFile file = serviceSQL.getUplaodFile(Integer.valueOf(docID));
+		if (file == null) throw new BadRequestException("Invalid docID");
+		org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+		ContentDisposition cd = ContentDisposition.builder("attachment").filename(file.getAlias()).build();
+		headers.setContentDisposition(cd);
+
+		Tika tika = new Tika();
+	    String mimeType = tika.detect(file.getContent());
+		headers.setContentType(MediaType.valueOf( mimeType ));
+
+		log.info("Get upload fiile with ID: {}",docID);
+		return new ResponseEntity<byte[]>(file.getContent(),headers,HttpStatus.OK);
 	}
 
 	private final String getRequestStatus = "getRequestStatus";
