@@ -1,9 +1,13 @@
+2019-08-22
+	- เพิ่ม API-getSummaryRequestStatus() สำหรับเรียกดูสถานะคำขอของผู้กู้ (ผ่อนผัน/ระงับ) รองรับการเรียก API จาก module Dashboard
+	- เพิ่ม API-listNotification() และ API-acknowledgeNotification() รองรับการการเรียก API จาก module Notification
+	
 2019-08-21
 	- เพิ่ม API-validateUser() สำหรับตรวจสอบข้อมูลผู้ลงทะเบียนถูกต้องตรงตามในข้อมูลกรมการปกครอง และไม่ซ้ำซ้อนกับข้อมูลในระบบ
 	- เพิ่ม code ให้ HTTP-Request-Header 'Access-Control-Allow-Methods: *'
 	- แก้ไขเวลาการทดสอบ request API จำเป็นต้อง authentication ให้ไม่จำเป็นต้อง authenticate.
 	- ยกเลิก API-getPostponeRequiredDocument(), API-getSuspendRequiredDocument() แทนที่ด้วย API-getRequiredDocument()
-	- ยกเลิก API-getPostponeRequestStatus(), API-getSuspendRequestStatus() แทนที่ด้วย API-getRequestSummary()
+	- ยกเลิก API-getPostponeRequestStatus(), API-getSuspendRequestStatus() แทนที่ด้วย API-getRequestStatus()
 	- เพิ่ม API-getPaymentReceipt() สำหรับเรียกดูใบเสร็จการชำระเงิน
 	- เพิ่มรายละเอียด และทีม ที่ดำเนินการพัฒนา API
 

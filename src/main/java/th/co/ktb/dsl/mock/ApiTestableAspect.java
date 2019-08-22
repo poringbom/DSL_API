@@ -41,7 +41,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import th.co.ktb.dsl.Utilities;
 import th.co.ktb.dsl.config.ApiMetadataArgumentResolver;
-import th.co.ktb.dsl.exception.ApiException;
 import th.co.ktb.dsl.model.annotation.ApiMetadata;
 import th.co.ktb.dsl.model.common.ApiMetadataRequest;
 import th.co.ktb.dsl.model.common.ApiResponseError;

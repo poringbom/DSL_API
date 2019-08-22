@@ -24,7 +24,6 @@ import th.co.ktb.dsl.model.authen.ActivateUserResponse;
 import th.co.ktb.dsl.model.authen.UserRegisterInfo;
 import th.co.ktb.dsl.model.authen.UserRegisterResponse;
 import th.co.ktb.dsl.model.authen.ValidateUserRequest;
-import th.co.ktb.dsl.model.user.ContactInfo;
 import th.co.ktb.dsl.model.user.PasswordReset;
 import th.co.ktb.dsl.model.user.PasswordReset.PasswordChange;
 import th.co.ktb.dsl.model.user.PinSetup;

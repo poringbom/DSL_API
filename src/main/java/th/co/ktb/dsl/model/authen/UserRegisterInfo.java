@@ -4,7 +4,6 @@ import java.util.Date;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import th.co.ktb.dsl.model.user.RegisterChannel;
 
 @Data
 public class UserRegisterInfo {

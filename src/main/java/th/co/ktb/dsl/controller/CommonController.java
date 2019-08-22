@@ -24,8 +24,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.google.common.net.HttpHeaders;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.Data;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocParamAcctNo;
 import th.co.ktb.dsl.apidoc.ApiDocParamLoanType;
@@ -37,6 +39,8 @@ import th.co.ktb.dsl.model.common.DownloadableDocument;
 import th.co.ktb.dsl.model.common.LoanType;
 import th.co.ktb.dsl.model.common.RequestDocFormExample;
 import th.co.ktb.dsl.model.common.RequestReason;
+import th.co.ktb.dsl.model.postpone.PostponeReason;
+import th.co.ktb.dsl.model.postpone.PostponeStatus;
 
 @Api(tags="2.1. DSL-DMS : Common API", description="API ทั่วไปอาจถูกนำไปใช้ในหลาย module")
 @RestController
@@ -107,9 +111,9 @@ public class CommonController {
                 .body(baos.toByteArray());
 	}
 
-	private final String getRequestSummary = "getRequestSummary";
+	private final String getRequestStatus = "getRequestStatus";
 	@Testable
-	@ApiOperation(value=getRequestSummary + Team.DMS_TEAM,
+	@ApiOperation(value=getRequestStatus + Team.DMS_TEAM,
 			notes="API สำหรับดึงข้อมูลสถานะร้องขอ ณ ปัจจุบัน "
 			+ "โดยข้อมูลจะประกอบด้วยการร้องขอผ่อนผัน/ระงับ ปัจจุบัน และประวัติการร้องขอ"
 			+ "(แทน API-getPostponeRequestStatus() และ )​")
@@ -135,4 +139,46 @@ public class CommonController {
 	) {
 		return RequestDocFormExample.getExample(reason);
 	}
+
+	private final String getSummaryRequestStatus = "getSummaryRequestStatus";
+	@ApiOperation(value=getSummaryRequestStatus + Team.DMS_TEAM,
+			notes="API สำหรับเรียกดูสถานะคำขอของผู้กู้ (ผ่อนผัน/ระงับ) รองรับการเรียก API จาก module Dashboard ")
+	@ApiDocHeaderAuthorized
+	@ApiDocResponseAuthorized
+	@GetMapping(path="/{loanType}/{acctNo}/status")
+	@ResponseStatus(HttpStatus.OK)
+	public RequestSummary getSummaryRequestStatus(
+		@ApiDocParamLoanType @PathVariable("loanType") LoanType loanType,
+		@ApiDocParamAcctNo @PathVariable("acctNo") String acctNo) 
+	{
+		return null;
+	}
+}
+
+@Data
+class RequestSummary {
+	@ApiModelProperty(position = 1, required=false)
+	RequestStatusSummary postponeStatus;
+
+	@ApiModelProperty(position = 2, required=false)
+	RequestStatusSummary suspendStatus;	
+}
+
+@Data 
+class RequestStatusSummary {
+	@ApiModelProperty(position = 1, required=true)
+	String requestNo;
+
+	@ApiModelProperty(position = 2, required=true)
+	PostponeReason requestReason;
+
+	@ApiModelProperty(position = 3, required=true)
+	PostponeStatus requestStatus;
+	
+	@ApiModelProperty(position = 4, required=false)
+	String statusInfo;
+}
+
+enum UserInfoFilter {
+	ALL, ADDRESS_INFO, WORKING_INFO, SPOUSE_INFO
 }

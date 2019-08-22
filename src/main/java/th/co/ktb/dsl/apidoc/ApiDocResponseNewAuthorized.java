@@ -7,7 +7,6 @@ import java.lang.annotation.Target;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.ResponseHeader;
 import th.co.ktb.dsl.model.common.ApiResponseError;
 
 @Target(value={ElementType.METHOD,ElementType.TYPE})

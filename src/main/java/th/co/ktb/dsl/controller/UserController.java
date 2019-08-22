@@ -1,6 +1,5 @@
 package th.co.ktb.dsl.controller;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -14,19 +13,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import lombok.Data;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized2Authen;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized;
 import th.co.ktb.dsl.mock.Testable;
-import th.co.ktb.dsl.model.postpone.PostponeInfo;
-import th.co.ktb.dsl.model.postpone.PostponeReason;
-import th.co.ktb.dsl.model.postpone.PostponeStatus;
-import th.co.ktb.dsl.model.postpone.PostponeSummary;
-import th.co.ktb.dsl.model.suspend.SuspendReason;
 import th.co.ktb.dsl.model.user.LoanInfo;
 import th.co.ktb.dsl.model.user.PersonalInfo;
 import th.co.ktb.dsl.model.user.SpouseInfo;
@@ -123,51 +115,9 @@ public class UserController {
 	) {
 		return;
 	}
-
-	private final String getRequestStatus = "getRequestStatus";
-	@ApiOperation(value=getRequestStatus,
-			notes="API สำหรับเรียกดูข้อมูลคำขอต่างๆของผู้กู้ ที่อยู่ในกระบวนการก่อนการอนุมัติ ")
-	@ApiDocHeaderAuthorized
-	@ApiDocResponseAuthorized
-	@GetMapping(path="/request")
-	@ResponseStatus(HttpStatus.OK)
-	public RequestSummary getRequestStatus() {
-		return null;
-	}
 }
 
 
-@Data
-class RequestSummary {
-	@ApiModelProperty(position = 1, required=false)
-	RequestStatusSummary postponeStatus;
-
-	@ApiModelProperty(position = 2, required=false)
-	RequestStatusSummary suspendStatus;
-
-	@ApiModelProperty(position = 3, required=false)
-	RequestStatusSummary decreaseStatus;
-	
-}
-
-@Data 
-class RequestStatusSummary {
-	@ApiModelProperty(position = 1, required=true)
-	String requestNo;
-
-	@ApiModelProperty(position = 2, required=true)
-	PostponeReason requestReason;
-
-	@ApiModelProperty(position = 3, required=true)
-	PostponeStatus requestStatus;
-	
-	@ApiModelProperty(position = 4, required=false)
-	String statusInfo;
-}
-
-enum UserInfoFilter {
-	ALL, ADDRESS_INFO, WORKING_INFO, SPOUSE_INFO
-}
 
 
 
