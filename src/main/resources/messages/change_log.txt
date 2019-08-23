@@ -1,3 +1,8 @@
+2019-08-23
+	- แก้ไข Enum Type สำหรับ requestReason ของการระงับที่ผิด ไปซ้ำซ้อนกับผ่อนผัน
+	- เพิ่ม rejectReason ใน Model-PostponeInfo และ Model-SuspendInfo รองรับการแสดงเหตุผลการถูกปฏิเสธคำขอผ่อนผัน/ระงับ
+	- แก้ไข format เพิ่มเวลาใน Model-PostponeInfo และ Model-SuspendInfo สำหรับ field 'docSubmitDue', 'effectiveStart', 'effectiveEnd'
+
 2019-08-22
 	- เพิ่ม API-getSummaryRequestStatus() สำหรับเรียกดูสถานะคำขอของผู้กู้ (ผ่อนผัน/ระงับ) รองรับการเรียก API จาก module Dashboard
 	- เพิ่ม API-listNotification() และ API-acknowledgeNotification() รองรับการการเรียก API จาก module Notification

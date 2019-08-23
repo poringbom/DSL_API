@@ -1,5 +1,7 @@
 package th.co.ktb.dsl.controller;
 
+import java.util.Date;
+import java.util.List;
 
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +19,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocParamAcctNo;
@@ -158,9 +165,79 @@ public class CommonController {
 	{
 		return null;
 	}
+	
+	private final String getAccountStatementHistory = "getAccountStatementHistory";
+	@Testable
+	@ApiOperation(value=getAccountStatementHistory, 
+			notes="API สำหรับดึงข้อมูลประวัติบัญชีกู้ยืม รองรับการเรียก API จาก module Dashboard ")
+	@ApiDocHeaderAuthorized
+	@ApiDocResponseAuthorized
+	@GetMapping(path="/{loanType}/{acctNo}/hist", produces=MediaType.APPLICATION_JSON_VALUE)
+	public AccountStatementHistoryRs getAccountStatementHistory(
+		@ApiDocParamLoanType @PathVariable("loanType") LoanType loanType,
+		@ApiDocParamAcctNo @PathVariable("acctNo") String acctNo,
+		
+		@ApiParam(type="query", value="Data offset", required=false, defaultValue="1") 
+		@RequestParam(name="offset", required=false) String offset,
+		
+		@ApiParam(type="query", value="Limit data size (-1 = unlimit)", required=false, defaultValue="-1") 
+		@RequestParam(name="size", required=false) String size,
+		
+		@ApiParam(type="query", value="Filter year (-1 = all, default is current year)", required=false, defaultValue="2019") 
+		@RequestParam(name="year", required=false) String year,
+		
+		@ApiParam(type="query", required=false,
+			value="Filter history type (ประเภทประวัติรายการ ตัวอย่าง ผู้กู้ชำระเงิน, รับเงินค่าเทอม, รับเงินค่าครองชีพ)") 
+		@RequestParam(name="histType", required=false) StatementHistoryType histType
+	) {
+		return null;
+	}
 }
 
+enum StatementHistoryType {
+	PAY,
+	REC_TUITION_FEE,
+	REC_MONTHLY
+}
 
+@Data
+@EqualsAndHashCode(callSuper=false)
+class AccountStatementHistoryRs {
+
+	@ApiModelProperty(position = 1)
+	List<String> filterYear;
+	
+	@JsonProperty("total") 
+	@ApiModelProperty(position = 2)
+	int totalRecord = 0;
+
+	@ApiModelProperty(position = 3)
+	List<StatementItem> history;
+	
+}
+
+@Data
+@EqualsAndHashCode(callSuper=false)
+@AllArgsConstructor
+class StatementItem {
+	@ApiModelProperty(position = 1, example="2019-08-07 22:55:00")
+	@JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")  Date statementDTM;
+	
+	@ApiModelProperty(position = 2)
+	String refID;
+	
+	@ApiModelProperty(position = 3)
+	StatementHistoryType statementType;
+	
+	@ApiModelProperty(position = 4)
+	Double amount;
+	
+	@ApiModelProperty(position = 5)
+	Double principal;
+	
+	@ApiModelProperty(position = 6)
+	String receipt; // link, id, ... 
+}
 
 @Data
 class RequestStatusRs {

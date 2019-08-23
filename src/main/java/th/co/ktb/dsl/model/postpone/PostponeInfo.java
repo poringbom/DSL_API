@@ -21,13 +21,15 @@ public class PostponeInfo {
 	@ApiModelProperty(position = 4, example="2019-08-07 22:55:00", required=true)
 	@JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss") Date requestDate;
 
-	@ApiModelProperty(position = 5, example="2019-08-07")
-	@JsonFormat(pattern = "yyyy-MM-dd")  Date docSubmitDue;
+	@ApiModelProperty(position = 5, example="2019-08-07 22:55:00")
+	@JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")  Date docSubmitDue;
 
-	@ApiModelProperty(position = 6, example="2019-08-07")
-	@JsonFormat(pattern = "yyyy-MM-dd") Date effectiveStart;
+	@ApiModelProperty(position = 6, example="2019-08-07 22:55:00")
+	@JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss") Date effectiveStart;
 
-	@ApiModelProperty(position = 7, example="2019-08-07")
-	@JsonFormat(pattern = "yyyy-MM-dd") Date effectiveEnd;
+	@ApiModelProperty(position = 7, example="2019-08-07 22:55:00")
+	@JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss") Date effectiveEnd;
 
+	@ApiModelProperty(position = 8, required=false)
+	String rejectReason;
 }
