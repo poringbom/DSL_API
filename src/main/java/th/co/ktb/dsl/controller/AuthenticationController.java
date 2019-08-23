@@ -134,4 +134,15 @@ public class AuthenticationController {
 		return new VerifyOTP();
 	}
 
+	private final String verifyToken = "verifyToken";
+	@Testable
+	@ApiOperation(value=verifyToken, 
+			notes="API ตรวจสอบ access token ยังคงมีสิทธิ์อยู่หรือไม่​ ถูกใช้โดย client สำหรับการตรวจสอบเมื่อผู้ใช้มีการ access known url ของ application ตรง")
+	@ApiDocHeaderAuthorized
+	@ApiDocResponseAuthorized
+	@GetMapping(path="/token")
+	@ResponseStatus(HttpStatus.OK)
+	public void verifyToken() {
+		return;
+	}
 }
