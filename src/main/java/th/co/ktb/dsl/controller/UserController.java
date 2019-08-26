@@ -49,6 +49,7 @@ public class UserController {
 	}
 	
 	private final String listUserAccount = "listUserAccount";
+	@Testable
 	@ApiOperation(value=listUserAccount,
 			notes="API สำหรับดึงข้อมูลรายการบัญขีกู้ยืมทั้งหมดของผู้ใช้ " + 
 			"/ ใช้เรียกหลังจากผู้ใช้ login สำเร็จเรียบร้อย (Dashboard)")
