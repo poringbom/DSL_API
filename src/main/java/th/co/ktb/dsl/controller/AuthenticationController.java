@@ -9,18 +9,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import th.co.ktb.dsl.apidoc.ApiDocHeader;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderOptionAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized2Authen;
 import th.co.ktb.dsl.apidoc.ApiDocResponseNewAuthorized;
+import th.co.ktb.dsl.apidoc.ApiDocResponseNoAuthorized;
 import th.co.ktb.dsl.apidoc.Team;
 import th.co.ktb.dsl.mock.MockService;
 import th.co.ktb.dsl.mock.Testable;
@@ -36,7 +40,7 @@ import th.co.ktb.dsl.model.authen.VerifyOTP;
 	description="API เกี่ยวกับการยืนยันตัวตนผู้ใช้ และการลงทะเบียนผู้ใช้ ")
 @RestController
 @RequestMapping("/api/v1")
-
+@Slf4j
 public class AuthenticationController {
 	
 	@Autowired MockService mockService;
@@ -53,6 +57,7 @@ public class AuthenticationController {
 		@RequestBody LoginRequest userLogin,
 		HttpServletResponse response
 	) throws Exception {
+		log.info("signIn()");
 		LoginResponse rt = mockService.signIn(userLogin);
 		response.setHeader("Authorization", "Bearer xxx");
 		return rt;
@@ -86,10 +91,10 @@ public class AuthenticationController {
 	private final String verifyUser = "verifyUser";
 	@Testable
 	@ApiOperation(value=verifyUser, 
-			notes="API สำหรับขอยืนยันตัวตนด้วย รหัสผู้ใช้+รหัสลับ (user+password) เพื่อขอ Verify Token Action (ตัวอย่างใช้งานกรณีลืมรหัส PIN)​ ")
-	@ApiDocHeaderOptionAuthorized
+			notes="API สำหรับขอยืนยันตัวตนด้วย รหัสผู้ใช้+รหัสลับ (user+password) เพื่อขอ Verify Token Action (ตัวอย่างใช้งานกรณีต้องการกำหนดรหัส PIN แต่ลืมรหัส PIN เก่า)​ ")
+	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized2Authen
-	@GetMapping(path="/verifyUser")
+	@PostMapping(path="/verif/user")
 	@ResponseStatus(HttpStatus.OK)
 	public void verifyUser (
 		@RequestBody LoginRequest userLogin
@@ -100,7 +105,7 @@ public class AuthenticationController {
 	@ApiOperation(value=requestOTPVerify+Team.DSL_SECURITY_TEAM, 
 			notes="API สำหรับขอยืนยันตัวตน ด้วย OTP / สำหรับกรณียืนยันตัวตนก่อนมี Authorization (เช่น การลงทะเบียนผู้ใช้)​ ไม่จำเป็นต้องแนบ Token หากมี Authorization แล้วจำเป็นต้องแนบ Token เสมอ")
 	@ApiDocHeaderOptionAuthorized
-	@GetMapping(path="/otp")
+	@PostMapping(path="/verif/otp/req")
 	@ResponseStatus(HttpStatus.OK)
 	public VerifyOTP requestOTPVerify(
 		@ApiParam(name="requestOTP", value="OTP request information", required=true, type="body") @RequestBody RequestVerifyOTP requestOTP
@@ -113,12 +118,12 @@ public class AuthenticationController {
 	@ApiOperation(value=verifyOTP+Team.DSL_SECURITY_TEAM, 
 			notes="API สำหรับตรวจสอบ OTP")
 	@ApiDocHeaderOptionAuthorized
-	@ApiDocResponseAuthorized2Authen
-	@GetMapping(path="/otp/verify")
-	public void verifyOTP (
+	@ApiDocResponseAuthorized
+	@PostMapping(path="/verif/otp")
+	public VerifyOTPRs verifyOTP (
 		@ApiParam(name="challengeOTP", value="Submited OTP", required=true, type="body") @RequestBody ChallengeOTP challengeOTP
 	) {
-		
+		return null;
 	}
 	
 	private final String requestEmailVerify = "requestEmailVerify";
@@ -126,7 +131,8 @@ public class AuthenticationController {
 	@ApiOperation(value=requestEmailVerify, 
 			notes="API สำหรับขอยืนยันตัวตน ด้วย Email / สำหรับกรณียืนยันตัวตนก่อนมี Authorization (การลงทะเบียนผู้ใช้)​")
 	@ApiDocHeaderOptionAuthorized
-	@GetMapping(path="/email/verify")
+	@ApiDocResponseNoAuthorized
+	@PostMapping(path="/verif/email")
 	@ResponseStatus(HttpStatus.OK)
 	public VerifyOTP requestEmailVerify(
 		@ApiParam(name="userRegister", value="User registration with verify by email", required=true, type="body") @RequestBody UserRegisterInfo userRegister
@@ -140,9 +146,14 @@ public class AuthenticationController {
 			notes="API ตรวจสอบ access token ยังคงมีสิทธิ์อยู่หรือไม่​ ถูกใช้โดย client สำหรับการตรวจสอบเมื่อผู้ใช้มีการ access known url ของ application ตรง")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
-	@GetMapping(path="/token")
+	@RequestMapping(path="/verif/token",method=RequestMethod.HEAD)
 	@ResponseStatus(HttpStatus.OK)
 	public void verifyToken() {
 		return;
 	}
+}
+
+@Data
+class VerifyOTPRs { 
+	String verifyActionToken;
 }

@@ -1,7 +1,6 @@
 package th.co.ktb.dsl.controller;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,20 +9,20 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.Data;
 import th.co.ktb.dsl.apidoc.ApiDocHeader;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized2Authen;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderNoAuthorized2Authen;
+import th.co.ktb.dsl.apidoc.ApiDocHeaderOptionAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocResponseNoAuthorized;
 import th.co.ktb.dsl.apidoc.Team;
 import th.co.ktb.dsl.mock.Testable;
-import th.co.ktb.dsl.model.authen.ActivateUserRequest;
-import th.co.ktb.dsl.model.authen.ActivateUserResponse;
-import th.co.ktb.dsl.model.authen.UserRegisterInfo;
-import th.co.ktb.dsl.model.authen.UserRegisterResponse;
 import th.co.ktb.dsl.model.authen.ValidateUserRequest;
+import th.co.ktb.dsl.model.authen.VerifyActionChannel;
 import th.co.ktb.dsl.model.user.PasswordReset;
 import th.co.ktb.dsl.model.user.PasswordReset.PasswordChange;
 import th.co.ktb.dsl.model.user.PinSetup;
@@ -82,13 +81,13 @@ public class RegistrationController {
 	private final String registerUser = "registerUser";
 	@Testable
 	@ApiOperation(value=registerUser+Team.RMS_TEAM, 
-			notes="API สำหรับลงทะเบียนการใช้งานระบบด้วยบัตรประชาชน")
+			notes="API สำหรับลงทะเบียนการใช้งานผู้ใช้ / โดยอ้างอิงจาก Register Ref ID ที่ผ่านการ validation เรียบร้อย และได้รับ Verification Token เพื่อดำเนินการแล้ว")
 	@ApiDocHeaderNoAuthorized2Authen
-	@PostMapping("/register")
+	@PutMapping("/user")
 	@ResponseStatus(HttpStatus.OK)
-	public UserRegisterResponse registerUser(
+	public ReqisterUserRs registerUser(
 		@ApiParam(name="userInfo",type="body",required=true, value="ข้อมูลผู้ใช้สำหรับการลงทะเบียนใช้งาน") 
-		@RequestBody UserRegisterInfo userInfo
+		@RequestBody ReqisterUserRq userInfo
 	) {
 		return null;
 	}
@@ -96,18 +95,18 @@ public class RegistrationController {
 	private final String resendVerifyEmail = "resendVerifyEmail";
 	@Testable
 	@ApiOperation(value=resendVerifyEmail+Team.RMS_TEAM, 
-			notes="API สำหรับส่ง Email เพื่อยืนยันตัวตนเปิดการใช้งานผู้ใช้ในระบบ")
+			notes="API สำหรับส่ง Email เพื่อยืนยันตัวตนลงทะเบียนผู้ใช้ในระบบ")
 	@ApiDocHeader
 	@ApiDocResponseNoAuthorized
 	@PostMapping("/email")
 	@ResponseStatus(HttpStatus.OK)
-	public void resendVerifyEmail(
+	public ResendVerifyEmailRs resendVerifyEmail(
 		@ApiParam(name="registerRef",type="body",required=true, value="Register reference ID") 
-		@RequestBody ActivateUserRequest registerRef
+		@RequestBody ResendVerifyEmailRq registerRef
 	) {
-		return;
+		return null;
 	}
-	
+/*	
 	private final String activateUser = "activateUser";
 	@Testable
 	@ApiOperation(value=activateUser+Team.RMS_TEAM, 
@@ -122,16 +121,19 @@ public class RegistrationController {
 	) {
 		return null;
 	}
-	
+*/	
 	private final String validateUser = "validateUser";
 	@Testable
 	@ApiOperation(value=validateUser+Team.RMS_TEAM, 
-			notes="API สำหรับตรวจสอบข้อมูลผู้ลงทะเบียนถูกต้องตรงตามในข้อมูลกรมการปกครอง และไม่ซ้ำซ้อนกับข้อมูลในระบบ")
-	@ApiDocHeaderNoAuthorized2Authen
+			notes="API สำหรับตรวจสอบข้อมูลผู้ลงทะเบียนถูกต้องตรงตามในข้อมูลกรมการปกครอง และไม่ซ้ำซ้อนกับข้อมูลในระบบ "
+					+ "/ ใช้เรียกในขั้นตอนผู้ใช้กดปุ่ม 'ถัดไป' ในขั้นตอนสมัครทั้งการลงทะเบียนแบบใช้ บัตรประชาชน และ OpenID "
+					+ "/ ผลลัพธ์ระบบจะคืน Reference ID ที่เป็นตัวแทนข้อมูลของผู้ใช้ที่จะสมัครในขั้นตอนถัดๆไป ")
+//	@ApiDocHeaderNoAuthorized2Authen
+	@ApiDocHeaderOptionAuthorized
 	@ApiDocResponseNoAuthorized
-	@GetMapping("/validation")
+	@PostMapping("/user")
 	@ResponseStatus(HttpStatus.OK)
-	public ActivateUserResponse validateUser(
+	public ValidateUserRs validateUser(
 		@ApiParam(name="userInfo",type="body",required=true, value="ข้อมูลผู้ใช้สำหรับการลงทะเบียนใช้งาน") 
 		@RequestBody ValidateUserRequest userInfo
 	) {
@@ -151,4 +153,52 @@ public class RegistrationController {
 		return;
 	}
 */
+}
+
+@Data
+class ValidateUserRs {
+	String registerRefID;
+}
+
+@Data
+class ResendVerifyEmailRq {
+
+	@ApiModelProperty(position = 1, required=true)
+	String registerRefID;
+}
+
+@Data
+class ResendVerifyEmailRs {
+
+	@ApiModelProperty(position = 1, required=true)
+	String registerRefID;
+
+	@ApiModelProperty(position = 2, required=true)
+	VerifyActionChannel verifyChannel;
+	
+	@ApiModelProperty(position = 3, required=false, value="มีค่าเมื่อทำการลงทะเบียนและยืนยันผ่านช่องทาง Email")
+	String email;
+}
+
+@Data
+class ReqisterUserRq {
+
+	@ApiModelProperty(position = 1, required=true)
+	String registerRefID;
+
+	@ApiModelProperty(position = 2, required=true)
+	VerifyActionChannel verifyChannel;
+}
+
+@Data
+class ReqisterUserRs {
+
+	@ApiModelProperty(position = 1, required=true)
+	String registerRefID;
+
+	@ApiModelProperty(position = 2, required=true)
+	VerifyActionChannel verifyChannel;
+	
+	@ApiModelProperty(position = 4, required=false, value="มีค่าเมื่อทำการลงทะเบียนและยืนยันผ่านช่องทาง Mobile")
+	String verifyActionToken;
 }
