@@ -13,10 +13,10 @@ public class PostponeSummary {
 	@ApiModelProperty(position = 2, required=true)
 	boolean onSuspendPeriod = false;
 
-	@ApiModelProperty(position = 3, required=false)
+	@ApiModelProperty(position = 3, required=true)
 	boolean overdueFlag = false;
 
-	@ApiModelProperty(position = 4, required=false)
+	@ApiModelProperty(position = 4, required=true)
 	Integer numApprovedRequest = 0;
 
 	@ApiModelProperty(position = 8)
