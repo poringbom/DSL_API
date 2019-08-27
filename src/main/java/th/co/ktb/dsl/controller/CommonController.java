@@ -29,6 +29,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocParamAcctNo;
@@ -219,6 +220,7 @@ class AccountStatementHistoryRs {
 @Data
 @EqualsAndHashCode(callSuper=false)
 @AllArgsConstructor
+@NoArgsConstructor
 class StatementItem {
 	@ApiModelProperty(position = 1, example="2019-08-07 22:55:00")
 	@JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")  Date statementDTM;
