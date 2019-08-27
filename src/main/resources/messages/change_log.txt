@@ -1,3 +1,8 @@
+2019-08-26
+	- แก้ไข Model-PostponeSummary กำหนดฟิลด์ 'numApprovedRequest' และ 'overdueFlag' เป็นฟิลด์บังคับที่ต้องส่ง
+	- ปรับปรุง API-validateUser(), resendVerifyEmail(), registerUser(), resetPassword() ให้รองรับและเป็นไปตาม business flow
+	- ปรับปรุง API-getUserInfo() รองรับ business flow การกำหนด PIN สำหรับผู้ใช้ที่ทำการเข้าใช้ระบบครั้งแรก หรือ ไม่มีกำหนด PIN ไว้
+
 2019-08-23
 	- แก้ไข Enum Type สำหรับ requestReason ของการระงับที่ผิด ไปซ้ำซ้อนกับผ่อนผัน
 	- เพิ่ม rejectReason ใน Model-PostponeInfo และ Model-SuspendInfo รองรับการแสดงเหตุผลการถูกปฏิเสธคำขอผ่อนผัน/ระงับ
