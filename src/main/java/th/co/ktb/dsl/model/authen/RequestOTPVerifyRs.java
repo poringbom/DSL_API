@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class VerifyOTP extends RequestVerifyOTP{
+public class RequestOTPVerifyRs extends RequestOTPVerifyRq {
 	@ApiModelProperty(position = 10, required=true)
 	String refID;
 	@ApiModelProperty(position = 11, required=true)

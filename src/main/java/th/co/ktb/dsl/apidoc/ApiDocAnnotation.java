@@ -5,9 +5,13 @@ import java.lang.annotation.Annotation;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Example;
+import th.co.ktb.dsl.JwtUtil;
 import th.co.ktb.dsl.model.annotation.ApiMetadata;
 
 public class ApiDocAnnotation {
+	public static final String NO_EXPIRE_TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwb25nY2hldEBvcmNzb2Z0LmNvLnRoIiwidXNlcklEIjoiMSIsImFjdGlvbiI6IkxvZ2luIiwidG9rZW5JRCI6MjIsImV4cGlyZWQiOiIxNTY2OTE2NzE4NDQ2In0.3Zch7i-4McNpVbrtjClPZlLHM1xVHQvZwhqQ1ijoibdzDTeXDDF5bbLj4_C7jwl9gdYKJPqNMm9TBjfhDEpiVQ";
+	public static final String DEFAULT_API_TOKEN = JwtUtil.JWT_HEADER_PREFIX + NO_EXPIRE_TOKEN;
+	
 	public static ApiImplicitParam getIntanceOfApiImplicitParam(final ParamName field) {
 //		@ApiImplicitParam(name = ApiMetadata.HEADER_NAME, value = "Metadata information of service request. syntax: "
 //				+ "src=<channel>;dest=<service-destination>;service=<api-sevice-name>", required = true, 

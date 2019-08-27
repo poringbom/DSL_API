@@ -1,3 +1,19 @@
+2019-08-27
+	- แก้ไข Model-PostponeDetail เพิ่มฟิลด์ additionInfo สำหรับข้อมูล เพื่อนำไปแสดงในรายละเอียดคำขอ (iOS, Android)
+	- เพิ่ม API Spec. User ดังนี้
+		- getUserInfo()
+		- updateUserInfo()
+		- updateUserAddress()
+		- updateUserSpouse()
+		- updateUserWorkInfo()
+	- เพิ่ม API Spec. Authentication ดังนี้
+		- signIn()
+		- signOut()
+		- refreshToken()
+		- verifyToken()
+		- verifyOTP()
+	- เพิ่ม Mock Logic สำหรับการทดสอบ API-signIn(), signOut(), refreshToken(), verifyToken()
+
 2019-08-26
 	- แก้ไข Model-PostponeSummary กำหนดฟิลด์ 'numApprovedRequest' และ 'overdueFlag' เป็นฟิลด์บังคับที่ต้องส่ง
 	- ปรับปรุง API-validateUser(), resendVerifyEmail(), registerUser(), resetPassword() ให้รองรับและเป็นไปตาม business flow
@@ -7,11 +23,11 @@
 	- แก้ไข Enum Type สำหรับ requestReason ของการระงับที่ผิด ไปซ้ำซ้อนกับผ่อนผัน
 	- เพิ่ม rejectReason ใน Model-PostponeInfo และ Model-SuspendInfo รองรับการแสดงเหตุผลการถูกปฏิเสธคำขอผ่อนผัน/ระงับ
 	- แก้ไข format เพิ่มเวลาใน Model-PostponeInfo และ Model-SuspendInfo สำหรับ field 'docSubmitDue', 'effectiveStart', 'effectiveEnd'
- 	- เพิ่ม API-verifyToken() สำหรับตรวจสอบ access token ยังคงมีสิทธิ์อยู่หรือไม่​ ถูกใช้โดย client สำหรับการตรวจสอบเมื่อผู้ใช้มีการ access known url ของ application ตรง
+ 	- เพิ่ม (Draft) API-verifyToken() สำหรับตรวจสอบ access token ยังคงมีสิทธิ์อยู่หรือไม่​ ถูกใช้โดย client สำหรับการตรวจสอบเมื่อผู้ใช้มีการ access known url ของ application ตรง
 
 2019-08-22
 	- เพิ่ม API-getSummaryRequestStatus() สำหรับเรียกดูสถานะคำขอของผู้กู้ (ผ่อนผัน/ระงับ) รองรับการเรียก API จาก module Dashboard
-	- เพิ่ม API-listNotification() และ API-acknowledgeNotification() รองรับการการเรียก API จาก module Notification
+	- เพิ่ม (Draft) API-listNotification() และ API-acknowledgeNotification() รองรับการการเรียก API จาก module Notification
 	- เพิ่มกลไกทดสอบสอบสำหรับ API-removeRequestDocument(), API-getDocument(), API-uploadRequestDocument()
 	- แก้ API-getRequiredDocument() เพิ่มคืนฟิลด์ 'docDescription' สำหรับเป็นคำอธิบายกำกับประเภทเอกสารที่ต้องแนบ
 	
@@ -26,8 +42,8 @@
 
 2019-08-20
 	- เพิ่ม API-getRequestStatus() สำหรับเรียกดูข้อมูลคำขอต่างๆ (ผ่อนผัน,ระงับ,ลดหย่อนการหัก)​ ของผู้กู้ ที่อยู่ในกระบวนการก่อนการอนุมัติ (รองรับการเรียก API จาก module Dashboard)
-	- เพิ่ม API Spec. Authentication: API-signIn(), API-signOut(), API-refreshToken()
-	- เพิ่ม API Spec. Registration: API-registerUser(), API-activateUser(), API-resendVerifyEmail(), API-resetPassword(), API-resetPIN()
+	- เพิ่ม (Draft) API Spec. Authentication : API-signIn(), API-signOut(), API-refreshToken()
+	- เพิ่ม (Draft) API Spec. Registration : API-registerUser(), API-activateUser(), API-resendVerifyEmail(), API-resetPassword(), API-resetPIN()
 
 2019-08-19
 	- แก้ไข API-getPaymentHistory() เพิ่มพารามิเตอร์ 'includeRec' เพื่อเพิ่มเงื่อนไขในการเรียกรายการข้อมูลรวมถึงเงินที่ได้รับจากกองทุน (รองรับการเรียก API จาก module Dashboard)

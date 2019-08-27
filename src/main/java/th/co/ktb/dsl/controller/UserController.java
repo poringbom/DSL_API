@@ -18,6 +18,7 @@ import io.swagger.annotations.ApiParam;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized2Authen;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized;
+import th.co.ktb.dsl.apidoc.Team;
 import th.co.ktb.dsl.mock.Testable;
 import th.co.ktb.dsl.model.user.LoanInfo;
 import th.co.ktb.dsl.model.user.PersonalInfo;
@@ -33,7 +34,7 @@ public class UserController {
 
 	private final String getUserInfo = "getUserInfo";
 	@Testable
-	@ApiOperation(value=getUserInfo,
+	@ApiOperation(value=getUserInfo+Team.GATEWAY_TEAM,
 			notes="API สำหรับดึงข้อมูล profile, contact ของผู้ใช้ และข้อมูลสิทธิ์ทีจำเป็นในการแสดงผลในบางเมนู " + 
 			"/ ใช้เรียกหลังจากผู้ใช้ login สำเร็จเรียบร้อย")
 	@ApiDocHeaderAuthorized
@@ -62,7 +63,7 @@ public class UserController {
 	}
 	
 	private final String updateUserInfo = "updateUserInfo";
-	@ApiOperation(value=updateUserInfo,
+	@ApiOperation(value=updateUserInfo+Team.GATEWAY_TEAM,
 			notes="API สำหรับปรับปรุงข้อมูลพื้นฐานของผู้ใช้ (รหัสบัตรประชาชน, ชื่อ, สกุล, วันเกิด, ข้อมูลติดต่อ) ")
 	@ApiDocHeaderAuthorized2Authen
 	@ApiDocResponseAuthorized
@@ -76,7 +77,7 @@ public class UserController {
 	}
 	
 	private final String updateUserAddress = "updateUserAddress";
-	@ApiOperation(value=updateUserAddress,
+	@ApiOperation(value=updateUserAddress+Team.GATEWAY_TEAM,
 			notes="API สำหรับปรับปรุงข้อมูลที่อยู่ (ที่อยู่ตามทะเบียนบ้าน, ที่อยู่ปัจจุบัน, ที่อยู่จัดส่งเอกสาร) ")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
@@ -90,7 +91,7 @@ public class UserController {
 	}
 	
 	private final String updateUserSpouse = "updateUserSpouse";
-	@ApiOperation(value=updateUserSpouse,
+	@ApiOperation(value=updateUserSpouse+Team.GATEWAY_TEAM,
 			notes="API สำหรับปรับปรุงข้อมูลคู่สมรส ")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized
@@ -104,7 +105,7 @@ public class UserController {
 	}
 	
 	private final String updateUserWorkInfo = "updateUserWorkInfo";
-	@ApiOperation(value=updateUserWorkInfo,
+	@ApiOperation(value=updateUserWorkInfo+Team.GATEWAY_TEAM,
 			notes="API สำหรับปรับปรุงข้อมูลการทำงาน ")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized

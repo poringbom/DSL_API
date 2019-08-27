@@ -12,6 +12,8 @@ import java.util.List;
 
 import org.springframework.core.io.Resource;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class Utilities {
 	public static Date parseDate(String d) {
 		try {
@@ -49,5 +51,14 @@ public class Utilities {
 			if (t.getCause() != null) filterStackTrace(t.getCause());
 		}	
 		return t;
+    }
+    
+    private static ObjectMapper objMapper;
+    synchronized public static ObjectMapper getObjectMapper() {
+    		if (objMapper == null) {
+    			objMapper = new ObjectMapper();
+//    			objMapper.enable(SerializationFeature.INDENT_OUTPUT);
+    			return objMapper;
+    		} else return objMapper;
     }
 }

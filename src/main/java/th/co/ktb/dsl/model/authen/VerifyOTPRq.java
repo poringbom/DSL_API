@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-public class ChallengeOTP {
+public class VerifyOTPRq {
 	@ApiModelProperty(position = 1, required=true)
 	String otp;
 	

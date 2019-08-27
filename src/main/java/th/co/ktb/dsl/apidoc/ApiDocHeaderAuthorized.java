@@ -16,7 +16,7 @@ import th.co.ktb.dsl.model.annotation.ApiMetadata;
 @ApiImplicitParams({
 	@ApiImplicitParam(name = "Authorization", value = "JWT Access Token", required = true, 
 			allowEmptyValue = false, paramType = "header", dataTypeClass = String.class, 
-			example = "Bearer <access_token>"),
+			example = ApiDocAnnotation.DEFAULT_API_TOKEN),
 	@ApiImplicitParam(name = ApiMetadata.HEADER_NAME, value = "Metadata information of service request. syntax: "
 			+ "src=<channel>;dest=<service-destination>;service=<api-sevice-name>", required = true, 
 			allowEmptyValue = false, paramType = "header", dataTypeClass = String.class, 

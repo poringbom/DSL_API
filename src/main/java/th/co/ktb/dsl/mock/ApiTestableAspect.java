@@ -30,14 +30,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +52,7 @@ import th.co.ktb.dsl.model.common.ApiResponseError;
 @Slf4j
 public class ApiTestableAspect {
 	
+	@Value("${test.enable-security}") Boolean testEnable;
 	@Autowired MockResponseSQL mockSQL;
 	@Autowired ApiMetadataArgumentResolver apiMetadataResolver;
 	
@@ -65,6 +65,7 @@ public class ApiTestableAspect {
 	@SuppressWarnings("rawtypes")
 	@Around(DoRestApi)
 	public Object interceptProcess(ProceedingJoinPoint jp) throws Throwable{
+		log.info("------ Start process mock response -------------");
 		MessageFormat mf = new MessageFormat("MockID={0}; ResponseTxID={1}");
 		try {
 		    MethodSignature signature = (MethodSignature) jp.getSignature();
@@ -79,6 +80,12 @@ public class ApiTestableAspect {
 		    } else if ("".equals(apiOperation.value())) {
 		    		log.info("No @apiOpeation.value"); return jp.proceed();
 		    } else {
+	    			boolean isAlwaysMock = testable.alwaysMock();
+	    			if (!isAlwaysMock && testEnable) {
+	    				log.info("There mock logic for service, do logic inside.");
+	    				return jp.proceed();
+	    			}
+		    	
 		    		HttpServletRequest httpRequest = 
 		    				((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes())
 		    				.getRequest();
@@ -93,7 +100,6 @@ public class ApiTestableAspect {
 		    		if (apiMetaData != null) channel = apiMetaData.getSrc();
 		    		
 		    		log.info("Service = {}, Channel = {}, Test-Scenario = {}", apiName, channel, scenario);
-		    		ObjectMapper mapper = new ObjectMapper();
 		    		Class returnType = method.getReturnType();
 //		    		log.info("({} != {}) is {}",returnType,ResponseEntity.class,(returnType != ResponseEntity.class));
 		    		Boolean isResponseEntity = false;
@@ -152,17 +158,19 @@ public class ApiTestableAspect {
 		    								HttpStatus.valueOf(response.responseStatus));
 
 			    				} else {
-				    				Object o = mapper.readValue(responseBody, method.getReturnType());
+				    				Object o = Utilities.getObjectMapper().readValue(responseBody, method.getReturnType());
 					    			return o;
 			    				}
 			    			} else {
 			    				httpResponse.setStatus(response.responseStatus);
-			    				ApiResponseError error = mapper.readValue(responseBody, ApiResponseError.class);
+			    				ApiResponseError error = Utilities.getObjectMapper().readValue(responseBody, ApiResponseError.class);
 			    				log.error("ApiResonseError -> {}",error);
 			    				throw new TestableException(response.responseStatus, error);
 			    			}
 		    			} else {
-		    				log.info("No matched mock response"); return jp.proceed();
+		    				log.info("No matched mock response, always return null <body>"); 
+		    				return null;
+//		    				else return jp.proceed();
 		    			}
 		    		}
 		    }
@@ -173,6 +181,8 @@ public class ApiTestableAspect {
 				log.error(t.getMessage(),t);
 				throw new TestableException(t);
 			}
+		} finally {
+			log.info("------ End process mock response ----------------");
 		}
 	}
 

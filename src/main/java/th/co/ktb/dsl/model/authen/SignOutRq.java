@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-public class LogoutRequest {
+public class SignOutRq {
 	@ApiModelProperty(position = 1, required=true, notes="Access Token")
 	String accessToken;
 	

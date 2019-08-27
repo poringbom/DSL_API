@@ -1,10 +1,14 @@
 package th.co.ktb.dsl.controller;
 
+import java.util.Date;
+
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,7 +19,6 @@ import io.swagger.annotations.ApiParam;
 import lombok.Data;
 import th.co.ktb.dsl.apidoc.ApiDocHeader;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized;
-import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized2Authen;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderNoAuthorized2Authen;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderOptionAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocResponseNoAuthorized;
@@ -38,7 +41,7 @@ public class RegistrationController {
 	@Testable
 	@ApiOperation(value=resetPIN+Team.RMS_TEAM, 
 			notes="API สำหรับกำหนด PIN ใหม่ (กรณีไม่เคยมีมาก่อน หรือ ผู้ใช้ลืม PIN)")
-	@ApiDocHeaderAuthorized2Authen
+	@ApiDocHeaderNoAuthorized2Authen
 	@PostMapping("/pin")
 	@ResponseStatus(HttpStatus.CREATED)
 	public void resetPIN(
@@ -140,19 +143,53 @@ public class RegistrationController {
 		return null;
 	}
 	
-/*
 	private final String registerUserByOpenID = "registerUserByOpenID";
 	@Testable
-	@ApiOperation(value=registerUserByOpenID,hidden=true,
-			notes="API สำหรับลงทะเบียนการใช้งานผ่านช่องทาง OpenID")
-	@PostMapping("/register/openID")
+	@ApiDocHeader
+	@ApiOperation(value=registerUserByOpenID+Team.RMS_TEAM,
+			notes="API (Link) สำหรับเริ่มต้นกระบวนการลงทะเบียนการใช้งานผ่านช่องทาง OpenID")
+	@GetMapping("/openID")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void registerUserByOpenID(
-		
 	) {
 		return;
 	}
-*/
+	
+	private final String getOpenIDUserInfo = "getOpenIDUserInfo";
+	@Testable
+	@ApiDocHeader
+	@ApiOperation(value=getOpenIDUserInfo+Team.RMS_TEAM,
+			notes="API - สำหรับเรียกดูข้อมูลผู้ใช้เริ่มต้น ที่ได้รับจาก OpenID เพื่อตั้งต้นกระบวนการลงทะเบียนผู้ใช้ต่อไป")
+	@GetMapping("/openID/user")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public GetOpenIDUserInfoRs getOpenIDUserInfo(
+		@ApiParam(name="registerRef",type="query",required=true, value="Register reference ID") 
+		@RequestParam("registerRef") String registerRef
+	) {
+		return null;
+	}
+}
+@Data
+class GetOpenIDUserInfoRq {
+	String registerRefID;
+}
+
+@Data
+class  GetOpenIDUserInfoRs {
+	@ApiModelProperty(position = 1, required=true)
+	String citizenID;
+
+	@ApiModelProperty(position = 2, required=true)
+	String title;
+
+	@ApiModelProperty(position = 3, required=true)
+	String firstName;
+
+	@ApiModelProperty(position = 4, required=true)
+	String lastName;
+	
+	@ApiModelProperty(position = 5, example="2019-08-07 22:55:00", required=true)
+	Date dob;
 }
 
 @Data

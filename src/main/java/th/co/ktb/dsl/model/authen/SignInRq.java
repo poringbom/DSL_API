@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-public class LoginRequest {
+public class SignInRq {
 	
 	@ApiModelProperty(position = 1, required=true, example="pongchet@orcsoft.co.th")
 	String username;

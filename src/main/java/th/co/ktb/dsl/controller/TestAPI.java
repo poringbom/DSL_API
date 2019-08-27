@@ -23,8 +23,12 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
+import th.co.ktb.dsl.DateUtil;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized;
+import th.co.ktb.dsl.config.security.UserToken;
+import th.co.ktb.dsl.mock.ServiceSQL;
+import th.co.ktb.dsl.mock.ServiceSQL.UploadFile;
 import th.co.ktb.dsl.mock.Testable;
 import th.co.ktb.dsl.model.annotation.ApiMetadata;
 import th.co.ktb.dsl.model.common.ApiMetadataRequest;
@@ -34,10 +38,11 @@ import th.co.ktb.dsl.service.TestService;
 
 @Api(description="${TEST.DESCRIPTION}", value="${TEST.API}")
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/test")
 @Slf4j
 public class TestAPI {
 	@Autowired TestService service;
+	@Autowired ServiceSQL sql;
 	
 	private final String GET_TEST = "getTest()";
 	@Testable
@@ -58,7 +63,6 @@ public class TestAPI {
 			@RequestParam(required=false, defaultValue="false") Boolean error) throws Exception{
 
 		log.info("apiMeta -> {}",apiMeta);
-		
 		if (error) service.doError();
 		return service.doHello(name);
 	}
@@ -70,6 +74,25 @@ public class TestAPI {
 		tm.setAmount(new BigDecimal(4.9));
 		tm.setDtm(Calendar.getInstance().getTime());
 		log.info(tm.toString());
+		
+
+		UserToken token = new UserToken();
+		token.setUserID(1);
+		token.setExpiredTime(DateUtil.currTime());
+		token.setTokenValue("xxx");
+		token.setAction("Test");
+		token.setLogin("pongchet");
+		sql.addNewToken(token);
+		log.info("token: {}", token);
+		
+		UploadFile upload = new UploadFile();
+		upload.setAlias("alias");
+		upload.setDocType("xx.txt");
+		upload.setRefID("1");
+		upload.setFileName("yy.txt");
+		upload.setContent(new byte[]{});
+		sql.addUplaodFile(upload);
+		log.info("upload: {}", upload);
 		return tm;
 	}
 	
