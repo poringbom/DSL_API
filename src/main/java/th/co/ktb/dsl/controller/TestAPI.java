@@ -38,7 +38,7 @@ import th.co.ktb.dsl.service.TestService;
 
 @Api(description="${TEST.DESCRIPTION}", value="${TEST.API}")
 @RestController
-@RequestMapping("/test")
+@RequestMapping("/api")
 @Slf4j
 public class TestAPI {
 	@Autowired TestService service;

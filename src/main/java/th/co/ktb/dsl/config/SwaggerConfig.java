@@ -68,7 +68,7 @@ public class SwaggerConfig {
             .contact(new Contact("A.Pongchet", "https://github.com/pongchetgithub/DSL_API", "pongchet@orcsoft.co.th"))
 //            .license( (new MessageFormat("Last updated: {0,date} ")).format(new Object [] {lastUpdate}) )
             .license( "Change log ..." )
-            .licenseUrl("/api/v1/changelog")
+            .licenseUrl("/api/changelog")
             .version("1.0.0 - Draft")
             .build();
     }
