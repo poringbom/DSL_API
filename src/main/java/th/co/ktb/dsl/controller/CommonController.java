@@ -154,6 +154,7 @@ public class CommonController {
 	}
 
 	private final String getSummaryRequestStatus = "getSummaryRequestStatus";
+	@Testable
 	@ApiOperation(value=getSummaryRequestStatus + Team.DMS_TEAM, 
 			notes="API สำหรับเรียกดูสถานะคำขอของผู้กู้ (ผ่อนผัน/ระงับ) รองรับการเรียก API จาก module Dashboard ")
 	@ApiDocHeaderAuthorized
