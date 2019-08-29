@@ -13,6 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 import lombok.extern.slf4j.Slf4j;
 import th.co.ktb.dsl.DateUtil;
 import th.co.ktb.dsl.JwtUtil;
+import th.co.ktb.dsl.config.Constants;
 import th.co.ktb.dsl.exception.JwtTokenException;
 import th.co.ktb.dsl.mock.ServiceSQL;
 
@@ -57,7 +58,12 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         if (isExpired) {
 	        	log.error("token ID: "+userToken.getTokenID()+" is invalid. "+"(expired:"+isExpired+")");
 	        	throw new JwtTokenException("JWT token is expired");
-        };
+        }
+        if (!Constants.TOKEN_ACCESS.equals(dbUserToken.getAction())) {
+        		log.info("remove {} token, id: {} from db.",dbUserToken.getAction(),dbUserToken.getTokenID());
+        		serviceSQL.removeToken(dbUserToken.getTokenID());
+        }
+        
         log.info("token ID: "+userToken.getTokenID()+" still valid.");
         List<GrantedAuthority> grantedAuths = new ArrayList<GrantedAuthority>();
         grantedAuths.add(DSLGrantedAuthority.DUMMY_ICASGrantedAuthority);

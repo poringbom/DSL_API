@@ -1,7 +1,14 @@
 package th.co.ktb.dsl.controller;
 
+import java.io.IOException;
 import java.util.Date;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,21 +19,30 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import th.co.ktb.dsl.Utilities;
 import th.co.ktb.dsl.apidoc.ApiDocHeader;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderNoAuthorized2Authen;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderOptionAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocResponseNoAuthorized;
 import th.co.ktb.dsl.apidoc.Team;
+import th.co.ktb.dsl.mock.ServiceSQL;
 import th.co.ktb.dsl.mock.Testable;
 import th.co.ktb.dsl.model.authen.ValidateUserRequest;
 import th.co.ktb.dsl.model.authen.VerifyActionChannel;
+import th.co.ktb.dsl.model.user.OpenIDFormData;
 import th.co.ktb.dsl.model.user.PasswordReset;
+import th.co.ktb.dsl.model.user.PersonTitle;
 import th.co.ktb.dsl.model.user.PasswordReset.PasswordChange;
 import th.co.ktb.dsl.model.user.PinSetup;
 import th.co.ktb.dsl.model.user.PinSetup.PinChange;
@@ -35,7 +51,10 @@ import th.co.ktb.dsl.model.user.PinSetup.PinChange;
 	description="API เกี่ยวกับการลงทะเบียนใช้งาน")
 @RestController
 @RequestMapping("/api/v1/rms")
+@Slf4j
 public class RegistrationController {
+	
+	@Autowired ServiceSQL sql;
 	
 	private final String resetPIN = "resetPIN";
 	@Testable
@@ -60,15 +79,18 @@ public class RegistrationController {
 	) {}
 	
 	private final String resetPassword = "resetPassword";
-	@Testable
+	@Testable(alwaysMock=false)
 	@ApiOperation(value=resetPassword+Team.RMS_TEAM, 
 			notes="API สำหรับกำหนดรหัสผ่านเข้าใช้งานระบบใหม่ (กรณีผู้ใช้ลืม PIN)")
 	@ApiDocHeaderNoAuthorized2Authen
 	@PostMapping("/password")
 	@ResponseStatus(HttpStatus.CREATED)
 	public void resetPassword(
-		@ApiParam(name="passwordReset",type="body",value="New password", required=true) @RequestBody PasswordReset passwordReset
-	) {}
+		@ApiParam(name="passwordReset",type="body",value="New password", required=true) 
+		@RequestBody PasswordReset passwordReset
+	) {
+		log.info("do reset password.");
+	}
 	
 	private final String changePassword = "changePassword";
 	@Testable
@@ -144,29 +166,38 @@ public class RegistrationController {
 	}
 	
 	private final String registerUserByOpenID = "registerUserByOpenID";
-	@Testable
 	@ApiDocHeader
 	@ApiOperation(value=registerUserByOpenID+Team.RMS_TEAM,
 			notes="API (Link) สำหรับเริ่มต้นกระบวนการลงทะเบียนการใช้งานผ่านช่องทาง OpenID")
 	@GetMapping("/openID")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void registerUserByOpenID(
-	) {
-		return;
+		HttpServletRequest request, 
+		HttpServletResponse response
+	) throws IOException, ServletException {
+		request.getRequestDispatcher("/openID").forward(request, response);
+//		response.sendRedirect("/openID");
 	}
 	
 	private final String getOpenIDUserInfo = "getOpenIDUserInfo";
-	@Testable
+	@Testable(alwaysMock=false)
 	@ApiDocHeader
 	@ApiOperation(value=getOpenIDUserInfo+Team.RMS_TEAM,
 			notes="API - สำหรับเรียกดูข้อมูลผู้ใช้เริ่มต้น ที่ได้รับจาก OpenID เพื่อตั้งต้นกระบวนการลงทะเบียนผู้ใช้ต่อไป")
 	@GetMapping("/openID/user")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@ResponseStatus(HttpStatus.OK)
 	public GetOpenIDUserInfoRs getOpenIDUserInfo(
 		@ApiParam(name="registerRef",type="query",required=true, value="Register reference ID") 
 		@RequestParam("registerRef") String registerRef
-	) {
-		return null;
+	) throws JsonParseException, JsonMappingException, IOException {
+		String tempUserInfo = sql.getTempUser(registerRef);
+		OpenIDFormData fromData = Utilities.getObjectMapper().readValue(tempUserInfo, OpenIDFormData.class);
+		GetOpenIDUserInfoRs ret = new GetOpenIDUserInfoRs();
+		ret.setCitizenID(fromData.getCitizenID());
+		ret.setTitle(fromData.getTitle());
+		ret.setFirstName(fromData.getFirstName());
+		ret.setLastName(fromData.getLastName());
+		ret.setDob(fromData.getDob());
+		return ret;
 	}
 }
 @Data
@@ -180,7 +211,7 @@ class  GetOpenIDUserInfoRs {
 	String citizenID;
 
 	@ApiModelProperty(position = 2, required=true)
-	String title;
+	PersonTitle title;
 
 	@ApiModelProperty(position = 3, required=true)
 	String firstName;
@@ -188,7 +219,8 @@ class  GetOpenIDUserInfoRs {
 	@ApiModelProperty(position = 4, required=true)
 	String lastName;
 	
-	@ApiModelProperty(position = 5, example="2019-08-07 22:55:00", required=true)
+	@ApiModelProperty(position = 5, example="2019-08-07", required=true)
+	@JsonFormat(pattern = "yyyy-MM-dd") 
 	Date dob;
 }
 

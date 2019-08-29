@@ -1,5 +1,7 @@
 package th.co.ktb.dsl.mock;
 
+import java.util.Date;
+
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -9,6 +11,9 @@ import org.apache.ibatis.annotations.SelectKey;
 
 import lombok.Data;
 import th.co.ktb.dsl.config.security.UserToken;
+import th.co.ktb.dsl.model.authen.MockOTP;
+import th.co.ktb.dsl.model.user.OpenIDFormData;
+import th.co.ktb.dsl.model.user.OpenIDFormData.TempUser;
 
 @Mapper
 public interface ServiceSQL {
@@ -40,6 +45,26 @@ public interface ServiceSQL {
 	
 	@Delete("DELETE FROM MockToken WHERE TokenID = #{tokenID}")
 	public Integer removeToken(Integer tokenID);
+
+	@Insert("INSERT INTO MockOTP (RefID, UserID, OTP, Action, ExpireDTM, Channel, ChannelInfo) "
+			+ "VALUES (#{refID}, #{userID}, #{otp}, #{action}, #{expireDTM}, #{channel}, #{channelInfo}) ")
+	public Integer addNewOTP(MockOTP otp);
+	
+	@Select("SELECT RefID, OTP, ExpireDTM FROM MockOTP WHERE RefID = #{refID}")
+	public MockOTP checkOTP(@Param("refID") String refID);
+	
+	@Delete("DELETE FROM MockOTP WHERE RefID = #{refID}")
+	public Integer removeOTP(@Param("refID") String refID);
+
+	@Select("SELECT ConfigValue FROM Config WHERE ConfigName = #{config}")
+	public String getConfig(String refID);
+	
+	@Insert("INSERT INTO TempUser (TempUserInfo) VALUES (#{data}) ")
+	@SelectKey(statement="SELECT @@identity", keyProperty="refID", before=false, resultType=Integer.class)
+	public Integer addTempUser(TempUser data);
+	
+	@Select("SELECT TempUserInfo FROM TempUser WHERE RefID = #{refID}")
+	public String getTempUser(String refID);
 	
 	@Data
 	public static class LoginUser {

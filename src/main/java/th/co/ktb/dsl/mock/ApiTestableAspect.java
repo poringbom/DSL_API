@@ -150,7 +150,7 @@ public class ApiTestableAspect {
 		    					responseBody = null;
 		    				}
 			    			if (response.responseStatus >= 200 && response.responseStatus < 300) {
-			    				log.error("Return MockID -> {},responseBodyID -> {}  (ResponseID: {})",response.getMockID(), response.getResponseBodyID(), responseTxID);
+			    				log.info("Return MockID -> {},responseBodyID -> {}  (ResponseID: {})",response.getMockID(), response.getResponseBodyID(), responseTxID);
 			    				if ( isResponseEntity ) {
 		    						return new ResponseEntity<byte[]>(
 		    								Base64.getDecoder().decode(responseBody), 
@@ -164,7 +164,7 @@ public class ApiTestableAspect {
 			    			} else {
 			    				httpResponse.setStatus(response.responseStatus);
 			    				ApiResponseError error = Utilities.getObjectMapper().readValue(responseBody, ApiResponseError.class);
-			    				log.error("ApiResonseError -> {}",error);
+			    				log.info("Return MockID -> {}, ApiResonseError -> {}",response.getMockID(), error);
 			    				throw new TestableException(response.responseStatus, error);
 			    			}
 		    			} else {

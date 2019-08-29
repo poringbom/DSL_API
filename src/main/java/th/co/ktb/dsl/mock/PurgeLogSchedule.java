@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import lombok.extern.slf4j.Slf4j;
+import th.co.ktb.dsl.DateUtil;
 
 @Configuration
 @EnableScheduling
@@ -16,6 +17,11 @@ import lombok.extern.slf4j.Slf4j;
 public class PurgeLogSchedule {
 	
 	@Autowired MockResponseSQL mockResponse;
+
+	@Scheduled(cron="0 0/10 * * * ?")
+	public void justStandby() {
+		log.info("Server standby: {}",DateUtil.dateToDateStr(DateUtil.currTime(), "HH:mm:ss") );
+	}
 	
 	@Scheduled(cron="0 30 12 * * ?")
 	public void purgeData() {
@@ -37,6 +43,14 @@ public class PurgeLogSchedule {
 		    log.info("Delete {} records",count);
 	    }
 	    log.info("End Purge UploadFile (total delete: {})",total);
+	    
+	    count = -1; total = 0; hr = 2;
+	    log.info("Delete Token expired than {} hr.",hr);
+	    while (count != 0) {
+		    total += count = mockResponse.deleteToken(hr, current);
+		    log.info("Delete {} records",count);
+	    }
+	    log.info("End Purge Token (total delete: {})",total);
 	}
 
 }

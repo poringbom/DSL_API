@@ -16,8 +16,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import th.co.ktb.dsl.DateUtil;
 import th.co.ktb.dsl.JwtUtil;
 import th.co.ktb.dsl.apidoc.ApiDocAnnotation;
 import th.co.ktb.dsl.apidoc.ApiDocHeader;
@@ -37,6 +40,7 @@ import th.co.ktb.dsl.model.authen.VerifyOTPRq;
 import th.co.ktb.dsl.model.authen.SignInRq;
 import th.co.ktb.dsl.model.authen.SignInRs;
 import th.co.ktb.dsl.model.authen.SignOutRq;
+import th.co.ktb.dsl.model.authen.MockOTP;
 import th.co.ktb.dsl.model.authen.RequestOTPVerifyRq;
 import th.co.ktb.dsl.model.authen.UserRegisterInfo;
 import th.co.ktb.dsl.model.authen.RequestOTPVerifyRs;
@@ -139,7 +143,7 @@ public class AuthenticationController {
 	) {}
 	
 	private final String requestOTPVerify = "requestOTPVerify";
-	@Testable
+	@Testable(alwaysMock=false)
 	@ApiOperation(value=requestOTPVerify+Team.DSL_SECURITY_TEAM, 
 			notes="API สำหรับขอยืนยันตัวตน ด้วย OTP / สำหรับกรณียืนยันตัวตนก่อนมี Authorization (เช่น การลงทะเบียนผู้ใช้)​ ไม่จำเป็นต้องแนบ Token หากมี Authorization แล้วจำเป็นต้องแนบ Token เสมอ")
 	@ApiDocHeaderOptionAuthorized
@@ -149,11 +153,15 @@ public class AuthenticationController {
 		@ApiParam(name="requestOTP", value="OTP request information", required=true, type="body") 
 		@RequestBody RequestOTPVerifyRq requestOTP
 	) {
-		return new RequestOTPVerifyRs();
+		RequestOTPVerifyRs ret = mockService.generateOTP(
+				requestOTP.getObjective(), 
+				requestOTP.getChannel(), 
+				requestOTP.getChannelInfo());
+		return ret;
 	}
 	
 	private final String verifyOTP = "verifyOTP";
-	@Testable
+	@Testable(alwaysMock=false)
 	@ApiOperation(value=verifyOTP+Team.DSL_SECURITY_TEAM, 
 			notes="API สำหรับตรวจสอบ OTP")
 	@ApiDocHeaderOptionAuthorized
@@ -162,8 +170,28 @@ public class AuthenticationController {
 	public VerifyOTPRs verifyOTP (
 		@ApiParam(name="challengeOTP", value="Submited OTP", required=true, type="body") 
 		@RequestBody VerifyOTPRq challengeOTP
-	) {
-		return null;
+	) throws ClientException {
+		MockOTP mockOTP = serviceSQL.checkOTP(challengeOTP.getRefID());
+		if (mockOTP == null) {
+			throw new ClientException("400-000","Not found OTP ref");
+		} else {
+			if (mockOTP.getExpireDTM().before(DateUtil.currTime())) {
+				throw new ClientException("400-001","OTP expired");
+			}
+			if (!mockOTP.getOtp().equals(challengeOTP.getOtp())) {
+				throw new ClientException("400-002","Invalid otp");
+			}
+		}
+		
+		log.info("Generate one-time token.");
+		UserToken userToken = UserToken.createOneTimeToken();
+		serviceSQL.addNewToken(userToken);
+		String token = jwtUtil.generateToken(userToken);
+		log.info("One-time token with value: {}",userToken);
+		VerifyOTPRs ret = new VerifyOTPRs(token);
+		log.info("Remove token refID: {}",challengeOTP.getRefID());
+		serviceSQL.removeOTP(challengeOTP.getRefID());
+		return ret;
 	}
 	
 	private final String requestEmailVerify = "requestEmailVerify";
@@ -195,6 +223,8 @@ public class AuthenticationController {
 }
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 class VerifyOTPRs { 
 	String verifyActionToken;
 }

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head xmlns:th="http://www.thymeleaf.org">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Mock OpenID</title>
+</head>
+<body>
+	<h1>Registration User Information</h1>
+	<form action="#" th:action="@{/openID}" th:object="${formData}" method="post">
+    		<p>
+    			คำนำหน้า: <select th:field="*{title}">
+    						<option value="MR">นาย</option>
+    						<option value="MRS">นางสาว</option>
+    						<option value="MISS">นาง</option>
+    						<option value="BOY">ด.ช.</option>
+    						<option value="GIRL">ด.ญ.</option>
+    					</select>
+    			ชื่อ* : <input type="text" th:field="*{firstName}"/>
+    			สกุล* : <input type="text" th:field="*{lastName}"/>
+    		</p>
+        <p>
+        		เลขบัตรประชาชน* : <input type="text" th:field="*{citizenID}"/>
+        		วัน เดือน ปีเกิด* : <input type="text" th:field="*{dob}"/></p>
+        <p>
+        		<input type="submit" value="Submit" /> 
+	        <input type="submit" value="Cancel" /> 
+	        <input type="reset" value="Reset" />
+		</p>
+    </form>
+</body>
+</html>

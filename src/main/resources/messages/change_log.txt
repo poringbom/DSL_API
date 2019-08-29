@@ -1,3 +1,11 @@
+2019-08-29
+	- แก้ Model-PaymentItem ให้สามารถคืน response ได้จากการทดสอบ API-getPaymentHistory()
+
+2019-08-28
+	- แก้ไข API-getSummaryRequestStatus() ให้เข้ากลไกทดสอบได้
+	- เพิ่ม API-registerUserByOpenID() Link สำหรับเริ่มต้นกระบวนการลงทะเบียนการใช้งานผ่านช่องทาง OpenID
+	- เพิ่ม API-getOpenIDUserInfo() สำหรับเรียกดูข้อมูลผู้ใช้เริ่มต้น ที่ได้รับจาก OpenID เพื่อตั้งต้นกระบวนการลงทะเบียนผู้ใช้ต่อไป
+
 2019-08-27
 	- แก้ไข Model-PostponeDetail เพิ่มฟิลด์ additionInfo สำหรับข้อมูล เพื่อนำไปแสดงในรายละเอียดคำขอ (iOS, Android)
 	- เพิ่ม API Spec. User ดังนี้
@@ -12,6 +20,7 @@
 		- refreshToken()
 		- verifyToken()
 		- verifyOTP()
+		- requestOTPVerify()
 	- เพิ่ม Mock Logic สำหรับการทดสอบ API-signIn(), signOut(), refreshToken(), verifyToken()
 
 2019-08-26

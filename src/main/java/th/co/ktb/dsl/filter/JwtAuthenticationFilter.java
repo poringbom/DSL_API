@@ -30,13 +30,18 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
     		throws AuthenticationException {
     		logger.info("*** attempAuthen: jwttoken for request url: "+request.getRequestURL().toString());
         String hToken = request.getHeader(JwtUtil.JWT_AUTHORIZATION_HEADER);
+        String actToken = request.getHeader(JwtUtil.JWT_VERIFY_ACTION_TOKEN);
         String qsToken = request.getParameter(JwtUtil.JWT_QUERY_STRING_PARAM);
         JwtAuthenticationToken authRequest = null;
         if (qsToken != null) {
-        	logger.info("token come along with request via query string.");
-        	authRequest = new JwtAuthenticationToken(qsToken);
-        } else if (hToken != null && hToken.startsWith(JwtUtil.JWT_HEADER_PREFIX)) {
-        		logger.info("token come along with request via header.");
+	        	logger.info("token come along with request via query string.");
+	        	authRequest = new JwtAuthenticationToken(qsToken);
+        } else if (actToken != null && actToken.startsWith(JwtUtil.JWT_HEADER_OTT_PREFIX)) {
+	    		logger.info("token come along with request via header (VerifyAction).");
+	        String authToken = actToken.substring(6);
+	    		authRequest = new JwtAuthenticationToken(authToken);
+	    } else if (hToken != null && hToken.startsWith(JwtUtil.JWT_HEADER_PREFIX)) {
+        		logger.info("token come along with request via header (Authroization) .");
 	        String authToken = hToken.substring(7);
 	        authRequest = new JwtAuthenticationToken(authToken);
         } else {

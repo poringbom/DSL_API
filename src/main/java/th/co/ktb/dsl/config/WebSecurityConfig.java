@@ -58,9 +58,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			TOKEN_REFRESH_ENTRY_POINT,
 			API_LOGIN_ENTRY_POINT,
 			"/test",
+			"/api/v1/rms/openID/user",
+			"/api/v1/rms/openID",
 			"/api/v1/verif/otp/req",
 			"/api/v1/verif/email",
-			"/api/v1/verif/otp/req",
 			"/api/v1/verif/otp"
 		);
 	
@@ -86,6 +87,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 			.antMatchers("/api/changelog").permitAll()
 			.antMatchers("/messages/**").permitAll()
+			//------------------
+			.antMatchers("/test").permitAll()
+			.antMatchers("/openID").permitAll()
+			.antMatchers("/api/v1/rms/openID/user").permitAll()
+			.antMatchers("/api/v1/rms/openID").permitAll()
+			.antMatchers("/api/v1/verif/otp/req").permitAll()
+			.antMatchers("/api/v1/verif/email").permitAll()
+			.antMatchers("/api/v1/verif/otp").permitAll()
+			//------------------
 			.anyRequest().authenticated()
 		.and()
 			.sessionManagement()

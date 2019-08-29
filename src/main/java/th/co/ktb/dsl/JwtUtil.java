@@ -19,7 +19,9 @@ public class JwtUtil {
 
 	public static final String JWT_AUTHORIZATION_HEADER = "Authorization";
 	public static final String JWT_HEADER_PREFIX = "Bearer ";
+	public static final String JWT_HEADER_OTT_PREFIX = "Token ";
 	public static final String JWT_QUERY_STRING_PARAM = "T";
+	public static final String JWT_VERIFY_ACTION_TOKEN = "Verify-Token-Action";
 	public static Integer JWT_EXPIRE_SEC = 900;
 	
 	@Getter private Integer jwtExpireSec = 900; //31536000

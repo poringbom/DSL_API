@@ -68,9 +68,13 @@ public class DateUtil {
 		return df.format(date);
 	}
 
-	public static Date dateStrToDate(final String dateStr, String format) throws ParseException {
-		SimpleDateFormat df = new SimpleDateFormat(format, DEFAULT_LOCALE);
-		return df.parse(dateStr);
+	public static Date dateStrToDate(final String dateStr, String format) {
+		try {
+			SimpleDateFormat df = new SimpleDateFormat(format, DEFAULT_LOCALE);
+			return df.parse(dateStr);
+		} catch (ParseException ex) {
+			return currDate();
+		}
 	}
 
 	public static Date BEtoAD(final Date be) {

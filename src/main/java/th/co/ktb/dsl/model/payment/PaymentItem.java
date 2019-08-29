@@ -8,11 +8,13 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import th.co.ktb.dsl.model.common.PaymentStatus;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
 @AllArgsConstructor
+@NoArgsConstructor
 public class PaymentItem {
 	@ApiModelProperty(position = 1)
 	String refID;
