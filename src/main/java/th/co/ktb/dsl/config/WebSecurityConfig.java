@@ -165,11 +165,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
    public AuthenticationManager authenticationManagerBean() throws Exception {
        return super.authenticationManagerBean();
    }
-   
-   @Bean
-   public RestTemplate restTemplate() {
-	    return new RestTemplate();
-	}
 	
 	@Autowired
 	public void configure(AuthenticationManagerBuilder auth) throws Exception{
