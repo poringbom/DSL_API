@@ -13,4 +13,5 @@ public class MockOTP {
 	Date expireDTM;
 	String channel;
 	String channelInfo;
+	String status;
 }

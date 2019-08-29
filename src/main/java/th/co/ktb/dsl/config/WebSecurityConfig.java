@@ -16,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 import th.co.ktb.dsl.JwtUtil;
@@ -58,10 +59,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			TOKEN_REFRESH_ENTRY_POINT,
 			API_LOGIN_ENTRY_POINT,
 			"/test",
-			"/api/v1/rms/openID/user",
+			"/api/v1/rms/email",
 			"/api/v1/rms/openID",
+			"/api/v1/rms/openID/user",
 			"/api/v1/verif/otp/req",
-			"/api/v1/verif/email",
 			"/api/v1/verif/otp"
 		);
 	
@@ -90,10 +91,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			//------------------
 			.antMatchers("/test").permitAll()
 			.antMatchers("/openID").permitAll()
-			.antMatchers("/api/v1/rms/openID/user").permitAll()
+			.antMatchers("/api/v1/rms/email").permitAll()
 			.antMatchers("/api/v1/rms/openID").permitAll()
+			.antMatchers("/api/v1/rms/openID/user").permitAll()
 			.antMatchers("/api/v1/verif/otp/req").permitAll()
-			.antMatchers("/api/v1/verif/email").permitAll()
 			.antMatchers("/api/v1/verif/otp").permitAll()
 			//------------------
 			.anyRequest().authenticated()
@@ -164,6 +165,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
    public AuthenticationManager authenticationManagerBean() throws Exception {
        return super.authenticationManagerBean();
    }
+   
+   @Bean
+   public RestTemplate restTemplate() {
+	    return new RestTemplate();
+	}
 	
 	@Autowired
 	public void configure(AuthenticationManagerBuilder auth) throws Exception{

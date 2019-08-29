@@ -1,10 +1,23 @@
 package th.co.ktb.dsl.mock;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
+
+import com.google.common.net.MediaType;
 
 import lombok.extern.slf4j.Slf4j;
 import th.co.ktb.dsl.DateUtil;
@@ -19,6 +32,11 @@ import th.co.ktb.dsl.model.authen.VerifyOTPChannel;
 @Slf4j
 public class MockService {
 	@Autowired ServiceSQL sql;
+	@Autowired JavaMailSender javaMailSender;
+	@Autowired RestTemplate restTemplate;
+	@Value("${sms.username}") String smsUser;
+	@Value("${sms.password}") String smsPwd;
+	
 	public SignInRs signIn(SignInRq login) throws Exception{
 		Object o = sql.login(login.getUsername(), login.getPassword());
 		if (o == null) {
@@ -27,7 +45,8 @@ public class MockService {
 		return new SignInRs();
 	}
 	
-	
+	private static String SMS_URL="https://secure.thaibulksms.com/sms_api.php?%s";
+//	private static String SMS_URL="username=ktbdslapi&password=abc1234-&msisdn=0819248388&message=testมีภาษาไทยด้วย"
 
 	public RequestOTPVerifyRs generateOTP(String objective, VerifyOTPChannel channel, String channelInfo){
 		String refID = new String(generateRef(4));
@@ -45,7 +64,6 @@ public class MockService {
 		mockOTP.setChannelInfo(channelInfo);
 		mockOTP.setExpireDTM(expireTime);
 		log.info("Generated OTP: {} ",mockOTP);
-		sql.addNewOTP(mockOTP);
 		
 		RequestOTPVerifyRs otpVerif = new RequestOTPVerifyRs();
 		String validPeriod = DateUtil.dateToDateStr(
@@ -55,6 +73,26 @@ public class MockService {
 		otpVerif.setRefID(refID);
 		otpVerif.setObjective(objective);
 		otpVerif.setValidPeriod(validPeriod);
+		
+
+		String text = "OTP: "+otp+" เลขอ้างอิง: "+refID+" หมดอายุภายใน: "+validPeriod+" นาที";
+		String status = null;
+		try {
+			if (VerifyOTPChannel.MOBILE == channel) {
+//--- SMS -------
+//				String encodeText = URLEncoder.encode(text, "UTF-8");
+				String encodeText = text;
+				status = sendOTP(channelInfo,encodeText);
+			} else if (VerifyOTPChannel.EMAIL == channel) {
+//--- EMAIL -------
+				sendEmail(channelInfo,"OTP Verification",text);
+				status = "Send email success";
+			}
+		} catch(Exception ex) {
+			status = ex.getMessage();
+		}
+		mockOTP.setStatus(status);
+		sql.addNewOTP(mockOTP);
 		return otpVerif;
 	}
 
@@ -86,6 +124,33 @@ public class MockService {
         } 
         return otp; 
     } 
+	
+	private String sendOTP(String mobileNo, String text) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("username", smsUser);
+		params.put("password", smsPwd);
+		params.put("msisdn", mobileNo);
+		params.put("message", text);
+		String parametrizedArgs = params.keySet().stream().map(k ->
+		    String.format("%s={%s}", k, k)
+		).collect(Collectors.joining("&"));
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_XML_UTF_8.toString());
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+		log.info("SMS URL >> {}",String.format(SMS_URL, parametrizedArgs));
+		ResponseEntity<String> ret = restTemplate.exchange(
+				String.format(SMS_URL, parametrizedArgs), HttpMethod.GET, entity, String.class, params);
+		return ret.getBody();
+//		return "Send sms success";
+	}
+	
+	public void sendEmail(String toEmail, String title, String text) {
+        SimpleMailMessage msg = new SimpleMailMessage();
+        msg.setTo(toEmail);
+        msg.setSubject(title); //"Testing OTP"
+        msg.setText(text); //"Your OTP Code: , Ref"
+        javaMailSender.send(msg);
+    }
 }
 
 

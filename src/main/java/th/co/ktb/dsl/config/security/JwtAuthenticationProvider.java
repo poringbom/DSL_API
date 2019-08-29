@@ -59,7 +59,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 	        	log.error("token ID: "+userToken.getTokenID()+" is invalid. "+"(expired:"+isExpired+")");
 	        	throw new JwtTokenException("JWT token is expired");
         }
-        if (!Constants.TOKEN_ACCESS.equals(dbUserToken.getAction())) {
+        if (dbUserToken != null && !Constants.TOKEN_ACCESS.equals(dbUserToken.getAction())) {
         		log.info("remove {} token, id: {} from db.",dbUserToken.getAction(),dbUserToken.getTokenID());
         		serviceSQL.removeToken(dbUserToken.getTokenID());
         }

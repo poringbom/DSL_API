@@ -4,7 +4,6 @@ import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -25,7 +24,10 @@ public class OpenIDFormData {
 	
 	@Data
 	public static class TempUser {
+		public static final String TEMP_OPEN_ID = "OpenID";
+		public static final String TEMP_VALIDATED = "Validated";
 		Integer refID;
 		String data;
+		String type = TEMP_OPEN_ID;
 	}
 }

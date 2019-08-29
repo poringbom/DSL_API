@@ -2,8 +2,10 @@ package th.co.ktb.dsl;
 
 import java.util.Date;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -12,10 +14,13 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import th.co.ktb.dsl.config.security.UserToken;
+import th.co.ktb.dsl.mock.ServiceSQL;
 
 @Component
 @Slf4j
 public class JwtUtil {
+	
+	@Autowired ServiceSQL sql;
 
 	public static final String JWT_AUTHORIZATION_HEADER = "Authorization";
 	public static final String JWT_HEADER_PREFIX = "Bearer ";
@@ -82,4 +87,16 @@ public class JwtUtil {
                 .compact();
     }
     
+    public String generateOneTimeToken(String login, Integer userID, String action) throws JsonProcessingException {
+    		UserToken userToken = UserToken.createOneTimeToken();
+    		userToken.setLogin(login);
+		userToken.setUserID(userID);
+		userToken.setAction(action);
+//		userToken.setTokenValue(Utilities.getObjectMapper().writeValueAsString(userToken));
+		sql.addNewToken(userToken);
+		userToken.getTokenID();
+		String verifyActionToken = generateToken(userToken);
+		log.info("create verify-action-token for {}, tokenID: {}\n{}", action, userToken.getTokenID(), verifyActionToken);
+    		return verifyActionToken;
+    }
 }
