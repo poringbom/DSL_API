@@ -1,5 +1,6 @@
 2019-08-29
 	- แก้ Model-PaymentItem ให้สามารถคืน response ได้จากการทดสอบ API-getPaymentHistory()
+	- เพิ่ม Enum-RequestDocumentType (SALARAY_SLIP_AFTER, SUSPEND_REQUEST_FORM, INCOMPETENCE_CERTIFICATE, DISABILITY_CERTIFICATE, MEDICAL_CERTIFICATE)
 
 2019-08-28
 	- แก้ไข API-getSummaryRequestStatus() ให้เข้ากลไกทดสอบได้
