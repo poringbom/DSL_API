@@ -2,6 +2,7 @@
 	- แก้ไข Model-LoanInfo (listUserAccount())
 		- เพิ่มฟิลด์ acctStatus แสดงสถานะบัญชีลูกหนี้
 		- เพิ่มฟิลด์ receivingAcct สำหรับข้อมูลบัญชีรับเงินจากกองทุน
+	- แก้ไข API-uploadRequestDocument() แก้ไขให้พารามิเตอร์ 'docType' เป็น required
 
 2019-08-29
 	- แก้ Model-PaymentItem ให้สามารถคืน response ได้จากการทดสอบ API-getPaymentHistory()

@@ -69,7 +69,7 @@ public class CommonController {
 	public DownloadableDocument uploadRequestDocument(
 		@ApiParam(value="File to upload", required=true) @RequestParam(name="file") MultipartFile file,
 		@ApiParam(value="Alias name") @RequestParam(name="alias", required=false) String alias, 
-		@ApiParam(value="Document or category type", required=false) @RequestParam(name="docType", required=true) DocumentType docType,
+		@ApiParam(value="Document or category type", required=true) @RequestParam(name="docType", required=true) DocumentType docType,
 		@ApiParam(value="Reference to document", required=true) @RequestParam(name="refID", required=false) String refID
 	) throws Exception {
 		UploadFile uploadFile = new UploadFile();
