@@ -168,9 +168,9 @@ public class ApiTestableAspect {
 			    				throw new TestableException(response.responseStatus, error);
 			    			}
 		    			} else {
-		    				log.info("No matched mock response, always return null <body>"); 
-		    				return null;
-//		    				else return jp.proceed();
+		    				log.info("No matched mock response, do as logic in controller"); 
+//		    				return null;
+		    				return jp.proceed();
 		    			}
 		    		}
 		    }
