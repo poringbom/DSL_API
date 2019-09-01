@@ -13,4 +13,7 @@ public class RequestOTPVerifyRq {
 	
 	@ApiModelProperty(position = 3, required=false, example="TEST")
 	String objective;
+	
+	@ApiModelProperty(position = 4, required=false)
+	String verifyUserRefID;
 }

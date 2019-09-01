@@ -4,13 +4,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
@@ -29,20 +34,19 @@ import th.co.ktb.dsl.apidoc.ApiDocHeaderOptionAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized2Authen;
 import th.co.ktb.dsl.apidoc.ApiDocResponseNewAuthorized;
-import th.co.ktb.dsl.apidoc.ApiDocResponseNoAuthorized;
 import th.co.ktb.dsl.apidoc.Team;
 import th.co.ktb.dsl.config.security.UserToken;
 import th.co.ktb.dsl.exception.ClientException;
 import th.co.ktb.dsl.mock.MockService;
 import th.co.ktb.dsl.mock.ServiceSQL;
 import th.co.ktb.dsl.mock.Testable;
+import th.co.ktb.dsl.mock.ServiceSQL.LoginUser;
 import th.co.ktb.dsl.model.authen.VerifyOTPRq;
 import th.co.ktb.dsl.model.authen.SignInRq;
 import th.co.ktb.dsl.model.authen.SignInRs;
 import th.co.ktb.dsl.model.authen.SignOutRq;
 import th.co.ktb.dsl.model.authen.MockOTP;
 import th.co.ktb.dsl.model.authen.RequestOTPVerifyRq;
-import th.co.ktb.dsl.model.authen.UserRegisterInfo;
 import th.co.ktb.dsl.model.authen.RequestOTPVerifyRs;
 
 @Api(tags="1.1. DSL-RMS : Authentication API", 
@@ -131,16 +135,34 @@ public class AuthenticationController {
 	}
 	
 	private final String verifyUser = "verifyUser";
-	@Testable
-	@ApiOperation(value=verifyUser, hidden=true,
-			notes="API สำหรับขอยืนยันตัวตนด้วย รหัสผู้ใช้+รหัสลับ (user+password) เพื่อขอ Verify Token Action (ตัวอย่างใช้งานกรณีต้องการกำหนดรหัส PIN แต่ลืมรหัส PIN เก่า)​ ")
+	@Testable(alwaysMock=false)
+	@ApiOperation(value=verifyUser, 
+			notes="API สำหรับขอยืนยันมีตัวตนผู้ใช้ในระบบด้วย Email และ Citizend ID สำหรับกรณียืนยันตัวตนก่อนมี Authorization (เช่นการขอ OTP เพื่อกรณีลืม password)​")
 	@ApiDocHeaderAuthorized
 	@ApiDocResponseAuthorized2Authen
-	@PostMapping(path="/verif/user")
+	@GetMapping(path="/verif/user")
 	@ResponseStatus(HttpStatus.OK)
-	public void verifyUser (
-		@RequestBody VerifyUserRq userLogin
-	) {}
+	public VerifyUserRs verifyUser (
+		@ApiParam(name="cid", value="หมายเลขบัตรประชาชนของผู้ใช้เพื่อยืนตัวตนมีอยู่ในระบ", required=true, type="query") 
+		@RequestParam("cid") String citizenID,
+		@ApiParam(name="email", value="email ของผู้ใช้เพื่อยืนยันตัวตนมีอยู่ในระบบ", required=true, type="body") 
+		@RequestParam("email") String email
+//		@RequestBody VerifyUserRq verifUser
+	) throws ClientException {
+		LoginUser user = new LoginUser();
+		user.setCitizenID(citizenID);
+		user.setLogin(email);
+		user = serviceSQL.getUserByCifAndLogin(user);
+		if (user == null) {
+			throw new ClientException("401-001", "Invalid email or citizenID");
+		} else {
+			VerifyUserRs ret = new VerifyUserRs();
+			ret.setEmail(user.getLogin());
+			ret.setMobileNo(user.getMobileNo());
+			ret.setVerifyUserRefID("<Verify User RefID>");
+			return ret;
+		}
+	}
 	
 	private final String requestOTPVerify = "requestOTPVerify";
 	@Testable(alwaysMock=false)
@@ -193,11 +215,11 @@ public class AuthenticationController {
 		serviceSQL.removeOTP(challengeOTP.getRefID());
 		return ret;
 	}
-	
-	private final String requestEmailVerify = "requestEmailVerify";
+/*	
+	private final String verifyUser = "verifyUser";
 	@Testable
-	@ApiOperation(value=requestEmailVerify, hidden=true,
-			notes="API สำหรับขอยืนยันตัวตน ด้วย Email / สำหรับกรณียืนยันตัวตนก่อนมี Authorization (การลงทะเบียนผู้ใช้)​")
+	@ApiOperation(value=verifyUser, //hidden=true,
+			notes="API สำหรับขอยืนยันมีตัวตนผู้ใช้ในระบบด้วย Email และ Citizend ID สำหรับกรณียืนยันตัวตนก่อนมี Authorization (เช่นการลืม password)​")
 	@ApiDocHeaderOptionAuthorized
 	@ApiDocResponseNoAuthorized
 	@PostMapping(path="/verif/email")
@@ -208,7 +230,7 @@ public class AuthenticationController {
 	) {
 		return new RequestOTPVerifyRs();
 	}
-
+*/
 	private final String verifyToken = "verifyToken";
 	@Testable
 	@ApiOperation(value=verifyToken+Team.GATEWAY_TEAM, 
@@ -253,9 +275,24 @@ class RefreshTokenRs {
 @Data
 class VerifyUserRq {
 	
-	@ApiModelProperty(position = 1, required=true, example="pongchet@orcsoft.co.th")
-	String username;
+	@ApiModelProperty(position = 1, required=true)
+	String citizenID;
 
-	@ApiModelProperty(position = 2, required=true, example="password")
-	String password;
+	@ApiModelProperty(position = 2, required=true, example="pongchet@orcsoft.co.th")
+	String email;
+}
+
+@Data
+@JsonInclude(value=Include.NON_EMPTY)
+class VerifyUserRs {
+	
+	@ApiModelProperty(position = 1, required=true)
+	String verifyUserRefID;
+	
+	@ApiModelProperty(position = 2, required=true, example="pongchet@orcsoft.co.th")
+	String email;
+	
+	@ApiModelProperty(position = 3, required=false)
+	String mobileNo;
+
 }

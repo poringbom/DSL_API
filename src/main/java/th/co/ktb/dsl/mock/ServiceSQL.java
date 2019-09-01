@@ -43,6 +43,10 @@ public interface ServiceSQL {
 			+ "WHERE Login = #{login} AND Password = #{password}")
 	public LoginUser getUserByLogin(LoginUser user);
 	
+	@Select("SELECT UserID, Login, MobileNo FROM MockUser "
+			+ "WHERE Login = #{login} AND CitizenID = #{citizenID}")
+	public LoginUser getUserByCifAndLogin(LoginUser user);
+	
 	@Insert("INSERT INTO MockUser (Login, Password, PIN, CitizenID, Title, FirstName, LastName, MobileNo, DOB) "
 			+ "VALUES (#{login}, #{password}, #{pin}, #{citizenID}, #{title}, #{firstName}, #{lastName}, #{mobileNo}, #{dob}) ")
 	@SelectKey(statement="SELECT @@identity", keyProperty="userID", before=false, resultType=Integer.class)
