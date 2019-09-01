@@ -24,6 +24,7 @@ public class PurgeLogSchedule {
 	}
 	
 	@Scheduled(cron="0 30 12 * * ?")
+//	@Scheduled(cron="0 58 8 * * ?")
 	public void purgeData() {
 	    log.info("Start Purge LogApiTesting");
 	    Integer hr = 24;
@@ -44,13 +45,21 @@ public class PurgeLogSchedule {
 	    }
 	    log.info("End Purge UploadFile (total delete: {})",total);
 	    
-	    count = -1; total = 0; hr = 2;
+	    count = -1; total = 0; 
 	    log.info("Delete Token expired than {} hr.",hr);
 	    while (count != 0) {
 		    total += count = mockResponse.deleteToken(hr, current);
 		    log.info("Delete {} records",count);
 	    }
 	    log.info("End Purge Token (total delete: {})",total);
+	    
+	    count = -1; total = 0; 
+	    log.info("Delete TempUser expired than {} hr.",hr);
+	    while (count != 0) {
+		    total += count = mockResponse.deleteTempUser(hr, current);
+		    log.info("Delete {} records",count);
+	    }
+	    log.info("End Purge TempUser (total delete: {})",total);
 	}
 
 }

@@ -35,6 +35,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -49,6 +50,7 @@ import th.co.ktb.dsl.model.common.ApiResponseError;
 @Aspect
 @Configuration
 @MapperScan("th.co.ktb.dsl.mock")
+@Transactional
 @Slf4j
 public class ApiTestableAspect {
 	

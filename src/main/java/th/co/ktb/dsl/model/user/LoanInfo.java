@@ -86,9 +86,11 @@ public class LoanInfo {
 	
 	@Data
 	@NoArgsConstructor
+	@JsonInclude(value=Include.NON_NULL)
 	public static class ReceiveingAccount {
 		Bank bank = Bank.KTB;
 		String acctNo = "1112223334";
 		AccountType acctType = AccountType.SAVING;
+		String acctDisplay = "xxx-x-xx333-4";
 	}
 }

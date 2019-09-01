@@ -1,6 +1,8 @@
 package th.co.ktb.dsl.mock;
 
 
+import java.util.Date;
+
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -41,10 +43,13 @@ public interface ServiceSQL {
 			+ "WHERE Login = #{login} AND Password = #{password}")
 	public LoginUser getUserByLogin(LoginUser user);
 	
-	@Insert("INSERT INTO MockUser (Login, Password, PIN, CitizenID, Title, FirstName, LastName, MobileNo) "
-			+ "VALUES (#{login}, #{password}, #{pin}, #{citizenID}, #{title}, #{firstName}, #{lastName}, #{mobileNo}) ")
+	@Insert("INSERT INTO MockUser (Login, Password, PIN, CitizenID, Title, FirstName, LastName, MobileNo, DOB) "
+			+ "VALUES (#{login}, #{password}, #{pin}, #{citizenID}, #{title}, #{firstName}, #{lastName}, #{mobileNo}, #{dob}) ")
 	@SelectKey(statement="SELECT @@identity", keyProperty="userID", before=false, resultType=Integer.class)
 	public Integer addNewUser(LoginUser user);
+	
+	@Insert("INSERT INTO MockUserInfo (UserID) VALUES (#{userID})")
+	public Integer addNewUserInfo(Integer userID);
 	
 	@Update("UPDATE MockUser SET Password = #{password} WHERE UserID = #{userID} AND (Password = #{oldPassword} OR #{oldPassword} IS NULL) ")
 	public int resetPassword(@Param("userID") Integer userID,
@@ -52,6 +57,31 @@ public interface ServiceSQL {
 	
 	@Update("UPDATE MockUser SET PIN = #{pin} WHERE UserID = #{userID} AND (PIN = #{oldPin} OR #{oldPin} IS NULL) ")
 	public int resetPIN(@Param("userID") Integer userID,@Param("pin") String pin, @Param("oldPin") String oldPin);
+	
+	@Select("SELECT u.UserID, u.Login, u.CitizenID, u.Title, u.FirstName, u.LastName, u.MobileNo, u.DOB, "
+			+ "	i.WorkInfo, i.Addresses, i.Spouse "
+			+ "FROM MockUser u LEFT JOIN MockUserInfo i ON u.UserID = i.UserID "
+			+ "WHERE u.UserID = #{userID} ")
+	public LoginUser getUserByID(Integer userID);
+	
+	@SuppressWarnings("el-syntax")
+	@Update("UPDATE MockUserInfo SET"
+			+ " WorkInfo = ISNULL(#{workInfo,jdbcType=VARCHAR}, WorkInfo), "
+			+ " Addresses = ISNULL(#{addresses,jdbcType=VARCHAR}, Addresses), "
+			+ " Spouse = ISNULL(#{spouse,jdbcType=VARCHAR}, Spouse) "
+			+ "WHERE UserID = #{userID}")
+	public int updateUserInfoByID(LoginUser user);
+	
+	@Update("UPDATE MockUser SET"
+			+ " Login = #{login}, "
+			+ " CitizenID = #{citizenID}, "
+			+ " Title = #{title}, "
+			+ " FirstName = #{firstName}, "
+			+ " LastName = #{lastName}, "
+			+ " MobileNo = #{mobileNo}, "
+			+ " DOB = #{dob} "
+			+ "WHERE UserID = #{userID}")
+	public int updateUser(LoginUser user);
 //----------------------------------
 	
 	
@@ -82,16 +112,26 @@ public interface ServiceSQL {
 	@Delete("DELETE FROM MockOTP WHERE RefID = #{refID}")
 	public Integer removeOTP(@Param("refID") String refID);
 //----------------------------------
-
-	@Select("SELECT ConfigValue FROM Config WHERE ConfigName = #{config}")
-	public String getConfig(String refID);
 	
+	
+
+//TempUser-------------------------
 	@Insert("INSERT INTO TempUser (TempUserInfo,Type) VALUES (#{data}, #{type}) ")
 	@SelectKey(statement="SELECT @@identity", keyProperty="refID", before=false, resultType=Integer.class)
 	public Integer addTempUser(TempUser data);
 	
+	@Delete("DELETE FROM TempUser WHERE RefID = #{refID}")
+	public Integer removeTempUser(@Param("refID") String refID);
+	
 	@Select("SELECT TempUserInfo FROM TempUser WHERE RefID = #{refID} AND [Type] = #{type}")
 	public String getTempUser(@Param("refID") String refID, @Param("type") String type);
+
+//----------------------------------
+
+	
+	
+	@Select("SELECT ConfigValue FROM Config WHERE ConfigName = #{config}")
+	public String getConfig(String refID);
 	
 	@Data
 	@NoArgsConstructor
@@ -105,6 +145,13 @@ public interface ServiceSQL {
 		String firstName;
 		String lastName;
 		String mobileNo;
+		String spouse;
+		String addresses;
+		String workInfo;
+		Date dob;
+		public LoginUser(Integer u) {
+			userID=u;
+		}
 		public LoginUser(String u, String p) {
 			login=u; password=p;
 		}

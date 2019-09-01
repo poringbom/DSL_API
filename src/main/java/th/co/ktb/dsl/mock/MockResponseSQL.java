@@ -75,4 +75,11 @@ public interface MockResponseSQL {
 			" WHERE DATEDIFF(HOUR,l.ExpireDTM,#{current}) >= #{numHr} ";
 	@Delete(DELETE_TOKEN)
 	public Integer deleteToken(@Param("numHr") Integer numHr, @Param("current") Date current);
+
+	public final String DELETE_TEMP_USER = "" +
+			" DELETE TOP (50) l " + 
+			" FROM TempUser l " + 
+			" WHERE DATEDIFF(HOUR,l.CreateDTM,#{current}) >= #{numHr} ";
+	@Delete(DELETE_TEMP_USER)
+	public Integer deleteTempUser(@Param("numHr") Integer numHr, @Param("current") Date current);
 }
