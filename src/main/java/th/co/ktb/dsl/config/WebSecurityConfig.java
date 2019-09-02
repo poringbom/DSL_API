@@ -19,7 +19,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.client.RestTemplate;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import th.co.ktb.dsl.EndPointMethodPath;
 import th.co.ktb.dsl.JwtUtil;
 import th.co.ktb.dsl.SkipPathRequestMatcher;
 import th.co.ktb.dsl.config.security.ApiAuthenticationFailureHandler;
@@ -56,16 +60,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	private static final List<String> SWAGGER_ENDPOINT = Arrays.asList(swagger_url);
 	
-	private static final List<String> EXCLUDE_JWT_AUTH_ENDPOINT = Arrays.asList(
-			TOKEN_REFRESH_ENTRY_POINT,
-			API_LOGIN_ENTRY_POINT,
-			"/test",
-			"/api/v1/rms/email",
-			"/api/v1/rms/openID",
-			"/api/v1/rms/openID/user",
-			"/api/v1/verif/otp/req",
-			"/api/v1/verif/otp"
-		);
+	private static final List<EndPointMethodPath> EXCLUDE_JWT_AUTH_ENDPOINT = Arrays.asList(
+//		new EndPointMethodPath(HttpMethod.PUT  ,TOKEN_REFRESH_ENTRY_POINT),
+		new EndPointMethodPath(HttpMethod.POST ,API_LOGIN_ENTRY_POINT),
+		new EndPointMethodPath(HttpMethod.GET ,"/test"),
+		new EndPointMethodPath(HttpMethod.POST ,"/api/v1/rms/user"), //validateUser 
+		new EndPointMethodPath(HttpMethod.POST ,"/api/v1/rms/email"), // resendVerifyEmail
+		new EndPointMethodPath(HttpMethod.GET  ,"/api/v1/rms/openID"), // registerUserByOpenID
+		new EndPointMethodPath(HttpMethod.GET  ,"/api/v1/rms/openID/user"), // getOpenIDUserInfo 
+		new EndPointMethodPath(HttpMethod.POST ,"/api/v1/verif/otp/req"), // requestOTPVerify
+		new EndPointMethodPath(HttpMethod.POST ,"/api/v1/verif/otp") // verifyOTP 
+	);
 	
 	@Autowired AuthenticationManager authenticationManager;
 	@Autowired JwtUtil jwtUtil;
@@ -92,6 +97,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			//------------------
 			.antMatchers("/test").permitAll()
 			.antMatchers("/openID").permitAll()
+			
 			.antMatchers(HttpMethod.POST,"/api/v1/rms/user").permitAll()
 			.antMatchers(HttpMethod.POST,"/api/v1/rms/email").permitAll()
 			.antMatchers(HttpMethod.GET ,"/api/v1/rms/openID").permitAll()

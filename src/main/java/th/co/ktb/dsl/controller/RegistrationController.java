@@ -177,8 +177,9 @@ public class RegistrationController {
 	@PutMapping("/user")
 	@ResponseStatus(HttpStatus.OK)
 	public ReqisterUserRs registerUser(
-			@ApiParam(name = "userInfo", type = "body", required = true, value = "ข้อมูลผู้ใช้สำหรับการลงทะเบียนใช้งาน") @RequestBody ReqisterUserRq userInfo)
-			throws ClientException, JsonParseException, JsonMappingException, IOException {
+			@ApiParam(name = "userInfo", type = "body", required = true, value = "ข้อมูลผู้ใช้สำหรับการลงทะเบียนใช้งาน") 
+			@RequestBody ReqisterUserRq userInfo
+	) throws ClientException, JsonParseException, JsonMappingException, IOException {
 		log.info("do {}()", registerUser);
 		String refID = userInfo.getRegisterRefID();
 		String tempUser = sql.getTempUser(refID, TempUser.TEMP_VALIDATED);

@@ -16,10 +16,10 @@ public class SkipPathRequestMatcher implements RequestMatcher {
     private OrRequestMatcher matchers;
     private RequestMatcher processingMatcher;
 
-    public SkipPathRequestMatcher(List<String> pathsToSkip, String processingPath) {
+    public SkipPathRequestMatcher(List<EndPointMethodPath> pathsToSkip, String processingPath) {
         List<RequestMatcher> m = pathsToSkip.
         		stream().
-        			map(path -> new AntPathRequestMatcher(path)).
+        			map(mp -> new AntPathRequestMatcher(mp.getPath(), mp.getMethod().toString())).
         				collect(Collectors.toList());
         matchers = new OrRequestMatcher(m);
         processingMatcher = new AntPathRequestMatcher(processingPath);
