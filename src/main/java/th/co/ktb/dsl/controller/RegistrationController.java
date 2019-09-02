@@ -77,8 +77,8 @@ public class RegistrationController {
 	private final String resetPIN = "resetPIN";
 
 	@Testable(alwaysMock = false)
-	@ApiOperation(value = resetPIN
-			+ Team.RMS_TEAM, hidden = true, notes = "API สำหรับกำหนด PIN ใหม่ (กรณีไม่เคยมีมาก่อน หรือ ผู้ใช้ลืม PIN)")
+	@ApiOperation(value = resetPIN+ Team.RMS_TEAM, hidden = true, 
+			notes = "API สำหรับกำหนด PIN ใหม่ (กรณีไม่เคยมีมาก่อน หรือ ผู้ใช้ลืม PIN)")
 	@ApiDocHeaderNoAuthorized2Authen
 	@ApiDocResponseNewAuthorized
 	@PostMapping("/pin")
@@ -98,8 +98,8 @@ public class RegistrationController {
 	private final String changePIN = "changePIN";
 
 	@Testable(alwaysMock = false)
-	@ApiOperation(value = changePIN
-			+ Team.RMS_TEAM, hidden = true, notes = "API สำหรับกำหนด PIN ใหม่ (ผุ้ใช้จำเป็นต้องทราบ PIN ปัจจุบัน)")
+	@ApiOperation(value = changePIN + Team.RMS_TEAM, hidden = true, 
+			notes = "API สำหรับกำหนด PIN ใหม่ (ผุ้ใช้จำเป็นต้องทราบ PIN ปัจจุบัน)")
 	@ApiDocHeaderAuthorized
 	@PutMapping("/pin")
 	@ResponseStatus(HttpStatus.OK)
@@ -320,10 +320,10 @@ public class RegistrationController {
 	@GetMapping("/openID/user")
 	@ResponseStatus(HttpStatus.OK)
 	public GetOpenIDUserInfoRs getOpenIDUserInfo(
-			@ApiParam(name = "registerRef", type = "query", required = true, value = "Register reference ID") @RequestParam("registerRef") String registerRef)
+			@ApiParam(name = "AccessToken", type = "query", required = true, value = "OpenID Access Token") @RequestParam("accessToken") String accessToken)
 			throws JsonParseException, JsonMappingException, IOException {
 		log.info("do {}()", getOpenIDUserInfo);
-		String tempUserInfo = sql.getTempUser(registerRef, TempUser.TEMP_OPEN_ID);
+		String tempUserInfo = sql.getTempUser(accessToken, TempUser.TEMP_OPEN_ID);
 		OpenIDFormData fromData = Utilities.getObjectMapper().readValue(tempUserInfo, OpenIDFormData.class);
 		GetOpenIDUserInfoRs ret = new GetOpenIDUserInfoRs();
 		ret.setCitizenID(fromData.getCitizenID());

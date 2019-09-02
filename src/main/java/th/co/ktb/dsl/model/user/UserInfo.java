@@ -18,9 +18,9 @@ public class UserInfo {
 	@JsonIgnore
 	Boolean resetPIN = false;
 	
-	@ApiModelProperty(position = -5, required=false, 
-		notes="Verify Token Action ใช้สำหรับเพื่อดำเนินการตั้งรหัส PIN หลังจากกรณี Sign-in เรียบร้อยและพบว่ายังไม่มีการกำหนด PIN")
-	String verifyActionToken;
+//	@ApiModelProperty(position = -5, required=false, 
+//		notes="Verify Token Action ใช้สำหรับเพื่อดำเนินการตั้งรหัส PIN หลังจากกรณี Sign-in เรียบร้อยและพบว่ายังไม่มีการกำหนด PIN")
+//	String verifyActionToken;
 
 	@ApiModelProperty(position = 0, required=true)
 	PersonTitle title;

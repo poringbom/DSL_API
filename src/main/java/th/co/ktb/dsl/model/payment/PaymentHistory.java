@@ -30,7 +30,7 @@ public class PaymentHistory {
 		num = num>15?15:num;
 		List<PaymentItem> list = new ArrayList<PaymentItem>();
 		for(int i=0; i<num; i++) {
-			list.add(new PaymentItem("927USH2837492","ATM",11957.86d,Utilities.parseDate("20"+(19-i)+"-06-12 12:32:00"),PaymentStatus.PAID,null,PayType.PAY));
+			list.add(new PaymentItem("927USH2837492","ATM",11957.86d,Utilities.parseDate("20"+(19-i)+"-06-12 12:32:00"),PaymentStatus.PAID,null,PayType.PAYMENT));
 		}
 //		list.add(new PaymentItem("927USH2837492","Int Transfer",11957.86d,Utilities.parseDate("2018-06-12 12:32:00"),"PAID",null));
 //		list.add(new PaymentItem("927USH2837492","Counter Service",11957.86d,Utilities.parseDate("2017-06-12 12:32:00"),"PAID",null));
@@ -41,5 +41,8 @@ public class PaymentHistory {
 }
 
 enum PayType {
-	PAY, RECEIVE
+//	ADJUST, // ปรับปรุงหนี้
+	DISBURSE, // โอนเงิน
+	PAYMENT, // ชำระหนี้
+	REPAYMENT // คืนเงิน
 }

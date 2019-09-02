@@ -1,3 +1,7 @@
+2019-09-02
+	- แก้ไข Enum-PayType (DISBURSE, PAYMENT, REPAYMENT)
+	- แก้ไข API-validateUser() ให้สามารถเรียกได้โดยไม่จำเป็นต้องมี Token
+
 2019-08-30
 	- แก้ไข Model-LoanInfo (listUserAccount())
 		- เพิ่มฟิลด์ acctStatus แสดงสถานะบัญชีลูกหนี้

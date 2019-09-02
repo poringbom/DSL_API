@@ -9,7 +9,10 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Configuration
+@Slf4j
 public class MvcConfig implements WebMvcConfigurer {
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add(new ApiMetadataArgumentResolver());
@@ -17,7 +20,12 @@ public class MvcConfig implements WebMvcConfigurer {
     
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedMethods("*").allowedOrigins("*");
+    		log.info("MvcConfig.addCorsMappings()");
+        registry.addMapping("/**")
+        		.allowedMethods("*")
+        		.allowedOrigins("*")
+        		.allowedHeaders("*")
+        		.allowCredentials(true);
     }
     
     @Bean

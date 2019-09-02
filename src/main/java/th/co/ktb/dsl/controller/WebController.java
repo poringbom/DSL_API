@@ -66,7 +66,7 @@ public class WebController {
 		}
 		String queryStringTemplate = "?status={0}";
 		if ("Accept".equalsIgnoreCase(action)) {
-			queryStringTemplate += "&refID={1}";
+			queryStringTemplate += "&AccessToken={1}";
 		}
 		MessageFormat mf = new MessageFormat(queryStringTemplate);
 		String queryString = mf.format(new Object[] {action,refID});

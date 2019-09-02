@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -80,7 +81,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	  	log.info(">> configure HttpSecurity");
 		http
 			.csrf().disable()
-//			.cors().disable()
+			.cors().disable()
 			.requiresChannel()
 			.requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
 			.requiresSecure()
@@ -91,11 +92,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			//------------------
 			.antMatchers("/test").permitAll()
 			.antMatchers("/openID").permitAll()
-			.antMatchers("/api/v1/rms/email").permitAll()
-			.antMatchers("/api/v1/rms/openID").permitAll()
-			.antMatchers("/api/v1/rms/openID/user").permitAll()
-			.antMatchers("/api/v1/verif/otp/req").permitAll()
-			.antMatchers("/api/v1/verif/otp").permitAll()
+			.antMatchers(HttpMethod.POST,"/api/v1/rms/user").permitAll()
+			.antMatchers(HttpMethod.POST,"/api/v1/rms/email").permitAll()
+			.antMatchers(HttpMethod.GET ,"/api/v1/rms/openID").permitAll()
+			.antMatchers(HttpMethod.GET ,"/api/v1/rms/openID/user").permitAll()
+			.antMatchers(HttpMethod.POST,"/api/v1/verif/otp").permitAll()
+			.antMatchers(HttpMethod.POST,"/api/v1/verif/otp/req").permitAll()
 			//------------------
 			.anyRequest().authenticated()
 		.and()

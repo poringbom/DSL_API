@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -25,16 +26,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import springfox.documentation.annotations.ApiIgnore;
 import th.co.ktb.dsl.DateUtil;
 import th.co.ktb.dsl.JwtUtil;
 import th.co.ktb.dsl.apidoc.ApiDocAnnotation;
 import th.co.ktb.dsl.apidoc.ApiDocHeader;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocHeaderOptionAuthorized;
+import th.co.ktb.dsl.apidoc.ApiDocHeaderOptionAuthorized2Authen;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized;
 import th.co.ktb.dsl.apidoc.ApiDocResponseAuthorized2Authen;
 import th.co.ktb.dsl.apidoc.ApiDocResponseNewAuthorized;
 import th.co.ktb.dsl.apidoc.Team;
+import th.co.ktb.dsl.config.security.ApiAuthenticationToken;
 import th.co.ktb.dsl.config.security.UserToken;
 import th.co.ktb.dsl.exception.ClientException;
 import th.co.ktb.dsl.mock.MockService;
@@ -138,7 +142,7 @@ public class AuthenticationController {
 	@Testable(alwaysMock=false)
 	@ApiOperation(value=verifyUser, 
 			notes="API สำหรับขอยืนยันมีตัวตนผู้ใช้ในระบบด้วย Email และ Citizend ID สำหรับกรณียืนยันตัวตนก่อนมี Authorization (เช่นการขอ OTP เพื่อกรณีลืม password)​")
-	@ApiDocHeaderAuthorized
+	@ApiDocResponseNewAuthorized
 	@ApiDocResponseAuthorized2Authen
 	@GetMapping(path="/verif/user")
 	@ResponseStatus(HttpStatus.OK)
@@ -234,14 +238,31 @@ public class AuthenticationController {
 	private final String verifyToken = "verifyToken";
 	@Testable
 	@ApiOperation(value=verifyToken+Team.GATEWAY_TEAM, 
-			notes="API ตรวจสอบ access token ยังคงมีสิทธิ์อยู่หรือไม่​ ถูกใช้โดย client สำหรับการตรวจสอบเมื่อผู้ใช้มีการ access known url ของ application ตรง")
-	@ApiDocHeaderAuthorized
+			notes="API ตรวจสอบ access token / verify action token ยังคงมีสิทธิ์อยู่หรือไม่​ ถูกใช้โดย client สำหรับการตรวจสอบเมื่อผู้ใช้มีการ access known url ของ application ตรง")
+	@ApiDocHeaderOptionAuthorized2Authen
 	@ApiDocResponseAuthorized
 	@RequestMapping(path="/verif/token",method=RequestMethod.HEAD)
 	@ResponseStatus(HttpStatus.OK)
-	public void verifyToken() {
-		return;
+	public VerifyTokenRs verifyToken(
+		@ApiIgnore Authentication auth
+	) throws ClientException {
+		if (auth instanceof ApiAuthenticationToken) {
+			UserToken token = ((ApiAuthenticationToken) auth).getUserInfo();
+			token.getLogin();
+			VerifyTokenRs ret = new VerifyTokenRs();
+			ret.setEmail(token.getLogin());
+			return ret;
+		} else {
+			throw new ClientException("400-001", "Invalid token");
+		}
 	}
+}
+
+@Data
+@NoArgsConstructor
+class VerifyTokenRs {
+	@ApiModelProperty(position = 1, required=true, example="pongchet@orcsoft.co.th", value="email (หรือ login name ของผู้ลงทะเบียน)")
+	String email;
 }
 
 @Data
